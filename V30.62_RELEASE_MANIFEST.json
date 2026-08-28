@@ -1,0 +1,24 @@
+{
+  "release": "V30.62",
+  "previous_release": "V30.61",
+  "type": "final-offline-production-readiness-hardening",
+  "live_provider_tests": false,
+  "deployment_owner_managed": [
+    "Firebase service account and project settings",
+    "Gemini API credentials/model",
+    "Telebirr/CBE production credentials and native webhook mapping",
+    "PAYMENT_CURRENCY and business pricing",
+    "ALLOWED_ORIGINS/custom domain"
+  ],
+  "validation": [
+    "release_consistency",
+    "static_regression",
+    "rate_limit_regression",
+    "python_compile",
+    "javascript_syntax",
+    "public_surface_smoke",
+    "security_rules_regression",
+    "secret_scan",
+    "zip_integrity"
+  ]
+}

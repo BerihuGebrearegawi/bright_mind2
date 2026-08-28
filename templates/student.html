@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Mind Tutor — Student Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}"><meta name="theme-color" content="#2563eb">
+</head>
+<body>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="container">
+
+        <!-- ========================================================== -->
+        <!-- AUTH SECTION                                               -->
+        <!-- ========================================================== -->
+        <div id="authSection">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Tab -->
+            <div id="loginTab" class="auth-tab active">
+                <div class="card">
+                    <h3>🔐 Sign In</h3>
+                    <form class="form-vertical" onsubmit="event.preventDefault(); loginStudent();">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">Sign In</button><button type="button" class="btn btn-outline" data-forgot-password>Forgot Password?</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Register Tab -->
+            <div id="registerTab" class="auth-tab" style="display:none;">
+                <div class="card">
+                    <h3>📝 Register</h3>
+                    <form id="studentRegisterForm" class="form-vertical">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="regName" placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password (6+ chars)</label>
+                            <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="regConfirmPassword" placeholder="••••••••" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label>Class</label>
+                            <select id="regClass">
+                                <option value="KG">KG</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                                <option value="7">Grade 7</option>
+                                <option value="8">Grade 8</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+                        <button id="registerBtn" type="submit" class="btn btn-primary" style="width:100%;">Create Student Account</button><div id="registerStatus" class="subtitle" role="status" aria-live="polite" style="margin-top:10px"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================== -->
+        <!-- MAIN CONTENT                                               -->
+        <!-- ========================================================== -->
+        <div id="mainContent" style="display:none;">
+
+            <!-- Top Bar -->
+            <div class="top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Bright Mind Tutor" id="navLogo" style="width:40px; height:40px; border-radius:var(--radius-sm); object-fit:cover;">
+                    <div>
+                        <h1 class="page-title" style="margin:0; text-align:left; font-size:1.3em;">
+                            Bright Mind Tutor <span style="font-weight:400; font-size:0.6em; color:var(--text-muted);">Student</span>
+                        </h1>
+                        <div id="userGreeting" style="font-size:0.85em; color:var(--text-muted); margin-top:2px;">
+                            👋 Welcome, <span id="greetingName">Student</span>!
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <button id="notificationBell" class="btn" type="button" onclick="toggleNotificationPanel()" aria-label="Notifications" style="position:relative;padding:8px 10px;font-size:18px;background:var(--card-bg);border:1px solid var(--border-color);">🔔<span id="notificationBadge" style="display:none;position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:999px;background:#ef4444;color:#fff;font-size:10px;line-height:18px;text-align:center;padding:0 4px;"></span></button>
+                    <div class="profile-picture" style="width:40px; height:40px; cursor:pointer;" onclick="openProfileModal()">
+                        <img id="navAvatar" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=64" alt="Profile" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                    </div>
+                    <button class="btn btn-danger" onclick="logoutUser()" style="padding:8px 16px; font-size:13px;">Logout</button>
+                </div>
+            </div>
+
+            <p class="subtitle" style="text-align:center; margin-top:6px;">
+                Find your books, videos, live classes, and quizzes here
+            </p>
+            <div id="notificationPanel" class="card" style="display:none;position:relative;margin-top:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">🔔 Notifications</h3>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-secondary" type="button" onclick="enablePushNotifications()">Enable push</button>
+                        <button class="btn btn-secondary" type="button" onclick="markAllNotificationsRead()">Mark all read</button>
+                    </div>
+                </div>
+                <div id="notificationList" style="margin-top:12px;"><p class="subtitle">Loading notifications…</p></div>
+                <details style="margin-top:12px;border-top:1px solid var(--border-color);padding-top:10px;">
+                    <summary style="cursor:pointer;font-weight:600;">Notification settings</summary>
+                    <div id="notificationPreferences" style="margin-top:10px;display:grid;gap:8px;"></div>
+                </details>
+            </div>
+
+
+            <div id="learningDashboard" class="card" style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h3 style="margin:0;">📊 My Learning Progress</h3><p id="progressGrade" class="subtitle" style="margin:4px 0 0;">Loading your learning analytics…</p></div>
+                    <button class="btn btn-secondary" type="button" onclick="loadLearningDashboard()">Refresh</button>
+                </div>
+                <div id="learningStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:12px;"></div>
+                <div id="learningNext" style="margin-top:12px;"></div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Class Selector -->
+            <div class="card">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="chatUserName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Select Your Class</label>
+                    <div class="class-selector">
+                        <div class="class-chips" id="classChips"></div>
+                        <select id="classSelect" style="display:none;">
+                            <option value="KG">KG</option>
+                            <option value="1">Grade 1</option>
+                            <option value="2">Grade 2</option>
+                            <option value="3">Grade 3</option>
+                            <option value="4">Grade 4</option>
+                            <option value="5">Grade 5</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Live Stream -->
+            <div class="card" style="background:var(--primary-light); border-color:var(--primary);">
+                <h3>🔴 Live Stream</h3>
+                <div id="liveStreamContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Unified Content Search / Saved Learning -->
+            <div class="card" id="contentTools">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+                    <div><h3 style="margin:0;">🔎 Find Learning Content</h3><p class="subtitle" style="margin:4px 0 0;">Search the books, videos and lessons currently available to your class.</p></div>
+                    <button class="btn btn-outline" type="button" onclick="loadBookmarks()">🔖 My Saved</button>
+                </div>
+                <input id="contentSearch" type="search" placeholder="Search books, videos, lessons…" aria-label="Search learning content" style="margin-top:10px;width:100%;">
+                <div id="savedItemsContainer" style="margin-top:10px;display:none;"></div>
+            </div>
+
+            <!-- Books -->
+            <div class="card">
+                <h3>📚 Books</h3>
+                <div id="booksContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Videos -->
+            <div class="card">
+                <h3>🎥 Videos</h3>
+                <div id="studentVideosContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Playlist -->
+            <div class="card">
+                <h3>📋 My Playlist</h3>
+                <div id="playlistContainer">No videos in playlist yet.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Downloaded Videos -->
+            <div class="card">
+                <h3>📥 Downloaded Videos</h3>
+                <div id="downloadedVideosContainer">No downloaded videos yet.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Assignments -->
+            <div class="card" id="studentAssignments" style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0;">📝 My Assignments</h3><p class="subtitle" style="margin:4px 0 0;">Homework and classwork published by your teachers.</p></div><button class="btn btn-secondary" type="button" onclick="loadStudentAssignments()">Refresh</button></div>
+                <div id="studentAssignmentList" style="margin-top:10px"><p class="subtitle">Loading assignments…</p></div>
+            </div>
+
+            <!-- Quizzes -->
+            <div class="card">
+                <h3>✍️ Quizzes</h3>
+                <div id="quizContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Exams -->
+            <div class="card">
+                <h3>📄 Exams</h3>
+                <div id="examsContainer"><div class="spinner"></div> Loading...</div>
+                <div style="margin-top:18px"><h4>📊 My Exam History</h4><div id="examHistoryContainer"><p class="subtitle">No results loaded yet.</p></div><button class="btn btn-neutral" type="button" onclick="loadExamHistory()">Refresh Results</button></div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- National Exam Archive -->
+            <div class="card" id="liveClassesSection"><h3>📅 Live Classes</h3><p class="subtitle">Upcoming classes for your grade.</p><div id="liveClassStatus" class="subtitle"></div><div id="liveClassList"><div class="spinner"></div> Loading live classes...</div></div>
+<div class="card" id="examArchiveStudentSection">
+                <h3>🏛️ National Exam Archive</h3>
+                <p class="subtitle">Find Grade 6–12 exams by grade, subject, stream and year. Premium files unlock instantly after payment approval.</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0;">
+                    <select id="archiveFilterGrade"><option value="">All grades</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select>
+                    <select id="archiveFilterStream" disabled><option value="">Grade 12 stream</option><option value="Natural Sciences">Natural Sciences</option><option value="Social Sciences">Social Sciences</option></select>
+                    <input id="archiveFilterSubject" placeholder="Subject">
+                    <input id="archiveFilterYear" type="number" placeholder="Year">
+                    <button class="btn btn-primary" type="button" onclick="loadExamArchive()">🔎 Search</button>
+                </div>
+                <div id="examArchiveStatus" class="subtitle"></div>
+                <div id="examArchiveList"><div class="spinner"></div> Loading archive...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- AI Tutor -->
+            <div class="card ai-tutor-card" id="aiTutorSection">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h3 style="margin-bottom:4px;">🤖 AI Tutor</h3><p class="subtitle" style="margin:0;">Your Bright Mind Tutor — ask, understand, practise.</p></div>
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="aiQuotaBadge" class="badge badge-free">AI Assistant</span><button class="btn btn-neutral" type="button" onclick="clearAIChat()">🗑️ Clear</button><button class="btn btn-neutral" type="button" onclick="enablePushNotifications()">🔔 Notifications</button></div>
+                </div>
+                <div class="ai-quick-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Explain this topic in a simple way for my grade.')">💡 Explain simply</button>
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Give me a clear worked example of this topic.')">🧮 Give an example</button>
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Quiz me on this topic with 5 questions. Do not give answers until I respond.')">📝 Quiz me</button>
+                    <button class="btn btn-neutral" type="button" onclick="openAIHomeworkCoach()">📷 Homework Coach</button>
+                    <button class="btn btn-neutral" type="button" onclick="openAIStudyPlan()">📅 Study Plan</button>
+                    <button class="btn btn-neutral" type="button" onclick="generateAIPracticeQuiz()">🎯 Generate BMT Quiz</button>
+                </div>
+                
+                <div id="aiHomeworkPanel" class="card" style="display:none;margin-top:12px;background:var(--surface);border-color:var(--primary)">
+                    <h4>🧮 AI Homework Coach</h4><p class="subtitle">Paste a homework problem. BMT will explain it step-by-step and give one similar practice question.</p>
+                    <textarea id="aiHomeworkInput" rows="5" maxlength="8000" placeholder="Example: Solve 2x + 5 = 15 and explain every step."></textarea>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="aiHomeworkImage" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload homework photo"><input id="aiHomeworkNote" type="text" maxlength="3000" placeholder="Optional note about the photo"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" type="button" onclick="solveAIHomework()">Solve Step-by-Step</button><button class="btn btn-accent" type="button" onclick="solveAIHomeworkImage()">📷 Solve Photo</button><button class="btn btn-neutral" type="button" onclick="document.getElementById('aiHomeworkPanel').style.display='none'">Close</button></div>
+                    <div id="aiHomeworkResult" class="ai-tutor-messages" style="max-height:300px"></div>
+                </div>
+                <div id="aiStudyPlanPanel" class="card" style="display:none;margin-top:12px;background:var(--surface);border-color:var(--primary)">
+                    <h4>📅 AI Personal Study Plan</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input id="aiPlanGoal" placeholder="Goal, e.g. prepare for Grade 8 exam"><input id="aiPlanWeak" placeholder="Weak topics, e.g. algebra, fractions"><input id="aiPlanDays" type="number" min="1" max="30" value="7" placeholder="Days"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" type="button" onclick="createAIStudyPlan()">Create Plan</button><button class="btn btn-neutral" type="button" onclick="document.getElementById('aiStudyPlanPanel').style.display='none'">Close</button></div>
+                    <div id="aiStudyPlanResult" class="ai-tutor-messages" style="max-height:360px"></div>
+                </div>
+                <div id="aiTutorMessages" class="ai-tutor-messages" aria-live="polite"><div class="ai-message assistant"><strong>Bright Mind Tutor:</strong> Hello! Ask me a mathematics, science, or study question.</div></div>
+                <form id="aiTutorForm" class="ai-tutor-form" onsubmit="event.preventDefault(); askAITutor();"><textarea id="aiTutorInput" rows="2" maxlength="8000" placeholder="Ask your question..." required></textarea><button class="btn btn-primary" type="submit" id="aiTutorSendBtn">Ask AI</button></form>
+                <div id="aiTutorStatus" class="subtitle" style="margin-top:8px;">Your recent AI conversation is saved on this device.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Submit Payment -->
+            <div class="card" style="background:var(--warning-light); border-color:var(--warning);">
+                <h3>💳 Subscribe to Premium</h3>
+                <p class="subtitle">Your free trial has ended or you want to access paid content. Choose a plan and make payment to continue.</p>
+
+                <div class="payment-plans">
+                    <div class="payment-plan" onclick="selectPlan('monthly', window.BMT_PRICES?.monthly || 9.99)">
+                        <h4>📱 Monthly</h4>
+                        <div class="price" data-plan-monthly>9.99 ETB</div>
+                        <div class="label">per month</div>
+                        <button class="btn btn-primary" style="width:100%; margin-top:8px;">Select</button>
+                    </div>
+                    <div class="payment-plan active" onclick="selectPlan('yearly', window.BMT_PRICES?.yearly || 79.99)">
+                        <h4>🎓 Yearly</h4>
+                        <div class="price" data-plan-yearly>79.99 ETB</div>
+                        <div class="label">per year (save 33%)</div>
+                        <button class="btn btn-primary" style="width:100%; margin-top:8px;">Select</button>
+                    </div>
+                </div>
+
+                <form class="form-section" id="paymentForm" onsubmit="event.preventDefault(); submitStudentPayment();">
+                    <div class="section-title">Payment Information</div>
+
+                    <div class="field-group full-width" id="selectedPlanDisplay" style="background:var(--primary-light); padding:12px; border-radius:var(--radius-md); text-align:center; display:none;">
+                        <strong>Selected Plan:</strong> <span id="selectedPlanName">Monthly</span> — 
+                        <strong>Amount:</strong> <span id="selectedPlanAmount">9.99</span> <span id="selectedPlanCurrency">ETB</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Full Name</label>
+                        <input type="text" id="paymentName" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="field-group">
+                        <label>Class</label>
+                        <select id="paymentClass">
+                            <option value="KG">KG</option>
+                            <option value="1">Grade 1</option>
+                            <option value="2">Grade 2</option>
+                            <option value="3">Grade 3</option>
+                            <option value="4">Grade 4</option>
+                            <option value="5">Grade 5</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Transaction ID</label>
+                        <input type="text" id="txId" placeholder="Enter transaction ID from TeleBirr / Bank">
+                    </div>
+
+                    <div class="field-group full-width" style="background:var(--surface); border:2px solid var(--success); border-radius:var(--radius-md); padding:16px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:center;">
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:4px;">🏦 Bank Transfer</h4>
+                                <div style="font-size:12px; color:var(--text-muted);">Commercial Bank of Ethiopia</div>
+                                <div style="font-family:monospace; font-size:18px; font-weight:700; background:var(--bg); padding:6px 12px; border-radius:var(--radius-sm); display:inline-block; margin:4px 0;">
+                                    1000072771471
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">Account Name: Berihu</div>
+                            </div>
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:4px;">📱 TeleBirr</h4>
+                                <div style="font-size:12px; color:var(--text-muted);">TeleBirr Number</div>
+                                <div style="font-family:monospace; font-size:18px; font-weight:700; background:var(--bg); padding:6px 12px; border-radius:var(--radius-sm); display:inline-block; margin:4px 0;">
+                                    0914 404 472
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">Account Name: Berihu</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success" style="flex:2;">💳 Submit Payment</button>
+                        <button type="button" class="btn btn-neutral" onclick="resetPaymentForm()">Reset</button>
+                    </div>
+                </form>
+
+                <div id="paymentStatus" style="margin-top:12px; display:none; padding:12px; border-radius:var(--radius-md); text-align:center;"></div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Payment History -->
+            <div class="card">
+                <h3>📜 Payment History</h3>
+                <div id="paymentHistory"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Profile -->
+            <div class="card" id="supportCenterSection"><h3>💬 Support & Teacher Q&A</h3><p class="subtitle">Ask a teacher, report a problem, or send feedback. Your conversation stays inside Bright Mind Tutor.</p><form id="supportTicketForm" class="form-vertical"><input id="supportSubject" maxlength="160" placeholder="Subject" required><select id="supportCategory"><option value="academic">Academic question</option><option value="course">Course</option><option value="exam">Exam</option><option value="live_class">Live class</option><option value="technical">Technical problem</option><option value="payment">Payment</option><option value="general">General</option></select><input id="supportTeacherUid" placeholder="Teacher UID (optional)"><textarea id="supportMessage" rows="4" maxlength="3000" placeholder="Write your question or problem..." required></textarea><button class="btn btn-primary" type="submit">Send Request</button></form><div id="supportStatus" class="subtitle"></div><div id="studentSupportTickets" style="margin-top:12px"></div><div class="card" style="margin:12px 0 0"><h4 style="margin-top:0">⭐ Your Feedback</h4><form id="feedbackForm" class="form-vertical"><select id="feedbackRating"><option value="5">★★★★★ 5</option><option value="4">★★★★ 4</option><option value="3">★★★ 3</option><option value="2">★★ 2</option><option value="1">★ 1</option></select><textarea id="feedbackMessage" rows="3" maxlength="2000" placeholder="How can we improve Bright Mind Tutor?" required></textarea><button class="btn btn-secondary" type="submit">Send Feedback</button></form></div></div>
+            <div class="card" id="profileSection">
+                <h3>👤 My Profile</h3>
+                <div class="profile-container">
+                    <div class="profile-picture" onclick="openProfileModal()">
+                        <img id="profileImage" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=128" alt="Profile Picture">
+                        <div class="upload-overlay"><span>📷<br>Change Photo</span></div>
+                        <div class="status-dot" id="statusDot"></div>
+                    </div>
+                    <div class="profile-info">
+                        <p><strong>Name:</strong> <span id="profileName">Loading...</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+                        <p><strong>Class:</strong> <span id="profileClass">Loading...</span></p>
+                        <p><strong>Bio:</strong> <span id="profileBio">Loading...</span></p>
+                    </div>
+                    <div id="progressStats" class="profile-stats">
+                        <div class="stat-item">📹 Videos: 0/0</div>
+                        <div class="stat-item">✍️ Quizzes: 0 completed</div>
+                    </div>
+                </div>
+                <button class="btn btn-accent" onclick="openProfileModal()" style="margin-top:12px;">✏️ Edit Profile</button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="card" id="digitalLibrarySection"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><div><h3 style="margin:0">📚 Digital Library</h3><p class="subtitle" style="margin:4px 0">Grade 3–12 textbooks, teacher guides, reference books, psychology and general development resources.</p></div><span class="badge badge-free">AI Translation</span></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px"><select id="libraryGrade"><option value="">All grades</option><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select><select id="libraryCategory"><option value="">All categories</option><option value="student_textbook">Student Textbooks</option><option value="teacher_guide">Teacher Guides</option><option value="reference">Reference Books (መጣቐስቲ)</option><option value="psychology">Psychology & General Development</option></select><input id="librarySubject" placeholder="Subject / topic"><button class="btn btn-primary" type="button" id="librarySearchBtn">Search library</button></div><div id="libraryList" style="margin-top:12px"></div><div class="card" style="margin-top:12px"><h4 style="margin-top:0">🤖 AI Translator</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><select id="translationSource"><option value="auto">Detect language</option><option>English</option><option>Amharic</option><option>Tigrinya</option></select><select id="translationTarget"><option>English</option><option>Amharic</option><option>Tigrinya</option></select></div><textarea id="libraryTranslationInput" rows="6" placeholder="Paste or select text from your library reading here…" style="margin-top:8px"></textarea><button class="btn btn-secondary" type="button" id="translateLibraryBtn">Translate with BMT AI</button><div id="libraryTranslationStatus" class="subtitle" style="margin-top:8px"></div><div id="libraryTranslationOutput" style="margin-top:8px;white-space:pre-wrap"></div></div></div>
+
+            <!-- Chat -->
+            <div class="card">
+                <h3>💬 BMT Community Chat</h3>
+                <div id="typingIndicators" style="display:none; font-size:0.85em; color:var(--text-muted); padding:4px 0;"></div>
+                <div id="replyIndicator" style="display:none; background:var(--primary-light); padding:8px 12px; border-radius:var(--radius-md); margin-bottom:8px; border-left:3px solid var(--primary);">
+                    <span id="replyText" style="font-size:0.9em;"></span>
+                    <button onclick="cancelReply()" style="background:none; border:none; color:var(--danger); cursor:pointer; float:right;">✕</button>
+                </div>
+                <div id="emojiPicker" style="display:none; flex-wrap:wrap; gap:6px; padding:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:10px;">
+                    <button onclick="insertEmoji('😊')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😊</button>
+                    <button onclick="insertEmoji('😂')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😂</button>
+                    <button onclick="insertEmoji('❤️')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">❤️</button>
+                    <button onclick="insertEmoji('👍')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">👍</button>
+                    <button onclick="insertEmoji('👏')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">👏</button>
+                    <button onclick="insertEmoji('🎉')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🎉</button>
+                    <button onclick="insertEmoji('🔥')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🔥</button>
+                    <button onclick="insertEmoji('💯')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">💯</button>
+                    <button onclick="insertEmoji('🤔')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🤔</button>
+                    <button onclick="insertEmoji('😢')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😢</button>
+                    <button onclick="insertEmoji('🙏')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🙏</button>
+                    <button onclick="insertEmoji('✨')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">✨</button>
+                    <button onclick="insertEmoji('⭐')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">⭐</button>
+                    <button onclick="insertEmoji('💪')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">💪</button>
+                    <button onclick="insertEmoji('🤝')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🤝</button>
+                    <button onclick="document.getElementById('emojiPicker').style.display='none'" style="font-size:0.8em; background:var(--danger); color:white; border:none; border-radius:var(--radius-sm); padding:2px 8px;">✕</button>
+                </div>
+                <div class="chat-box" id="chatMessagesContainer"><div class="spinner"></div> Loading...</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <textarea id="chatMessageText" rows="2" placeholder="Write to students, teachers and admins..." style="flex:1; min-width:200px;" oninput="setTypingIndicator()"></textarea>
+                    <button onclick="showEmojiPicker()" style="background:none; border:1px solid var(--border); font-size:1.3em; padding:8px 12px; border-radius:var(--radius-md);">😊</button>
+                    <button onclick="startVoiceRecording()" id="voiceRecordBtn" style="background:none; border:1px solid var(--border); font-size:1.3em; padding:8px 12px; border-radius:var(--radius-md);">🎤</button>
+                    <button onclick="askCommunityAI()" id="communityAiBtn" class="btn btn-secondary" type="button">🤖 Ask BMT AI</button>
+                    <input type="file" id="chatMediaFile" accept="image/*,audio/*,video/*" style="width:auto; max-width:150px;">
+                    <button class="btn btn-primary" onclick="sendChatMessageWithReply()" style="flex:1;">Send</button>
+                </div>
+                <div id="communityAiAnswer" class="card" style="display:none;margin-top:10px;background:var(--surface);border-left:4px solid var(--accent);">
+                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+                        <strong>🤖 BMT AI Learning Assistant</strong>
+                        <button type="button" class="btn btn-neutral" onclick="closeCommunityAI()">✕</button>
+                    </div>
+                    <div id="communityAiAnswerText" style="margin-top:8px;white-space:pre-wrap;"></div>
+                </div>
+            </div>
+
+        </div><!-- /mainContent -->
+
+    </div><!-- /container -->
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✏️ Edit Profile</h3>
+                <button class="modal-close" onclick="closeProfileModal()">✕</button>
+            </div>
+            <div class="profile-upload-area">
+                <img id="profilePreview" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=128" alt="Profile Preview" class="preview">
+                <label class="upload-btn" for="profileFileInput">
+                    📷 Change Photo
+                    <input type="file" id="profileFileInput" accept="image/*" onchange="previewProfilePicture(this.files[0])">
+                </label>
+                <button type="button" class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteProfilePicture()">🗑️ Remove Photo</button>
+            </div>
+            <form class="form-section" onsubmit="event.preventDefault(); saveProfile();">
+                <div class="section-title">Profile Information</div>
+                <div class="field-group full-width">
+                    <label>Full Name</label>
+                    <input type="text" id="modalName" placeholder="Your full name">
+                </div>
+                <div class="field-group full-width">
+                    <label>Bio</label>
+                    <textarea id="modalBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-neutral" onclick="closeProfileModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Media Preview Modal -->
+    <div class="modal-overlay" id="mediaPreviewModal">
+        <div class="modal" style="max-width:700px;">
+            <div class="modal-header">
+                <h3>📺 Media Preview</h3>
+                <button class="modal-close" onclick="closeMediaPreview()">✕</button>
+            </div>
+            <div id="mediaPreviewContent" style="min-height:200px;">
+                <div class="spinner"></div> Loading...
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='student.js') }}?v=31.18"></script>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            const btn = document.getElementById('darkModeToggle');
+            btn.textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('darkModeToggle');
+            if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+        })();
+        function switchTab(tab) {
+            document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerTab').style.display = tab === 'register' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-btn[onclick*="${tab}"]`).classList.add('active');
+        }
+    </script>
+<script>window.BMT_API_BASE = ""; window.BMT_FCM_VAPID_KEY = {{ fcm_vapid_key|tojson }};</script>
+    <script src="{{ url_for('static', filename='password-visibility.js') }}"></script><script src="{{ url_for('static', filename='auth-recovery.js') }}"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js',{scope:'/'}).catch(()=>{}));}</script><script>
+(function(){
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ async function loadLibrary(){const box=document.getElementById('libraryList');if(!box)return;box.innerHTML='<div class="spinner"></div> Loading library…';try{const token=await auth.currentUser.getIdToken(true);const grade=document.getElementById('libraryGrade').value,cat=document.getElementById('libraryCategory').value,subject=document.getElementById('librarySubject').value.trim();const q=new URLSearchParams({className:grade,category:cat,subject});const r=await fetch('/api/library?'+q,{headers:{Authorization:`Bearer ${token}`}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Could not load library.');const rows=d.items||[];box.innerHTML=rows.length?rows.map(x=>`<div class="item-row"><div class="item-content"><b>📘 ${esc(x.title||'Library item')}</b><div class="subtitle">${esc(x.categoryLabel||x.category||'Student Textbook')} · ${x.grade?'Grade '+esc(x.grade):'General'}${x.subject?' · '+esc(x.subject):''}</div>${x.description?`<div style="margin-top:4px">${esc(x.description)}</div>`:''}</div><div class="item-actions">${x.url?`<a class="btn btn-outline" href="${esc(x.url)}" target="_blank" rel="noopener">Open</a>`:(x.storageProvider==='gcs'&&x.storagePath?`<button class="btn btn-outline" type="button" data-library-gcs="${esc(x.storagePath)}">Open</button>`:'')}<button class="btn btn-secondary" type="button" data-library-translate="${esc(x.description||'')}">Translate text</button></div></div>`).join(''):'<p class="subtitle">No library items match your filters yet.</p>'}catch(e){box.innerHTML=`<p class="error-text">${esc(e.message)}</p>`}}
+ document.getElementById('librarySearchBtn')?.addEventListener('click',loadLibrary);
+ document.getElementById('libraryList')?.addEventListener('click',async e=>{const t=e.target.closest('[data-library-translate]');if(t){document.getElementById('libraryTranslationInput').value=t.dataset.libraryTranslate||'';document.getElementById('libraryTranslationInput').focus();document.getElementById('libraryTranslationInput').scrollIntoView({behavior:'smooth',block:'center'});return;} const b=e.target.closest('[data-library-gcs]');if(!b)return;try{const token=await auth.currentUser.getIdToken(true);const r=await fetch('/api/storage/document-url',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({storagePath:b.dataset.libraryGcs})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.url)throw Error(d.error||'Could not open document.');window.open(d.url,'_blank','noopener')}catch(err){status=err;alert(err.message)}});document.getElementById('libraryGrade')?.addEventListener('change',loadLibrary);document.getElementById('libraryCategory')?.addEventListener('change',loadLibrary);
+ document.getElementById('translateLibraryBtn')?.addEventListener('click',async()=>{const text=document.getElementById('libraryTranslationInput').value.trim(),target=document.getElementById('translationTarget').value,source=document.getElementById('translationSource').value,status=document.getElementById('libraryTranslationStatus'),out=document.getElementById('libraryTranslationOutput');if(!text){status.textContent='Paste text first.';return}status.textContent='Translating…';out.textContent='';try{const token=await auth.currentUser.getIdToken(true);const r=await fetch('/api/ai/translate',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({text,targetLanguage:target,sourceLanguage:source})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Translation failed.');out.textContent=d.translation||'';status.textContent='Translation complete.'}catch(e){status.textContent=e.message}});
+ if(window.auth?.currentUser)loadLibrary();
+})();
+</script>
+</body>
+</html>

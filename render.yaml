@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: bright-mind-tutor
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: TRUST_PROXY_HEADERS
+        value: "1"
+      - key: FIREBASE_WEB_API_KEY
+        sync: false
+      - key: PASSWORD_RESET_CONTINUE_URL
+        sync: false
+      - key: DIAGNOSTIC_KEY
+        sync: false

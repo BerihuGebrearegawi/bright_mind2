@@ -1,0 +1,24 @@
+{
+  "release": "V30.67",
+  "baseline": "V30.66",
+  "file_count": 167,
+  "key_changes": [
+    "Fixed missing getIdTokenResult import in student.js.",
+    "Preserved custom-claim admin authorization.",
+    "Preserved password visibility control and added autocomplete semantics.",
+    "Added cohesive responsive visual polish and accessible focus states.",
+    "Preserved removal of CBE/TeleBirr payment details from index.html.",
+    "Updated release/version regression expectations to 30.67."
+  ],
+  "offline_validation": {
+    "python_compile": "PASS",
+    "javascript_syntax": "PASS",
+    "release_consistency": "PASS",
+    "static_regression": "PASS",
+    "security_rules_regression": "PASS",
+    "rate_limit_regression": "PASS",
+    "index_payment_info_scan": "PASS",
+    "artifact_cleanliness": "PASS",
+    "live_e2e": "NOT_RUN: Flask is not installed in the build sandbox."
+  }
+}

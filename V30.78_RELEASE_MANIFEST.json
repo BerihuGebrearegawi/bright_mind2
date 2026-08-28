@@ -1,0 +1,17 @@
+{
+  "version": "30.78",
+  "release": "Final Reviewed",
+  "focus": [
+    "notification preferences",
+    "server-authoritative FCM targeting",
+    "community moderation"
+  ],
+  "tests": [
+    "compileall",
+    "v30_77_regression_test",
+    "v30_78_regression_test",
+    "security_rules_regression_test",
+    "static_regression_test",
+    "release_consistency_test"
+  ]
+}

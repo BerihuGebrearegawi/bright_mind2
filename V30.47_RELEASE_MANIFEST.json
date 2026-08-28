@@ -1,0 +1,8 @@
+{
+  "version": "30.47",
+  "baseline": "30.46",
+  "status": "ready-with-conditions",
+  "readiness_contract": {"firebase": true, "ai_configured": true, "payment_webhook_configured": true},
+  "provider_tests": {"gemini": "supported-via-environment", "telebirr": "supported-via-environment", "remote_readiness": "supported-via-BMT_BASE_URL"},
+  "security": {"secrets_in_release": false, "payment_hmac": true, "payment_amount_validation": true, "payment_currency_validation": true, "admin_custom_claims": true, "firebase_revocation_check": true}
+}

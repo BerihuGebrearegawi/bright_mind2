@@ -1,0 +1,24 @@
+{
+  "release": "V30.64",
+  "previous_release": "V30.63",
+  "type": "runtime-regression-and-password-visibility-hardening",
+  "live_provider_tests": false,
+  "deployment_owner_managed": [
+    "Firebase service account and project settings",
+    "Gemini API credentials/model",
+    "Telebirr/CBE production credentials and native webhook mapping",
+    "PAYMENT_CURRENCY and business pricing",
+    "ALLOWED_ORIGINS/custom domain"
+  ],
+  "validation": [
+    "password-visibility-static-check",
+    "password-input-coverage",
+    "firebase-messaging-import-check",
+    "firebase-messaging-runtime-guard",
+    "release_consistency",
+    "python_compile",
+    "javascript_syntax",
+    "secret_scan",
+    "zip_integrity"
+  ]
+}

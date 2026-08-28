@@ -1,0 +1,28 @@
+{
+  "release": "V30.69",
+  "baseline": "V30.68",
+  "purpose": "Render production hardening and completion pass",
+  "key_changes": [
+    "Fixed student registration rule mismatch by including uid.",
+    "Hardened Firebase Admin credential loading for Render environment formatting.",
+    "Moved admin organization logo, pricing, teacher-request, chat, FCM-token and live-stream writes/reads to server-authoritative APIs.",
+    "Fixed authenticated ImgBB image upload requests.",
+    "Added chat replies and reactions.",
+    "Added ETB/USD service pricing configuration.",
+    "Expanded national exam archive to Grade 6-12 and auto-generated Google Drive URLs.",
+    "Rejected Telegram bot URLs as live-stream links.",
+    "Added Teacher Dashboard entry on landing page.",
+    "Improved Cloudinary video upload timeout/error reporting."
+  ],
+  "validation": {
+    "python_compile": "PASS",
+    "javascript_syntax": "PASS",
+    "static_regression": "PASS",
+    "security_rules_regression": "PASS",
+    "rate_limit_regression": "PASS",
+    "release_consistency": "PASS",
+    "artifact_cleanliness": "PASS",
+    "runtime_e2e": "NOT_RUN: Flask runtime dependency is unavailable in the build sandbox"
+  },
+  "secrets_included": false
+}

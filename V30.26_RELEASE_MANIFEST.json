@@ -1,0 +1,11 @@
+{
+  "release": "V30.26",
+  "baseline": "V30.25",
+  "focus": "Existing-page migration infrastructure and visual QA",
+  "source_sha256": "5adbbdce23927b62f2239f207e74a5d4afb115d7752dd83b90c2bc9829664903",
+  "artifacts": [
+    "ui-system/bmt-v30.26-migration.js",
+    "ui-system/BMT_V30.26_PAGE_MIGRATION.md",
+    "V30.26_RELEASE_NOTES.md"
+  ]
+}

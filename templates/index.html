@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Mind Tutor</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <button class="dark-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+    <div class="landing-page">
+        <div class="bg-animation">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+        <div class="landing-card animate-slide-up">
+            <div class="logo-wrapper">
+                <div class="logo-pulse">
+                    <img src="{{ url_for('static', filename='logo.png') }}" 
+                         alt="Bright Mind Tutor Logo" 
+                         class="org-logo"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 rx=%2220%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2252%22 text-anchor=%22middle%22 font-size=%2240%22%3E🎓%3C/text%3E%3C/svg%3E'">
+                </div>
+            </div>
+            <h1 class="animate-fade-in">Bright Mind <span>Tutor</span></h1>
+            <p class="subtitle animate-fade-in-delay">Choose where you'd like to go</p>
+            <div class="btn-group">
+                <a href="/admin" class="btn btn-primary btn-glow animate-fade-in-delay-2">
+                    <span class="icon">⚙️</span>
+                    <div class="btn-text">Admin Panel<small>Manage content &amp; students</small></div>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="/student" class="btn btn-secondary animate-fade-in-delay-3">
+                    <span class="icon">📚</span>
+                    <div class="btn-text">Student Dashboard<small>Access your courses</small></div>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="/parent" class="btn btn-secondary animate-fade-in-delay-4">
+                    <span class="icon">👨‍👩‍👧</span>
+                    <div class="btn-text">Parent Dashboard<small>Track student progress</small></div>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="/teacher" class="btn btn-accent animate-fade-in-delay-4">
+                    <span class="icon">👨‍🏫</span>
+                    <div class="btn-text">Teacher Dashboard<small>Teach, publish and manage classes</small></div>
+                    <span class="btn-arrow">→</span>
+                </a>
+            </div>
+            <div class="footer animate-fade-in-delay-4">
+                <div style="display:flex; flex-direction:column; gap:6px; width:100%; padding-top:12px; border-top:1px solid var(--border);">
+                    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; font-size:13px;">
+                        <span>📞 <a href="tel:+251914404472" style="color:var(--primary); text-decoration:none;">0914 404 472</a></span>
+                        <span>✉️ <a href="mailto:berihu144@gmail.com" style="color:var(--primary); text-decoration:none;">berihu144@gmail.com</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            const btn = document.getElementById('darkModeToggle');
+            btn.textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('darkModeToggle');
+            if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+        })();
+    </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js',{scope:'/'}).catch(()=>{}));}</script></body>
+</html>

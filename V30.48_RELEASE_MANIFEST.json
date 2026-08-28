@@ -1,0 +1,19 @@
+{
+  "version": "30.48",
+  "baseline": "30.47",
+  "status": "ready-with-conditions",
+  "changes": [
+    "bounded exponential backoff for Gemini practice-quiz requests",
+    "shared Gemini timeout/attempt environment controls for tutor and quiz",
+    "safe JSON/error handling for Gemini quiz responses",
+    "health and readiness version updated"
+  ],
+  "security": {
+    "secrets_in_release": false,
+    "payment_hmac": true,
+    "payment_amount_validation": true,
+    "payment_currency_validation": true,
+    "admin_custom_claims": true,
+    "firebase_revocation_check": true
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "version": "30.37",
+  "baseline": "30.36",
+  "status": "READY WITH CONDITIONS",
+  "focus": ["role-based-frontend-authorization", "admin-identity-hardening", "security-regression"],
+  "changes": [
+    "removed hard-coded admin email checks from admin and student auth flows",
+    "admin UI now uses Firebase custom claims",
+    "student UI recognizes admin claims and redirects to admin panel",
+    "forced Firebase token refresh during role verification"
+  ],
+  "live_external_tests": false
+}

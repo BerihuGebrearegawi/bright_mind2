@@ -1,0 +1,352 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================================
+    // 🔐 HELPER FUNCTIONS
+    // ==========================================================
+    
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == 'admin'
+      );
+    }
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwnProfile(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    function isStudent() {
+      return request.auth != null && !isAdmin();
+    }
+
+    function isApprovedTeacher() {
+      return request.auth != null && exists(/databases/$(database)/documents/teachers/$(request.auth.uid))
+        && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true;
+    }
+
+    // ==========================================================
+    // 👤 USERS (ተምሃሮ)
+    // ==========================================================
+    match /users/{userId} {
+      allow read: if isAdmin() || isOwnProfile(userId);
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly([
+          'uid', 'name', 'email', 'class', 'registeredAt', 'progress',
+          'payments', 'isAdmin', 'profileImage', 'bio', 'freeTrial', 'isPaid', 'accountType'
+        ])
+        && request.resource.data.isAdmin == false
+        && request.resource.data.isPaid == false
+        && request.resource.data.accountType in ['student', 'teacher', 'parent']
+        && request.resource.data.payments == []
+        && request.resource.data.freeTrial.isActive == true
+        && request.resource.data.freeTrial.usedDays == 0;
+      // Students may edit only ordinary profile/progress fields.
+      // Payment/subscription/admin/identity fields are server-authoritative.
+      allow update: if isAdmin() || (
+        isOwnProfile(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'bio', 'profileImage', 'progress'
+        ])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 📚 BOOKS (መፃሕፍቲ)
+    // ==========================================================
+    match /books/{bookId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 🎥 VIDEOS (ቪድዮታት)
+    // ==========================================================
+    match /videos/{videoId} {
+      // Video metadata/URLs are server-authoritative. The browser receives
+      // only videos it is entitled to through /api/videos.
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // ✍️ QUIZZES (ፈተናታት)
+    // ==========================================================
+    match /quizzes/{quizId} {
+      // Quiz documents contain answer keys. Students receive sanitized
+      // questions through /api/quizzes and never read this collection directly.
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 📊 QUIZ RESULTS (ውፅኢት ፈተና)
+    // ==========================================================
+    match /quizResults/{resultId} {
+      // Quiz results are calculated and written by Flask/Admin SDK.
+      // The browser must never be able to forge score or percentage.
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // ==========================================================
+    // 📡 LIVE STREAM SETTINGS
+    // ==========================================================
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 👨‍🏫 TEACHER REQUESTS — previously had NO rules at all,
+    // which means Firestore denied everyone by default (including
+    // admin). Locked to admin-only for now since there's no public
+    // "apply to teach" form yet.
+    // ==========================================================
+    match /teacherRequests/{requestId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    match /teachers/{teacherId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // ==========================================================
+    // 💬 CHAT (ቻት)
+    // ==========================================================
+    match /chats/{chatId} {
+      // BMT Community Chat: authenticated students, approved teachers and admins
+      // can participate in the shared room. Legacy class chats remain class-scoped.
+      allow read: if isAdmin() || (
+        isAuthenticated() && (
+          resource.data.chatRoom == 'community' ||
+          resource.data.className == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.class
+        )
+      );
+      // Community messages are written only through Flask/Admin SDK so sender
+      // role, media URL and reply metadata cannot be forged in the browser.
+      allow create: if isAuthenticated()
+        && request.resource.data.senderUid == request.auth.uid
+        && request.resource.data.className is string
+        && request.resource.data.chatRoom != 'community'
+        && request.resource.data.className == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.class;
+      // Browser clients may only update the read flag. Message content/replies
+      // and reactions are server-authoritative to prevent forged writes.
+      allow update: if isAdmin() || (
+        isAuthenticated()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead'])
+        && request.resource.data.isRead == true
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 💳 PAYMENTS (ክፍሊት)
+    // ==========================================================
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      // Payment creation/approval is handled by Flask Admin SDK so the
+      // browser cannot forge amount, status, uid, or approval timestamps.
+      allow create: if false;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /entitlements/{userId} {
+      allow read: if isAdmin() || isOwnProfile(userId);
+      allow write: if false;
+    }
+
+    // ==========================================================
+    // ⌨️ TYPING INDICATORS
+    // ==========================================================
+    match /typing/{className} {
+      allow read: if isAuthenticated()
+        && className == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.class;
+      allow create: if isAuthenticated()
+        && request.resource.data.keys().hasOnly([request.auth.uid]);
+      allow update: if isAuthenticated()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([request.auth.uid]);
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 🏢 ORGANIZATION SETTINGS (ሎጎ)
+    // ==========================================================
+    match /organization/{docId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================
+    // 🎓 COURSES / TEACHER CONTENT
+    // ==========================================================
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && request.resource.data.teacherUid == request.auth.uid);
+      allow update, delete: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && resource.data.teacherUid == request.auth.uid);
+    }
+    match /lessons/{lessonId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && request.resource.data.teacherUid == request.auth.uid);
+      allow update, delete: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && resource.data.teacherUid == request.auth.uid);
+    }
+
+    // ==========================================================
+    // 📝 ADVANCED EXAMS
+    // ==========================================================
+    match /exams/{examId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.status == 'published');
+      allow create: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && request.resource.data.teacherUid == request.auth.uid);
+      allow update, delete: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && resource.data.teacherUid == request.auth.uid);
+    }
+    match /examKeys/{examId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.teacherUid == request.auth.uid);
+      allow create: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && request.resource.data.teacherUid == request.auth.uid);
+      allow update, delete: if isAdmin() || (isAuthenticated() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid)) && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.approved == true && resource.data.teacherUid == request.auth.uid);
+    }
+    match /examAttempts/{attemptId} {
+      // Attempts are created, graded, and updated by Flask/Admin SDK.
+      // The browser never writes authoritative attempt records directly.
+      allow create: if false;
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+
+    // ==========================================================
+    // 🔖 USER BOOKMARKS / FAVORITES
+    // Each user may manage only their own saved learning items.
+    // ==========================================================
+    match /bookmarks/{userId} {
+      allow read: if isOwnProfile(userId);
+      allow create, update: if isOwnProfile(userId);
+      allow delete: if isOwnProfile(userId);
+    }
+
+    // ==========================================================
+    // 📚 NATIONAL EXAM ARCHIVE
+    // Browser access is intentionally disabled. Flask Admin SDK
+    // returns only items the authenticated student is entitled to see.
+    // ==========================================================
+    match /examArchives/{archiveId} {
+      allow read, write: if false;
+    }
+
+    // ==========================================================
+    // 🔔 PUSH TOKENS / IN-APP NOTIFICATIONS
+    // ==========================================================
+    match /fcmTokens/{tokenId} {
+      // Token registration is server-authoritative. Students never write raw FCM tokens directly.
+      allow read, create, update, delete: if isAdmin();
+    }
+    match /notificationPreferences/{uid} {
+      // Preferences are written through Flask so the server can enforce a stable schema.
+      allow read, write: if false;
+    }
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && (resource.data.targetUid == request.auth.uid || resource.data.targetUid == 'all');
+      // Notifications are normally created by Flask/Admin SDK. Keep browser
+      // creation limited to self-authored records for legacy compatibility.
+      allow create: if false;
+      // Recipients can mark only their own notification as read.
+      allow update: if isAuthenticated()
+        && resource.data.targetUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read == true;
+      allow delete: if isAdmin();
+    }
+
+    // AI Tutor knowledge base. Teacher ingestion is server-authoritative;
+    // students do not need direct Firestore access to these collections.
+    match /aiMaterials/{materialId} {
+      allow read, write: if false;
+    }
+    match /aiMaterialChunks/{chunkId} {
+      allow read, write: if false;
+    }
+    match /aiUsage/{usageId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ==========================================================
+    // 🎥 LIVE CLASSES / TEACHER PRESENCE / Q&A
+    // Server-authoritative through Flask.
+    // ==========================================================
+    match /liveClasses/{classId} {
+      // Students and teachers use Flask endpoints which enforce grade/ownership
+      // and enrollment rules. Direct browser reads are disabled.
+      allow read, write: if false;
+    }
+    match /teacherPresence/{teacherUid} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+    match /liveClassQna/{qnaId} {
+      allow read, write: if false;
+    }
+
+    // ==========================================================
+    // 👨‍👩‍👧 V30.30 PARENT RELATIONSHIPS & ANALYTICS
+    // Browser access is intentionally disabled. Flask/Admin SDK verifies
+    // the parent-child relationship before returning any child data.
+    // ==========================================================
+    match /parentChildLinks/{linkId} {
+      allow read, write: if false;
+    }
+    match /studentAnalytics/{studentId} {
+      allow read, write: if false;
+    }
+
+    // ==========================================================
+    // 💬 V25 COMMUNICATION & SUPPORT CENTER
+    // All writes are server-authoritative through Flask.
+    // ==========================================================
+    match /supportTickets/{ticketId} {
+      allow read, write: if false;
+    }
+    match /supportMessages/{messageId} {
+      allow read, write: if false;
+    }
+    match /feedback/{feedbackId} {
+      allow read, write: if false;
+    }
+
+    // ==========================================================
+    // 🛡️ V26 ADMIN AUDIT LOGS
+    // Only the Flask/Admin SDK writes these records.
+    // ==========================================================
+    match /adminAuditLogs/{logId} {
+      allow read, write: if false;
+    }
+
+    // ==========================================================
+    // 📦 FALLBACK — ካልእ ዘይተጠቕሰ ኮለክሽን
+    // ==========================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

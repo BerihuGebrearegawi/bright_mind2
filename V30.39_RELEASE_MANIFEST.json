@@ -1,0 +1,8 @@
+{
+  "version": "30.39",
+  "baseline": "30.38",
+  "status": "READY_WITH_CONDITIONS",
+  "focus": ["readiness reliability", "health diagnostics", "operational safety"],
+  "live_external_tests": false,
+  "secrets_in_release": false
+}

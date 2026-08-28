@@ -1,0 +1,14 @@
+{
+  "version": "30.82",
+  "release": "Production Storage Architecture",
+  "architecture": {
+    "application": "Render",
+    "database": "Firestore",
+    "images": "Cloudinary",
+    "videos": "Cloudinary",
+    "audio": "Cloudinary",
+    "documents": "Google Cloud Storage"
+  },
+  "new_environment_variable": "GCS_BUCKET_NAME",
+  "secrets_in_release": false
+}

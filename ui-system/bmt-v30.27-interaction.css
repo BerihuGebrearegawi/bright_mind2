@@ -1,0 +1,24 @@
+/* V30.27 interaction states */
+.bmt-btn:disabled,
+button[disabled],
+input[disabled]{
+  opacity:.65;
+  cursor:not-allowed;
+}
+[aria-invalid="true"]{
+  border-color:var(--bmt-danger)!important;
+  box-shadow:0 0 0 3px rgba(240,68,56,.12);
+}
+[data-bmt-validation-message]{
+  color:var(--bmt-danger);
+  font-size:.875rem;
+  margin-top:6px;
+}
+.bmt-table thead th[role="button"]{
+  cursor:pointer;
+  user-select:none;
+}
+.bmt-table thead th[role="button"]:focus-visible{
+  outline:3px solid rgba(46,144,250,.35);
+  outline-offset:-2px;
+}

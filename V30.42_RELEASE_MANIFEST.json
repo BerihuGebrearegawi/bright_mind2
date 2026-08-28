@@ -1,0 +1,11 @@
+{
+  "version": "30.44",
+  "baseline": "30.41",
+  "status": "READY_WITH_CONDITIONS",
+  "focus": ["payment webhook hardening", "regression validation", "production safety"],
+  "live_provider_tests": "deferred",
+  "python_compile": true,
+  "javascript_syntax": true,
+  "payment_webhook_regression": true,
+  "secrets_in_release": false
+}

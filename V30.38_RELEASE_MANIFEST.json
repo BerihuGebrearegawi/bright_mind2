@@ -1,0 +1,24 @@
+{
+  "version": "30.38",
+  "baseline": "30.37",
+  "release_type": "incremental",
+  "focus": [
+    "production hardening",
+    "security headers",
+    "health-check cache safety",
+    "release consistency"
+  ],
+  "preserved": [
+    "firebase custom-claim admin authorization",
+    "request ids",
+    "rate limiting",
+    "proxy header controls",
+    "cors restrictions",
+    "hsts",
+    "firebase token revocation checks",
+    "payment security",
+    "ai gateway security"
+  ],
+  "live_external_tests": false,
+  "secrets_included": false
+}

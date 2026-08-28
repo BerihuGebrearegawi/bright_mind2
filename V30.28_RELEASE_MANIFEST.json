@@ -1,0 +1,12 @@
+{
+  "release": "V30.28",
+  "baseline": "V30.27",
+  "focus": "Student portal workflow completion and end-to-end QA preparation",
+  "source_sha256": "c8263ade4945bb9dfe5624528ff5df3a506bcc141e01cbc7fb221d3c5972405c",
+  "artifacts": [
+    "student-portal/bmt-v30.28-student-portal.js",
+    "student-portal/bmt-v30.28-student-portal.css",
+    "student-portal/BMT_V30.28_STUDENT_PORTAL.md",
+    "V30.28_RELEASE_NOTES.md"
+  ]
+}

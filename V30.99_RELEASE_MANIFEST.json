@@ -1,0 +1,12 @@
+{
+  "version": "30.99",
+  "base": "V30.98",
+  "status": "production-candidate",
+  "changes": [
+    "five student window exports",
+    "server-authoritative quiz catalog",
+    "diagnostic key fallback",
+    "Cloudinary default book provider",
+    "runtime and service-worker version sync"
+  ]
+}

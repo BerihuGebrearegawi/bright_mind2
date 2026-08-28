@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Mind Tutor — Admin Panel</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+    <button class="dark-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">⚙️</div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to manage your platform</p>
+            <form class="form-vertical" id="loginForm" onsubmit="event.preventDefault(); document.getElementById('emailLoginBtn').click();">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button type="button" id="emailLoginBtn" class="btn btn-primary" style="width:100%;">Sign In</button><button type="button" class="btn btn-outline" data-forgot-password>Forgot Password?</button>
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="container" id="adminPanel" style="display:none;">
+        
+        <!-- Top Bar -->
+        <div class="top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="navLogo" style="width:40px; height:40px; border-radius:var(--radius-sm); object-fit:cover;">
+                <h1 class="page-title" style="margin:0; text-align:left; font-size:1.5em;">
+                    Bright Mind Tutor <span style="font-weight:400; font-size:0.6em; color:var(--text-muted);">Admin</span>
+                </h1>
+            </div>
+            <button class="btn btn-danger" id="logoutBtn" style="padding:8px 16px;">Sign Out</button>
+        </div>
+        
+        <p class="subtitle" style="text-align:center; margin-top:6px;">
+            Manage books, videos, live streams, quizzes, and chat
+        </p>
+
+        <div class="card" id="adminDashboardPreview">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div><h3 style="margin:0;">👁️ Dashboard Preview</h3><p class="subtitle" style="margin:4px 0 0;">Safely preview the Student, Teacher, or Parent dashboard. Preview links expire automatically.</p></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-secondary" type="button" data-admin-preview="student">👨‍🎓 Student</button>
+                    <button class="btn btn-secondary" type="button" data-admin-preview="teacher">👨‍🏫 Teacher</button>
+                    <button class="btn btn-secondary" type="button" data-admin-preview="parent">👨‍👩‍👧 Parent</button>
+                </div>
+                <div id="adminPreviewStatus" class="subtitle" role="status" aria-live="polite" style="width:100%;"></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- V30.85 Admin AI Copilot -->
+        <div class="card" id="adminAICopilot">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div><h3 style="margin:0;">🤖 BMT Admin AI Copilot</h3><p class="subtitle" style="margin:4px 0 0;">Use the existing Gemini setup for announcements, moderation analysis, platform insights and content operations.</p></div>
+                <span class="badge badge-free">Existing Gemini</span>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:10px;margin-top:12px;">
+                <select id="adminAIMode">
+                    <option value="general">General operations</option>
+                    <option value="announcement">Announcement</option>
+                    <option value="moderation">Chat moderation</option>
+                    <option value="analytics">Platform insights</option>
+                    <option value="content">Content planning</option>
+                </select>
+                <textarea id="adminAITask" rows="3" maxlength="7000" placeholder="Example: Draft an announcement telling Grade 8 students that the new algebra lesson and practice quiz are available."></textarea>
+            </div>
+            <textarea id="adminAIContext" rows="3" maxlength="12000" style="margin-top:10px;" placeholder="Optional context: paste non-sensitive statistics, chat text, or content details for analysis."></textarea>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;">
+                <button class="btn btn-primary" type="button" id="adminAIBtn">🤖 Ask BMT AI</button>
+                <span class="subtitle" id="adminAIStatus"></span>
+            </div>
+            <div id="adminAIResult" class="ai-tutor-messages" style="display:none;margin-top:12px;max-height:420px;white-space:pre-wrap;"></div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="card">
+            <h3>📊 Dashboard</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍🎓</div>
+                    <div class="stat-number" id="studentCount">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎥</div>
+                    <div class="stat-number" id="totalVideos">0</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-number" id="totalViews">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💳</div>
+                    <div class="stat-number" id="totalPayments">0</div>
+                    <div class="stat-label">Payments</div>
+                </div>
+            </div>
+            <div style="margin-top:15px; display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:10px;">
+                <div style="background:var(--success-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Approved</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="approvedPayments">0</div>
+                </div>
+                <div style="background:var(--warning-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Pending</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="pendingPayments">0</div>
+                </div>
+                <div style="background:var(--danger-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Rejected</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="rejectedPayments">0</div>
+                </div>
+            </div>
+            <div style="margin-top:15px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);">
+                <strong>Top Video:</strong> <span id="topVideo">Loading...</span>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- V26 Admin Control Center -->
+        <div class="card" id="adminControlCenter">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin-bottom:4px;">🛡️ Admin Control Center 2.0</h3>
+                    <p class="subtitle" style="margin:0;">One secure overview for students, teachers, payments, content, live classes, AI and support.</p>
+                </div>
+                <button class="btn btn-primary" id="refreshControlCenterBtn" type="button">🔄 Refresh</button>
+            </div>
+
+            <div class="stats-grid" style="margin-top:16px;">
+                <div class="stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-number" id="ccStudents">—</div><div class="stat-label">Students</div></div>
+                <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-number" id="ccTeachers">—</div><div class="stat-label">Teachers</div></div>
+                <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-number" id="ccCourses">—</div><div class="stat-label">Courses</div></div>
+                <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-number" id="ccExams">—</div><div class="stat-label">Exams</div></div>
+                <div class="stat-card"><div class="stat-icon">🎥</div><div class="stat-number" id="ccLive">—</div><div class="stat-label">Live Classes</div></div>
+                <div class="stat-card"><div class="stat-icon">💳</div><div class="stat-number" id="ccPayments">—</div><div class="stat-label">Payments</div></div>
+                <div class="stat-card"><div class="stat-icon">🎫</div><div class="stat-number" id="ccSupport">—</div><div class="stat-label">Support Tickets</div></div>
+                <div class="stat-card"><div class="stat-icon">🤖</div><div class="stat-number" id="ccAiUsage">—</div><div class="stat-label">AI Usage Records</div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px;">
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">💳 Payment Health</h4>
+                    <div>Pending: <strong id="ccPendingPayments">—</strong></div>
+                    <div>Approved: <strong id="ccApprovedPayments">—</strong></div>
+                    <div>Rejected: <strong id="ccRejectedPayments">—</strong></div>
+                </div>
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">👨‍🏫 Teacher Requests</h4>
+                    <div>Pending: <strong id="ccPendingTeachers">—</strong></div>
+                    <div>Approved: <strong id="ccApprovedTeachers">—</strong></div>
+                    <div>Rejected: <strong id="ccRejectedTeachers">—</strong></div>
+                </div>
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">🎫 Support</h4>
+                    <div>Open: <strong id="ccOpenSupport">—</strong></div>
+                    <div>Unassigned: <strong id="ccUnassignedSupport">—</strong></div>
+                    <div>Closed: <strong id="ccClosedSupport">—</strong></div>
+                </div>
+            </div>
+
+            <div style="margin-top:18px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h4 style="margin:0;">📈 Platform Analytics</h4><div class="subtitle" style="margin:4px 0 0;">Live usage, learning engagement, content and storage-provider overview.</div></div>
+                    <button class="btn btn-secondary" id="refreshAnalyticsBtn" type="button">↻ Refresh analytics</button>
+                </div>
+                <div class="stats-grid" style="margin-top:14px;">
+                    <div class="stat-card"><div class="stat-icon">🟢</div><div class="stat-number" id="anActive7d">—</div><div class="stat-label">Active students · 7d</div></div>
+                    <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-number" id="anActive30d">—</div><div class="stat-label">Active students · 30d</div></div>
+                    <div class="stat-card"><div class="stat-icon">▶️</div><div class="stat-number" id="anVideosWatched">—</div><div class="stat-label">Videos watched</div></div>
+                    <div class="stat-card"><div class="stat-icon">🧠</div><div class="stat-number" id="anQuizSubmissions">—</div><div class="stat-label">Quiz submissions</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px;">
+                    <div><strong>Learning</strong><div class="subtitle">Students with progress: <b id="anStudentsProgress">—</b></div><div class="subtitle">Active teachers · 30d: <b id="anTeachers30d">—</b></div></div>
+                    <div><strong>Content</strong><div class="subtitle">Courses: <b id="anCourses">—</b> · Lessons: <b id="anLessons">—</b></div><div class="subtitle">Quizzes: <b id="anQuizzes">—</b> · Exam archive: <b id="anArchives">—</b></div></div>
+                    <div><strong>Video / file providers</strong><div class="subtitle">YouTube: <b id="anYoutube">—</b></div><div class="subtitle">Cloudinary: <b id="anCloudinary">—</b> · Drive: <b id="anDrive">—</b></div></div>
+                </div>
+                <div id="adminAnalyticsError" class="error-text" style="display:none;margin-top:10px;"></div>
+            </div>
+
+            <div style="margin-top:18px;">
+                <h4>🕒 Recent Platform Activity</h4>
+                <div id="ccRecentActivity"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <div style="margin-top:18px;">
+                <h4>🛡️ Admin Audit Log</h4>
+                <div id="ccAuditLog"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <div style="margin-top:18px;padding:12px;border:1px dashed var(--border);border-radius:var(--radius-md);">
+                <strong>Quick actions</strong>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('teacherRequestsList')">👨‍🏫 Teachers</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminPaymentsList')">💳 Payments</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminExamArchiveList')">🏛️ Exam Archive</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('pushForm')">🔔 Announcements</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminChatList')">💬 Communication</button>
+                </div>
+            </div>
+            <div id="ccGeneratedAt" style="font-size:12px;color:var(--text-muted);margin-top:10px;"></div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Organization Logo -->
+        <div class="card">
+            <h3>🏢 Organization Logo</h3>
+            <p class="subtitle">Upload your organization logo. It will appear on the landing page and student dashboard.</p>
+            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin:12px 0;">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Current Logo" id="currentLogoDisplay" style="width:80px; height:80px; border-radius:var(--radius-md); object-fit:cover; border:2px solid var(--border);">
+                <button class="btn btn-primary" onclick="openLogoModal()" style="width:auto;">🖼️ Change Logo</button>
+                <button class="btn btn-danger" onclick="removeOrganizationLogo()" style="width:auto;">🗑️ Remove Logo</button>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Upload Book -->
+        <div class="card">
+            <h3>📚 Upload Book</h3>
+            <form class="form-section" id="bookForm" onsubmit="event.preventDefault(); uploadBook();">
+                <div class="section-title">Book Information</div>
+                <div class="field-group">
+                    <label>Book Title</label>
+                    <input type="text" id="bookTitle" placeholder="e.g. Grade 7 Math Book">
+                </div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="bookClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>Book Source</label>
+                    <select id="bookStorageProvider" onchange="toggleBookSource()">
+                        <option value="cloudinary" selected>Upload PDF/Document to Cloudinary (recommended)</option><option value="gcs">Google Cloud Storage</option>
+                        <option value="google_drive">Google Drive Link (second account / existing file)</option>
+                    </select>
+                </div>
+                <div class="field-group full-width" id="bookFileGroup">
+                    <label>Book File (PDF)</label>
+                    <input type="file" id="bookFile" accept=".pdf,.doc,.docx">
+                    <div class="subtitle">For new uploads. Books/PDFs are stored in Google Cloud Storage; access uses short-lived signed URLs.</div>
+                </div>
+                <div class="field-group full-width" id="bookDriveGroup" style="display:none;">
+                    <label>Google Drive File Link</label>
+                    <input type="url" id="bookDriveUrl" placeholder="https://drive.google.com/file/d/FILE_ID/view">
+                    <div class="subtitle">Use a file from your second Google Drive account. Set the file sharing to <strong>Anyone with the link → Viewer</strong>.</div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">📚 Save Book</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Books</h4>
+            <div class="subtitle" style="margin:10px 0;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);">
+                <strong>Google Drive:</strong> the first upload may ask you to sign in with Google. If Google shows <em>Access blocked / Authorization Error</em>, add the Render domain under <strong>Authorized JavaScript origins</strong> for this OAuth client in Google Cloud Console.
+            </div>
+            <div id="adminBooksList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Upload Video -->
+        <div class="card">
+            <h3>🎥 Upload Video</h3>
+            <form class="form-section" id="videoForm" onsubmit="event.preventDefault(); uploadVideo();">
+                <div class="section-title">Video Information</div>
+                <div class="field-group">
+                    <label>Video Title</label>
+                    <input type="text" id="videoTitle" placeholder="e.g. Physics — Kinematics">
+                </div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="videoClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>Video File <span class="subtitle">(optional if using YouTube)</span></label>
+                    <input type="file" id="videoFile" accept="video/*">
+                </div>
+                <div class="field-group full-width">
+                    <label>YouTube URL <span class="subtitle">(optional alternative to upload)</span></label>
+                    <input type="url" id="videoYoutubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div class="field-group full-width">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="isPaidVideo" style="width:auto; margin:0;">
+                        <span>Paid Content?</span>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-secondary">📤 Upload Video</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Videos</h4>
+            <p class="subtitle">Choose a video from your device, including Android Photos/Google Photos through the system file picker. Cloudinary must have the configured upload preset enabled.</p>
+            <div id="adminVideosList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Live Stream -->
+        <div class="card">
+            <h3>📡 Live Stream</h3>
+            <div id="liveStatusBox" class="subtitle" style="padding:10px; border-radius:var(--radius-md); background:rgba(0,0,0,0.05); margin-bottom:10px;">
+                Checking live status...
+            </div>
+            <div class="form-section">
+                <div class="field-group">
+                    <label>Stream Title</label>
+                    <input type="text" id="liveTitle" placeholder="e.g. Live Math Review">
+                </div>
+                <div class="field-group">
+                    <label>Stream Type</label>
+                    <select id="liveType">
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>YouTube Live / Meet Link</label>
+                    <input type="text" id="liveLink" placeholder="https://www.youtube.com/watch?v=XXXXXXXX">
+                </div>
+                <div class="form-actions">
+                    <button onclick="startLiveStream()" class="btn btn-success">🟢 Start Live</button>
+                    <button onclick="toggleAdminAudioMute()" id="muteAudioBtn" class="btn btn-warning">🔇 Mute Audio</button>
+                    <button onclick="stopLiveStream()" class="btn btn-danger">🔴 Stop Live</button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Add Quiz -->
+        <div class="card">
+            <h3>✍️ Add Quiz</h3>
+            <form class="form-section" id="quizForm" onsubmit="event.preventDefault(); uploadQuiz();">
+                <div class="section-title">Quiz Information</div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="quizClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Quiz Title</label>
+                    <input type="text" id="quizTitle" placeholder="e.g. Question 1">
+                </div>
+                <div class="field-group full-width">
+                    <label>Question</label>
+                    <textarea id="quizQuestion" rows="3" placeholder="e.g. v = u + at"></textarea>
+                </div>
+                <div class="field-group full-width">
+                    <label>Question Image (optional)</label>
+                    <input type="file" id="quizImageFile" accept="image/*">
+                </div>
+                <div class="section-title">Options</div>
+                <div class="field-group">
+                    <label>Option A</label>
+                    <input type="text" id="optA" placeholder="Option A">
+                </div>
+                <div class="field-group">
+                    <label>Option B</label>
+                    <input type="text" id="optB" placeholder="Option B">
+                </div>
+                <div class="field-group">
+                    <label>Option C</label>
+                    <input type="text" id="optC" placeholder="Option C">
+                </div>
+                <div class="field-group">
+                    <label>Option D</label>
+                    <input type="text" id="optD" placeholder="Option D">
+                </div>
+                <div class="field-group">
+                    <label>Correct Answer</label>
+                    <select id="correctOpt">
+                        <option value="A">A</option><option value="B">B</option>
+                        <option value="C">C</option><option value="D">D</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Quiz</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Quizzes</h4>
+            <div id="adminQuizzesList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- National Exam Archive -->
+        <div class="card" id="examArchiveAdminSection">
+            <h3>📚 National & Regional Exam Archive</h3>
+            <p class="subtitle">Manage Grade 6–12 exam PDFs. Grade 12 must be assigned to Natural Sciences or Social Sciences.</p>
+            <form class="form-section" id="examArchiveForm" onsubmit="event.preventDefault(); saveExamArchive();">
+                <div class="field-group">
+                    <label>Title</label>
+                    <input id="archiveTitle" maxlength="160" placeholder="e.g. Grade 12 Mathematics National Exam 2025" required>
+                </div>
+                <div class="field-group">
+                    <label>Grade</label>
+                    <select id="archiveGrade" onchange="toggleArchiveStream()">
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group" id="archiveStreamGroup" style="display:none;">
+                    <label>Grade 12 Stream</label>
+                    <select id="archiveStream"><option value="Natural Sciences">Natural Sciences</option><option value="Social Sciences">Social Sciences</option></select>
+                </div>
+                <div class="field-group"><label>Subject</label><input id="archiveSubject" maxlength="80" placeholder="Mathematics" required></div>
+                <div class="field-group"><label>Year</label><input id="archiveYear" type="number" min="1900" max="2100" placeholder="2025" required></div>
+                <div class="field-group"><label>Storage</label><select id="archiveProvider"><option value="gcs" selected>Google Cloud Storage (recommended)</option><option value="cloudinary">Cloudinary (legacy)</option><option value="google_drive">Google Drive (legacy)</option><option value="mega">Mega</option><option value="external">External</option></select></div>
+                <div class="field-group full-width"><label>Exam PDF</label><input id="archiveFile" type="file" accept="application/pdf"><small class="subtitle">Recommended: choose the PDF and BMT will upload it to Google Cloud Storage automatically. For legacy Google Drive/Mega/External items, you may leave this empty and use File ID/URL below.</small></div>
+                <div class="field-group full-width"><label>File ID / Public ID / Google Drive Link (optional)</label><input id="archiveFileId" maxlength="1000" placeholder="Cloudinary public ID or Google Drive file link / file ID"><small class="subtitle">For Google Drive, paste a file link from your second account, for example <code>https://drive.google.com/file/d/FILE_ID/view</code>. Set sharing to <strong>Anyone with the link → Viewer</strong>.</small></div>
+                <div class="field-group full-width"><label>Preview URL (optional)</label><input id="archivePreviewUrl" maxlength="1000" placeholder="Cloudinary/External preview URL (optional)"></div>
+                <div class="field-group full-width"><label>Download URL (optional)</label><input id="archiveDownloadUrl" maxlength="1000" placeholder="Cloudinary/External download URL (optional)"></div>
+                <div class="field-group full-width"><label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="archivePremium" checked style="width:auto;margin:0;"> Premium / paid archive</label><div style="display:grid;grid-template-columns:1fr 120px;gap:8px;margin-top:8px"><input id="archivePriceLabel" placeholder="e.g. 50" inputmode="decimal"><select id="archiveCurrency"><option>ETB</option><option>USD</option></select></div><small class="subtitle">Free items automatically display “Free”. Paid items should show a clear price.</small></div>
+                <div class="form-actions"><button class="btn btn-primary" type="submit">➕ Add Archive Item</button></div>
+            </form>
+            <div id="adminExamArchiveList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Payment Approvals -->
+        <div class="card">
+            <h3>💳 Payment Approvals</h3>
+            <p class="subtitle">Review transaction IDs submitted by students and approve or reject to unlock paid content.</p>
+            <div id="adminPaymentsList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Teacher Requests -->
+        <div class="card">
+            <h3>👨‍🏫 Teacher Requests</h3>
+            <p class="subtitle">Review and approve teacher access requests.</p>
+            <div id="teacherRequestsList"><div class="spinner"></div> Loading...</div>
+            <div class="card" style="margin-top:14px">
+                <h3>👨‍👩‍👧 Parent–Student Linking</h3>
+                <p class="subtitle">Link a verified parent account to a student. The parent will then see only that student’s server-authorized progress and results.</p>
+                <form id="parentLinkForm" class="form-vertical" style="max-width:620px">
+                    <input id="parentLinkParentEmail" type="email" placeholder="Parent account email" required>
+                    <input id="parentLinkStudentEmail" type="email" placeholder="Student account email" required>
+                    <button class="btn btn-primary" type="submit" id="parentLinkBtn">Link Parent to Student</button>
+                    <div id="parentLinkStatus" class="subtitle" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Push Notifications -->
+        <div class="card">
+            <h3>🔔 Push Notifications</h3>
+            <p class="subtitle">Send a real browser push notification to students who enabled notifications.</p>
+            <form class="form-vertical" id="pushForm">
+                <input id="pushTitle" value="Bright Mind Tutor" maxlength="100" placeholder="Notification title">
+                <textarea id="pushMessage" rows="3" maxlength="500" placeholder="New lesson is available…" required></textarea>
+                <button class="btn btn-primary" type="submit">🔔 Send Notification</button>
+                <div id="pushStatus" class="subtitle"></div>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- In-App Announcements -->
+        <div class="card">
+            <h3>📢 In-App Announcements</h3>
+            <p class="subtitle">Create a durable notification that appears in every student's notification bell.</p>
+            <form class="form-vertical" id="announcementForm">
+                <input id="announcementTitle" maxlength="120" placeholder="Announcement title" required>
+                <textarea id="announcementMessage" rows="4" maxlength="600" placeholder="Write the announcement…" required></textarea>
+                <button class="btn btn-primary" type="submit">📢 Publish Announcement</button>
+                <div id="announcementStatus" class="subtitle"></div>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Chat Moderation -->
+        <div class="card">
+            <h3>💬 Chat Moderation</h3>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0"><textarea id="adminCommunityMessage" rows="2" placeholder="Send an announcement to the community chat…" style="flex:1;min-width:220px"></textarea><input id="adminCommunityMedia" type="file" accept="image/*,audio/*,video/*" style="max-width:180px"><button class="btn btn-primary" type="button" id="adminCommunitySendBtn">Send to community</button></div><div id="adminCommunitySendStatus" class="subtitle"></div><div id="adminChatList"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Service Prices -->
+        <div class="card">
+            <h3>💰 Service Prices <span style="font-size:0.7em; color:var(--text-muted);">(Admin Setup)</span></h3>
+            <p class="subtitle">Set prices for each paid service. Students will see these when subscribing.</p>
+            <form class="form-section" id="priceForm" onsubmit="event.preventDefault(); saveServicePrices();">
+                <div class="section-title">Price Configuration</div>
+                <div class="field-group">
+                    <label>Currency</label>
+                    <select id="priceCurrency"><option value="ETB">ETB (Birr)</option><option value="USD">USD (Dollar)</option></select>
+                </div>
+                <div class="field-group">
+                    <label>Monthly Subscription <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceMonthly" placeholder="9.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Yearly Subscription <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceYearly" placeholder="79.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Single Video <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceVideo" placeholder="2.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Exam PDF <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceExam" placeholder="4.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Quiz Access <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceQuiz" placeholder="1.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Live Class <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceLive" placeholder="5.99" step="0.01" min="0">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Prices</button>
+                    <button type="button" class="btn btn-neutral" onclick="loadServicePrices()">🔄 Load Current</button>
+                </div>
+            </form>
+            <div id="priceStatus" style="margin-top:12px; display:none; padding:12px; border-radius:var(--radius-md); text-align:center;"></div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <div>
+                <h4>📞 Contact</h4>
+                <div>📱 <a href="tel:+251914404472">0914 404 472</a></div>
+                <div>✉️ <a href="mailto:berihu144@gmail.com">berihu144@gmail.com</a></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Logo Modal -->
+    <div class="modal-overlay" id="logoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🏢 Update Organization Logo</h3>
+                <button class="modal-close" onclick="closeLogoModal()">✕</button>
+            </div>
+            <div class="profile-upload-area">
+                <img id="logoPreview" src="{{ url_for('static', filename='logo.png') }}" alt="Logo Preview" class="preview has-image">
+                <label class="upload-btn" for="logoFileInput">
+                    📁 Choose Image
+                    <input type="file" id="logoFileInput" accept="image/*" onchange="previewLogo(this.files[0])">
+                </label>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:16px;">
+                <button class="btn btn-primary" onclick="saveOrganizationLogo()" style="flex:1;">💾 Save Logo</button>
+                <button class="btn btn-neutral" onclick="closeLogoModal()" style="flex:1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='admin.js') }}"></script>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            const btn = document.getElementById('darkModeToggle');
+            btn.textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('darkModeToggle');
+            if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+        })();
+    </script>
+    <script src="{{ url_for('static', filename='password-visibility.js') }}"></script><script src="{{ url_for('static', filename='auth-recovery.js') }}"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js',{scope:'/'}).catch(()=>{}));}</script></body>
+</html>
