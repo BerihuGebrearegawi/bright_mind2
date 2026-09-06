@@ -1,0 +1,46 @@
+{
+  "release": "V30.24",
+  "project": "Bright Mind Tutor",
+  "based_on": "V30.23",
+  "created_utc": "2026-08-17T18:57:24Z",
+  "audit_file": "V30.24_PRODUCTION_SECURITY_AUDIT.md",
+  "smoke_test_file": "V30.24_SMOKE_TEST_MATRIX.md",
+  "static_audit": {
+    "release": "V30.24",
+    "based_on": "V30.23",
+    "python_files": 12,
+    "python_syntax": {
+      "archive_routes.py": "PASS",
+      "live_routes.py": "PASS",
+      "teacher_routes.py": "PASS",
+      "admin_control_routes.py": "PASS",
+      "progress_routes.py": "PASS",
+      "ai_material_routes.py": "PASS",
+      "embedding_service.py": "PASS",
+      "communication_routes.py": "PASS",
+      "ai_tutor_service.py": "PASS",
+      "notification_routes.py": "PASS",
+      "backfill_ai_embeddings.py": "PASS",
+      "app.py": "PASS"
+    },
+    "secret_scan_hits": [
+      {
+        "file": "static/firebase-messaging-sw.js",
+        "line": 6
+      },
+      {
+        "file": "static/student.js",
+        "line": 13
+      },
+      {
+        "file": "static/admin.js",
+        "line": 13
+      },
+      {
+        "file": "static/teacher.js",
+        "line": 4
+      }
+    ],
+    "source_sha256": "ada462d7130fd9e844ab7df620e96f178ca0ca1238b945fe531ec441792f9ed1"
+  }
+}

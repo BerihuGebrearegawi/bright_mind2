@@ -1,0 +1,14 @@
+{
+  "version": "30.31",
+  "baseline": "30.30",
+  "focus": ["security-hardening", "admin-workflows", "teacher-approval"],
+  "breakingChanges": false,
+  "serverAuthoritativeTeacherApproval": true,
+  "customAdminClaimsSupported": true,
+  "legacyAdminEmailFallback": true,
+  "validation": {
+    "pythonCompile": true,
+    "zipIntegrity": true
+  },
+  "status": "READY_WITH_CONDITIONS"
+}

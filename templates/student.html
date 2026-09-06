@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Mind Tutor — Student Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo-favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo-favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}"><meta name="theme-color" content="#2563eb">
+
+<style id="bmt-original-motion-system">
+:root{--bmt-a:#5b5cf6;--bmt-b:#14b8a6;--bmt-c:#f472b6}
+.bmt-portal-page{background:radial-gradient(900px 500px at 8% -10%,color-mix(in srgb,var(--bmt-a) 14%,transparent),transparent 60%),radial-gradient(800px 500px at 100% 100%,color-mix(in srgb,var(--bmt-b) 11%,transparent),transparent 60%);}
+.bmt-landing-top{animation:bmtNavIn .7s cubic-bezier(.2,.8,.2,1) both}
+.bmt-landing-intro{position:relative}
+.bmt-landing-intro:after{content:"";position:absolute;z-index:-1;inset:-35px 8%;border-radius:50%;background:conic-gradient(from 120deg,color-mix(in srgb,var(--bmt-a) 14%,transparent),color-mix(in srgb,var(--bmt-c) 10%,transparent),color-mix(in srgb,var(--bmt-b) 12%,transparent),color-mix(in srgb,var(--bmt-a) 14%,transparent));filter:blur(35px);animation:bmtHalo 9s linear infinite}
+.bmt-kicker{animation:bmtReveal .7s .08s both}
+.bmt-landing-intro h1{animation:bmtReveal .8s .15s both}
+.bmt-landing-intro p{animation:bmtReveal .8s .24s both}
+.bmt-landing-pills span{animation:bmtFloatIn .7s calc(.12s * var(--i,1)) both;transition:transform .25s,box-shadow .25s,border-color .25s}
+.bmt-landing-pills span:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 14px 32px rgba(35,40,80,.10);border-color:color-mix(in srgb,var(--bmt-a) 40%,var(--border-color))}
+.bmt-auth-card{animation:bmtCardIn .8s .18s both}
+.bmt-auth-card:after{content:"";position:absolute;inset:auto -30% -65% -30%;height:140px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--bmt-a) 8%,transparent),transparent);transform:translateX(-60%);animation:bmtSweep 6s ease-in-out infinite}
+.bmt-landing-footer{animation:bmtReveal .8s .35s both}
+@keyframes bmtNavIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes bmtReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes bmtFloatIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes bmtCardIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes bmtHalo{to{transform:rotate(360deg)}}
+@keyframes bmtSweep{0%,55%{transform:translateX(-70%)}80%,100%{transform:translateX(70%)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+<style id="bmt-compact-landing-v3124">
+/* V31.24 compact landing polish: smaller typography and tighter landing cards */
+.bmt-portal-page .bmt-landing-top{padding:14px 12px 5px}.bmt-portal-page .bmt-brand-mini{gap:7px}.bmt-portal-page .bmt-brand-mini img{width:34px;height:34px;border-radius:10px}.bmt-portal-page .bmt-brand-mini strong{font-size:12px}.bmt-portal-page .bmt-brand-mini small{font-size:9px}.bmt-portal-page .bmt-home-link{padding:6px 9px;font-size:9px}.bmt-portal-page .bmt-landing-intro{max-width:560px;margin:10px auto 10px;padding:0 10px}.bmt-portal-page .bmt-kicker{font-size:8px;letter-spacing:.14em}.bmt-portal-page .bmt-landing-intro h1{font-size:clamp(23px,5vw,36px);margin:7px 0 6px}.bmt-portal-page .bmt-landing-intro p{font-size:10px;line-height:1.45;max-width:500px}.bmt-portal-page .bmt-landing-pills{gap:5px;margin-top:8px}.bmt-portal-page .bmt-landing-pills span{padding:4px 7px;border-radius:999px;font-size:8px}.bmt-portal-page .bmt-auth-card{border-radius:12px!important}.bmt-portal-page .bmt-auth-card .btn{font-size:10px;padding:7px 9px}.bmt-portal-page .bmt-landing-footer{margin:12px auto 0;padding:10px 8px;font-size:8px;gap:10px}.bmt-portal-page .bmt-landing-footer a{font-size:8px}
+@media(max-width:600px){.bmt-portal-page .bmt-landing-top{padding-top:10px}.bmt-portal-page .bmt-landing-intro{margin-top:7px}.bmt-portal-page .bmt-landing-intro h1{font-size:25px}.bmt-portal-page .bmt-landing-pills span{font-size:8px;padding:4px 6px}}
+</style>
+
+<style id="bmt-v31-26-landing-typography">
+/* V31.26: readable landing typography, while keeping dashboard UI untouched */
+.bmt-landing-top .bmt-brand-mini strong{font-size:18px!important}
+.bmt-landing-top .bmt-brand-mini small{font-size:13.5px!important}
+.bmt-landing-top .bmt-home-link{font-size:13.5px!important}
+.bmt-landing-intro .bmt-kicker{font-size:12px!important}
+.bmt-landing-intro h1{font-size:clamp(34.5px,7.5vw,54px)!important}
+.bmt-landing-intro p{font-size:15px!important;line-height:1.65!important}
+.bmt-landing-footer{font-size:16.5px!important;gap:18px!important}
+.bmt-landing-footer a{font-size:16.5px!important}
+@media(max-width:600px){
+  .bmt-landing-top .bmt-brand-mini strong{font-size:16px!important}
+  .bmt-landing-top .bmt-brand-mini small{font-size:12px!important}
+  .bmt-landing-top .bmt-home-link{font-size:12px!important}
+  .bmt-landing-intro h1{font-size:37.5px!important}
+  .bmt-landing-intro p{font-size:15px!important}
+  .bmt-landing-footer,.bmt-landing-footer a{font-size:13.5px!important}
+}
+</style>
+
+<style id="bmt-v31-27-unified-auth">
+.bmt-auth-card{position:relative;overflow:hidden}
+.bmt-auth-choice{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:color-mix(in srgb,var(--bmt-a,#5b5cf6) 7%,transparent);border:1px solid rgba(108,99,255,.12);border-radius:14px}
+.bmt-auth-choice .btn{border:0!important;box-shadow:none!important;min-height:42px;font-weight:800}
+.bmt-auth-choice .btn.active{background:linear-gradient(135deg,#5b5cf6,#8b5cf6)!important;color:#fff!important}
+.bmt-auth-method{animation:bmtAuthSwap .22s ease both}
+.bmt-auth-status{min-height:20px;font-size:13px}
+.bmt-auth-helper{font-size:12px;color:var(--muted,#667085);text-align:center;margin:10px 0 0}
+.bmt-auth-card input,.bmt-auth-card select{min-height:44px;border-radius:12px}
+@keyframes bmtAuthSwap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.bmt-auth-choice .btn{font-size:12px}.bmt-auth-card{padding:18px!important}}
+</style>
+
+<style id="bmt-v31-29-dashboard-modernization">
+/* V31.29 — unified dashboard visual system */
+:root{--bmt-blue:#2563eb;--bmt-violet:#7c3aed;--bmt-teal:#0f766e;--bmt-ink:#0f172a;--bmt-line:rgba(100,116,139,.16)}
+.bmt-portal-page{background:radial-gradient(700px 360px at 0 -5%,rgba(37,99,235,.10),transparent 62%),radial-gradient(700px 380px at 100% 100%,rgba(124,58,237,.08),transparent 62%),var(--bg,#f8fafc);}
+.bmt-portal-page .card,.bmt-portal-page .contact-info,.bmt-portal-page .auth-card{border:1px solid var(--bmt-line);border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.055);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.bmt-portal-page .card:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(15,23,42,.08);border-color:rgba(37,99,235,.22)}
+.bmt-portal-page .card h2,.bmt-portal-page .card h3,.bmt-portal-page .card h4{letter-spacing:-.02em}
+.bmt-portal-page .btn{border-radius:11px;font-weight:750;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.bmt-portal-page .btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 20px rgba(37,99,235,.12)}
+.bmt-portal-page input,.bmt-portal-page select,.bmt-portal-page textarea{border-radius:11px;border-color:var(--bmt-line);transition:border-color .18s,box-shadow .18s}
+.bmt-portal-page input:focus,.bmt-portal-page select:focus,.bmt-portal-page textarea:focus{border-color:rgba(37,99,235,.55);box-shadow:0 0 0 3px rgba(37,99,235,.09);outline:none}
+.bmt-dashboard-nav{position:sticky;top:8px;z-index:10;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--surface,#fff) 86%,transparent);border:1px solid var(--bmt-line);border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.bmt-dashboard-nav button{border:0!important;border-radius:10px!important;padding:8px 11px!important;font-size:12px!important;transition:.18s}
+.bmt-dashboard-nav button.active,.bmt-dashboard-nav button:hover{background:linear-gradient(135deg,var(--bmt-blue),var(--bmt-violet));color:#fff;transform:translateY(-1px)}
+.stats-grid,.metric-grid,.parent-grid{gap:10px!important}
+.stats-grid>* ,.metric,.child-card{border-radius:13px!important;border:1px solid var(--bmt-line)!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important}
+.bmt-portal-page table{font-size:12px;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+.bmt-portal-page th,.bmt-portal-page td{padding:7px 9px!important}
+.bmt-portal-page th{font-size:11px;letter-spacing:.02em}
+.bmt-portal-page .item-row{border:1px solid var(--bmt-line)!important;border-radius:12px!important;padding:10px!important;margin-bottom:8px;transition:.18s}
+.bmt-portal-page .item-row:hover{transform:translateX(2px);border-color:rgba(37,99,235,.22)!important}
+.bmt-support-card{display:flex;align-items:center;gap:12px;padding:12px 14px!important}
+.bmt-support-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#dbeafe,#ede9fe);font-size:18px;flex:0 0 auto}
+.bmt-support-copy{display:grid;gap:2px;flex:1}.bmt-support-copy strong{font-size:13px}.bmt-support-copy span{font-size:11px;color:var(--text-muted)}
+.bmt-support-actions{display:flex;gap:6px;flex-wrap:wrap}.bmt-support-actions .btn{padding:7px 9px;font-size:11px}
+.bmt-payment-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.bmt-payment-item{padding:10px 12px;border:1px solid var(--bmt-line);border-radius:12px;background:linear-gradient(135deg,rgba(37,99,235,.045),rgba(124,58,237,.045))}
+.bmt-payment-item small{display:block;color:var(--text-muted);font-size:10px;margin-bottom:3px}.bmt-payment-item strong{font-size:13px;letter-spacing:.01em}
+@media(max-width:650px){.bmt-payment-strip{grid-template-columns:1fr}.bmt-dashboard-nav{position:relative;top:auto;overflow:auto;white-space:nowrap}.bmt-dashboard-nav button{font-size:11px!important}.bmt-support-card{align-items:flex-start;flex-wrap:wrap}.bmt-support-actions{width:100%}}
+@media(prefers-reduced-motion:reduce){.bmt-portal-page *{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body class="bmt-portal-page">
+
+    <div class="bmt-landing-top"><a class="bmt-brand-mini" href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="BMT"><span style="--i:1"><strong>Bright Mind Tutor</strong><small>Student learning platform</small></span></a><a class="bmt-home-link" href="/">← Home</a></div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="container">
+
+        <!-- ========================================================== -->
+        <!-- AUTH SECTION                                               -->
+        <!-- ========================================================== -->
+        <div id="authSection">
+            <div class="bmt-landing-intro"><div class="bmt-kicker">Learn • Practice • Grow</div><h1>Your learning space, <span style="--i:2">made brighter.</span></h1><p>Courses, videos, quizzes, secure exams, community and AI support in one focused student experience.</p></div>
+            <div class="auth-shell" style="max-width:520px;margin:28px auto 0;">
+                <div class="auth-tabs" style="margin-bottom:12px;">
+                    <button class="tab-btn active" type="button" onclick="switchTab('login')">🔐 Sign In</button>
+                    <button class="tab-btn" type="button" onclick="switchTab('register')">📝 Register</button>
+                </div>
+
+                <div class="card auth-card bmt-auth-card" style="padding:24px;">
+                    <div style="text-align:center;margin-bottom:18px;">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Bright Mind Tutor" style="width:62px;height:62px;border-radius:18px;object-fit:cover;box-shadow:0 10px 25px rgba(108,99,255,.18)">
+                        <h2 style="margin:12px 0 4px;">Bright Mind Tutor</h2>
+                        <p class="subtitle" style="margin:0;">Student access</p>
+                    </div>
+
+                    <div id="loginTab" class="auth-tab active">
+                        <form id="studentUnifiedLoginForm" class="form-vertical">
+                            <div class="form-group"><label>Email or Phone Number</label><input type="text" id="studentLoginIdentity" placeholder="you@example.com or 0912 345 678" autocomplete="username" required></div>
+                            <div class="form-group"><label>Password / PIN</label><input type="password" id="studentLoginSecret" placeholder="Password or 6–8 digit PIN" autocomplete="current-password" required></div>
+                            <button id="studentUnifiedLoginBtn" type="submit" class="btn btn-primary" style="width:100%;">Sign In</button>
+                            <button type="button" class="btn btn-outline" data-forgot-password style="width:100%;">Forgot Password?</button>
+                            <div id="studentUnifiedLoginStatus" class="subtitle bmt-auth-status" role="status" aria-live="polite"></div>
+                        </form>
+                        <p class="bmt-auth-helper">Use the same box with either your email + password or phone + PIN.</p>
+                        <p class="subtitle" style="text-align:center;margin:16px 0 0;">No account? <button type="button" class="btn btn-link" onclick="switchTab('register')">Create one</button></p>
+                    </div>
+
+                    <div id="registerTab" class="auth-tab" style="display:none;">
+                        <div class="method-switch" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+                            <button class="btn btn-primary" type="button" data-register-method="email" onclick="setStudentRegisterMethod('email')">Email Registration</button>
+                            <button class="btn btn-outline" type="button" data-register-method="phone" onclick="setStudentRegisterMethod('phone')">📱 Phone + PIN</button>
+                        </div>
+
+                        <form id="studentRegisterForm" class="form-vertical">
+                            <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
+                            <div id="emailRegisterFields" class="bmt-auth-method">
+                                <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email"></div>
+                                <div class="form-group"><label>Password (6+ chars)</label><input type="password" id="regPassword" placeholder="Create a password" autocomplete="new-password"></div>
+                                <div class="form-group"><label>Confirm Password</label><input type="password" id="regConfirmPassword" placeholder="Repeat password" autocomplete="new-password"></div>
+                            </div>
+                            <div id="phoneRegisterFields" class="bmt-auth-method" style="display:none;">
+                                <div class="form-group"><label>Phone Number</label><input type="tel" id="phoneRegNumber" inputmode="tel" placeholder="0912 345 678" autocomplete="tel"></div>
+                                <div class="form-group"><label>PIN (6–8 digits)</label><input type="password" id="phoneRegPin" inputmode="numeric" maxlength="8" placeholder="Choose a secure PIN" autocomplete="new-password"></div>
+                                <div class="form-group"><label>Confirm PIN</label><input type="password" id="phoneRegPinConfirm" inputmode="numeric" maxlength="8" placeholder="Repeat PIN" autocomplete="new-password"></div>
+                            </div>
+                            <div class="form-group"><label>Class</label><select id="regClass"><option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8" selected>Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select></div>
+                            <button id="registerBtn" type="submit" class="btn btn-primary" style="width:100%;">Create Student Account</button>
+                            <button id="phoneRegisterBtn" type="button" class="btn btn-primary" style="width:100%;display:none;" onclick="registerStudentPhonePin()">Create Student Account</button>
+                            <div id="registerStatus" class="subtitle" role="status" aria-live="polite" style="margin-top:10px"></div>
+                            <div id="phoneRegisterStatus" class="subtitle" role="status" aria-live="polite" style="margin-top:10px"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="bmt-landing-footer"><span>Bright Mind Tutor · Ethiopia</span><a href="tel:+251914404472" aria-label="Call Bright Mind Tutor">📞 +251 914 404 472</a><a href="mailto:berihu144@gmail.com" aria-label="Email Bright Mind Tutor">✉️ berihu144@gmail.com</a></div>
+
+        <!-- ========================================================== -->
+        <!-- MAIN CONTENT                                               -->
+        <!-- ========================================================== -->
+        <div id="mainContent" style="display:none;">
+
+            <!-- Top Bar -->
+            <div class="top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Bright Mind Tutor" id="navLogo" style="width:40px; height:40px; border-radius:var(--radius-sm); object-fit:cover;">
+                    <div>
+                        <h1 class="page-title" style="margin:0; text-align:left; font-size:1.3em;">
+                            Bright Mind Tutor <span style="font-weight:400; font-size:0.6em; color:var(--text-muted);">Student</span>
+                        </h1>
+                        <div id="userGreeting" style="font-size:0.85em; color:var(--text-muted); margin-top:2px;">
+                            👋 Welcome, <span id="greetingName">Student</span>!
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <button id="notificationBell" class="btn" type="button" onclick="toggleNotificationPanel()" aria-label="Notifications" style="position:relative;padding:8px 10px;font-size:18px;background:var(--card-bg);border:1px solid var(--border-color);">🔔<span id="notificationBadge" style="display:none;position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:999px;background:#ef4444;color:#fff;font-size:10px;line-height:18px;text-align:center;padding:0 4px;"></span></button>
+                    <div class="profile-picture" style="width:40px; height:40px; cursor:pointer;" onclick="openProfileModal()">
+                        <img id="navAvatar" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=64" alt="Profile" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                    </div>
+                    <button class="btn btn-danger" onclick="logoutUser()" style="padding:8px 16px; font-size:13px;">Logout</button>
+                </div>
+            </div>
+
+            <div class="bmt-student-hero"><div><span class="bmt-dashboard-kicker">BMT • STUDENT SPACE</span><h2>Learn at your <span>own pace.</span></h2><p>Courses, practice, secure exams, AI support and your progress in one focused learning space.</p></div><div class="bmt-student-hero-badges"><span>📚 Learn</span><span>🧠 Practice</span><span>📈 Improve</span></div></div>
+            <nav class="bmt-dashboard-nav student-dashboard-nav" aria-label="Student dashboard sections"><button type="button" class="active" onclick="document.getElementById('learningDashboard')?.scrollIntoView({behavior:'smooth'})">Overview</button><button type="button" onclick="document.getElementById('digitalLibrarySection')?.scrollIntoView({behavior:'smooth'})">📚 Library</button><button type="button" onclick="document.getElementById('quizContainer')?.scrollIntoView({behavior:'smooth'})">🧩 Quiz</button><button type="button" onclick="document.getElementById('examsContainer')?.scrollIntoView({behavior:'smooth'})">📝 Exams</button><button type="button" onclick="document.getElementById('chatMessagesContainer')?.scrollIntoView({behavior:'smooth'})">💬 Chat</button></nav>
+            <p class="subtitle bmt-dashboard-subtitle" style="text-align:center; margin-top:10px;">Find your books, videos, live classes, quizzes and support here.</p>
+            <div id="notificationPanel" class="card" style="display:none;position:relative;margin-top:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">🔔 Notifications</h3>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-secondary" type="button" onclick="enablePushNotifications()">Enable push</button>
+                        <button class="btn btn-secondary" type="button" onclick="markAllNotificationsRead()">Mark all read</button>
+                    </div>
+                </div>
+                <div id="notificationList" style="margin-top:12px;"><p class="subtitle">Loading notifications…</p></div>
+                <details style="margin-top:12px;border-top:1px solid var(--border-color);padding-top:10px;">
+                    <summary style="cursor:pointer;font-weight:600;">Notification settings</summary>
+                    <div id="notificationPreferences" style="margin-top:10px;display:grid;gap:8px;"></div>
+                </details>
+            </div>
+
+
+            <div id="learningDashboard" class="card" style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h3 style="margin:0;">📊 My Learning Progress</h3><p id="progressGrade" class="subtitle" style="margin:4px 0 0;">Loading your learning analytics…</p></div>
+                    <button class="btn btn-secondary" type="button" onclick="loadLearningDashboard()">Refresh</button>
+                </div>
+                <div id="learningStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:12px;"></div>
+                <div id="learningNext" style="margin-top:12px;"></div>
+            </div>
+
+            <div class="card" id="studentDevelopmentCenter" style="margin-top:12px">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">🌱 My Development</h3><p class="subtitle" style="margin:4px 0 0">Grow your character, self-development, emotional & social skills, and life skills. This is for growth—not for judging you.</p></div><button class="btn btn-secondary" type="button" onclick="loadStudentDevelopment()">Refresh</button></div>
+                <div id="studentDevelopmentProgress" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px"></div>
+                <div id="studentDevelopmentLessons" style="margin-top:12px"></div>
+                <div id="studentDevelopmentStatus" class="subtitle" style="margin-top:8px"></div>
+            </div>
+
+            <div class="card" id="studentParentConnect" style="margin-top:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 style="margin:0">👨‍👩‍👧 Parent Connection</h3><p class="subtitle" style="margin:4px 0 0">Share this private code with your parent so they can follow your learning journey.</p></div><button class="btn btn-secondary" type="button" id="refreshParentLinkCode">Refresh Code</button></div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px"><strong id="parentLinkCodeDisplay" style="font-size:1.25rem;letter-spacing:.08em">Loading…</strong><button class="btn btn-outline" type="button" id="copyParentLinkCode">Copy</button><button class="btn btn-outline" type="button" id="regenerateParentLinkCode">New Code</button></div><div id="parentLinkCodeStatus" class="subtitle" style="margin-top:6px"></div>
+            </div>
+            <div class="card" id="studentPrivateCommunication" style="margin-top:12px"><h3 style="margin:0">💬 Family & Teacher Messages</h3><p class="subtitle">Private messages with your verified parent and teachers connected to your class.</p><div id="studentPrivateContacts" class="parent-grid" style="margin-top:10px"></div><div id="studentPrivateChat" style="display:none;margin-top:10px"><div id="studentPrivateChatTitle" class="subtitle" style="font-weight:800"></div><div id="studentPrivateChatMessages" class="chat-box" style="max-height:300px;overflow:auto;margin-top:6px"></div><div style="display:flex;gap:8px;margin-top:8px"><textarea id="studentPrivateChatInput" rows="2" placeholder="Write a private message…" style="flex:1"></textarea><button class="btn btn-primary" id="studentPrivateChatSend" type="button">Send</button></div></div></div>
+
+            <hr class="divider">
+
+            <!-- Class Selector -->
+            <div class="card">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="chatUserName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Select Your Class</label>
+                    <div class="class-selector">
+                        <div class="class-chips" id="classChips"></div>
+                        <select id="classSelect" style="display:none;">
+                            <option value="KG">KG</option>
+                            <option value="1">Grade 1</option>
+                            <option value="2">Grade 2</option>
+                            <option value="3">Grade 3</option>
+                            <option value="4">Grade 4</option>
+                            <option value="5">Grade 5</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Live Stream -->
+            <div class="card" style="background:var(--primary-light); border-color:var(--primary);">
+                <h3>🔴 Live Stream</h3>
+                <div id="liveStreamContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Unified Content Search / Saved Learning -->
+            <div class="card" id="contentTools">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+                    <div><h3 style="margin:0;">🔎 Find Learning Content</h3><p class="subtitle" style="margin:4px 0 0;">Search the books, videos and lessons currently available to your class.</p></div>
+                    <button class="btn btn-outline" type="button" onclick="loadBookmarks()">🔖 My Saved</button>
+                </div>
+                <input id="contentSearch" type="search" placeholder="Search books, videos, lessons…" aria-label="Search learning content" style="margin-top:10px;width:100%;">
+                <div id="savedItemsContainer" style="margin-top:10px;display:none;"></div>
+            </div>
+
+            <!-- Books -->
+            <div class="card">
+                <h3>📚 Books</h3>
+                <div id="booksContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Videos -->
+            <div class="card">
+                <h3>🎥 Videos</h3>
+                <div id="studentVideosContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Playlist -->
+            <div class="card">
+                <h3>📋 My Playlist</h3>
+                <div id="playlistContainer">No videos in playlist yet.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Downloaded Videos -->
+            <div class="card">
+                <h3>📥 Downloaded Videos</h3>
+                <div id="downloadedVideosContainer">No downloaded videos yet.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Assignments -->
+            <div class="card" id="studentAssignments" style="margin-top:12px;">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0;">📝 My Assignments</h3><p class="subtitle" style="margin:4px 0 0;">Homework and classwork published by your teachers.</p></div><button class="btn btn-secondary" type="button" onclick="loadStudentAssignments()">Refresh</button></div>
+                <div id="studentAssignmentList" style="margin-top:10px"><p class="subtitle">Loading assignments…</p></div>
+            </div>
+
+            <!-- Quizzes -->
+            <div class="card">
+                <h3>✍️ Quizzes</h3>
+                <div id="quizContainer"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Exams -->
+            <div class="card">
+                <h3>📄 Exams</h3>
+                <div id="examsContainer"><div class="spinner"></div> Loading...</div>
+                <div style="margin-top:18px"><h4>📊 My Exam History</h4><div id="examHistoryContainer"><p class="subtitle">No results loaded yet.</p></div><button class="btn btn-neutral" type="button" onclick="loadExamHistory()">Refresh Results</button></div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- National Exam Archive -->
+            <div class="card" id="liveClassesSection"><h3>📅 Live Classes</h3><p class="subtitle">Upcoming classes for your grade.</p><div id="liveClassStatus" class="subtitle"></div><div id="liveClassList"><div class="spinner"></div> Loading live classes...</div></div>
+<div class="card" id="examArchiveStudentSection">
+                <h3>🏛️ National Exam Archive</h3>
+                <p class="subtitle">Find Grade 6–12 exams by grade, subject, stream and year. Premium files unlock instantly after payment approval.</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0;">
+                    <select id="archiveFilterGrade"><option value="">All grades</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select>
+                    <select id="archiveFilterStream" disabled><option value="">Grade 12 stream</option><option value="Natural Sciences">Natural Sciences</option><option value="Social Sciences">Social Sciences</option></select>
+                    <input id="archiveFilterSubject" placeholder="Subject">
+                    <input id="archiveFilterYear" type="number" placeholder="Year">
+                    <button class="btn btn-primary" type="button" onclick="loadExamArchive()">🔎 Search</button>
+                </div>
+                <div id="examArchiveStatus" class="subtitle"></div>
+                <div id="examArchiveList"><div class="spinner"></div> Loading archive...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- AI Tutor -->
+            <div class="card ai-tutor-card" id="aiTutorSection">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h3 style="margin-bottom:4px;">🤖 AI Tutor</h3><p class="subtitle" style="margin:0;">Your Bright Mind Tutor — ask, understand, practise.</p></div>
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="aiQuotaBadge" class="badge badge-free">AI Assistant</span><button class="btn btn-neutral" type="button" onclick="clearAIChat()">🗑️ Clear</button><button class="btn btn-neutral" type="button" onclick="enablePushNotifications()">🔔 Notifications</button></div>
+                </div>
+                <div class="ai-quick-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Explain this topic in a simple way for my grade.')">💡 Explain simply</button>
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Give me a clear worked example of this topic.')">🧮 Give an example</button>
+                    <button class="btn btn-neutral" type="button" onclick="aiQuickPrompt('Quiz me on this topic with 5 questions. Do not give answers until I respond.')">📝 Quiz me</button>
+                    <button class="btn btn-neutral" type="button" onclick="openAIHomeworkCoach()">📷 Homework Coach</button>
+                    <button class="btn btn-neutral" type="button" onclick="openAIStudyPlan()">📅 Study Plan</button>
+                    <button class="btn btn-neutral" type="button" onclick="generateAIPracticeQuiz()">🎯 Generate BMT Quiz</button>
+                </div>
+                
+                <div id="aiHomeworkPanel" class="card" style="display:none;margin-top:12px;background:var(--surface);border-color:var(--primary)">
+                    <h4>🧮 AI Homework Coach</h4><p class="subtitle">Paste a homework problem. BMT will explain it step-by-step and give one similar practice question.</p>
+                    <textarea id="aiHomeworkInput" rows="5" maxlength="8000" placeholder="Example: Solve 2x + 5 = 15 and explain every step."></textarea>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="aiHomeworkImage" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload homework photo"><input id="aiHomeworkNote" type="text" maxlength="3000" placeholder="Optional note about the photo"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" type="button" onclick="solveAIHomework()">Solve Step-by-Step</button><button class="btn btn-accent" type="button" onclick="solveAIHomeworkImage()">📷 Solve Photo</button><button class="btn btn-neutral" type="button" onclick="document.getElementById('aiHomeworkPanel').style.display='none'">Close</button></div>
+                    <div id="aiHomeworkResult" class="ai-tutor-messages" style="max-height:300px"></div>
+                </div>
+                <div id="aiStudyPlanPanel" class="card" style="display:none;margin-top:12px;background:var(--surface);border-color:var(--primary)">
+                    <h4>📅 AI Personal Study Plan</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input id="aiPlanGoal" placeholder="Goal, e.g. prepare for Grade 8 exam"><input id="aiPlanWeak" placeholder="Weak topics, e.g. algebra, fractions"><input id="aiPlanDays" type="number" min="1" max="30" value="7" placeholder="Days"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" type="button" onclick="createAIStudyPlan()">Create Plan</button><button class="btn btn-neutral" type="button" onclick="document.getElementById('aiStudyPlanPanel').style.display='none'">Close</button></div>
+                    <div id="aiStudyPlanResult" class="ai-tutor-messages" style="max-height:360px"></div>
+                </div>
+                <div id="aiTutorMessages" class="ai-tutor-messages" aria-live="polite"><div class="ai-message assistant"><strong>Bright Mind Tutor:</strong> Hello! Ask me a mathematics, science, or study question.</div></div>
+                <form id="aiTutorForm" class="ai-tutor-form" onsubmit="event.preventDefault(); askAITutor();"><textarea id="aiTutorInput" rows="2" maxlength="8000" placeholder="Ask your question..." required></textarea><button class="btn btn-primary" type="submit" id="aiTutorSendBtn">Ask AI</button></form>
+                <div id="aiTutorStatus" class="subtitle" style="margin-top:8px;">Your recent AI conversation is saved on this device.</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Submit Payment -->
+            <div class="card" style="background:var(--warning-light); border-color:var(--warning);">
+                <h3>💳 Subscribe to Premium</h3>
+                <p class="subtitle">Your free trial has ended or you want to access paid content. Choose a plan and make payment to continue.</p>
+
+                <div class="payment-plans">
+                    <div class="payment-plan" onclick="selectPlan('monthly', window.BMT_PRICES?.monthly || 9.99)">
+                        <h4>📱 Monthly</h4>
+                        <div class="price" data-plan-monthly>9.99 ETB</div>
+                        <div class="label">per month</div>
+                        <button class="btn btn-primary" style="width:100%; margin-top:8px;">Select</button>
+                    </div>
+                    <div class="payment-plan active" onclick="selectPlan('yearly', window.BMT_PRICES?.yearly || 79.99)">
+                        <h4>🎓 Yearly</h4>
+                        <div class="price" data-plan-yearly>79.99 ETB</div>
+                        <div class="label">per year (save 33%)</div>
+                        <button class="btn btn-primary" style="width:100%; margin-top:8px;">Select</button>
+                    </div>
+                </div>
+
+                <form class="form-section" id="paymentForm" onsubmit="event.preventDefault(); submitStudentPayment();">
+                    <div class="section-title">Payment Information</div>
+
+                    <div class="field-group full-width" id="selectedPlanDisplay" style="background:var(--primary-light); padding:12px; border-radius:var(--radius-md); text-align:center; display:none;">
+                        <strong>Selected Plan:</strong> <span id="selectedPlanName">Monthly</span> — 
+                        <strong>Amount:</strong> <span id="selectedPlanAmount">9.99</span> <span id="selectedPlanCurrency">ETB</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Full Name</label>
+                        <input type="text" id="paymentName" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="field-group">
+                        <label>Class</label>
+                        <select id="paymentClass">
+                            <option value="KG">KG</option>
+                            <option value="1">Grade 1</option>
+                            <option value="2">Grade 2</option>
+                            <option value="3">Grade 3</option>
+                            <option value="4">Grade 4</option>
+                            <option value="5">Grade 5</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group full-width" style="background:var(--surface); border:2px solid var(--primary); border-radius:var(--radius-md); padding:16px; text-align:center;">
+                        <div style="font-size:1.05rem; font-weight:700; margin-bottom:6px;">⚡ Fast & Secure Checkout</div>
+                        <p class="subtitle" style="margin-bottom:10px;">Pay securely through Chapa. Your payment is verified by the BMT server before premium access is unlocked.</p>
+                        <button type="button" class="btn btn-primary" style="width:100%;" onclick="startChapaPayment()">💳 Pay Securely with Chapa</button>
+                        <div id="chapaStatus" class="subtitle" style="margin-top:8px;"></div>
+                    </div>
+
+                    <details class="field-group full-width" style="background:var(--surface); border-radius:var(--radius-md); padding:12px;">
+                        <summary style="cursor:pointer; font-weight:700;">Manual payment fallback</summary>
+                        <div style="padding-top:12px;">
+                            <label>Transaction ID</label>
+                            <input type="text" id="txId" placeholder="Enter transaction ID from TeleBirr / Bank">
+                        </div>
+                    </details>
+
+                    <div class="field-group full-width" style="background:var(--surface); border:2px solid var(--success); border-radius:var(--radius-md); padding:16px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:center;">
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:4px;">🏦 Bank Transfer</h4>
+                                <div style="font-size:12px; color:var(--text-muted);">Commercial Bank of Ethiopia</div>
+                                <div style="font-family:monospace; font-size:18px; font-weight:700; background:var(--bg); padding:6px 12px; border-radius:var(--radius-sm); display:inline-block; margin:4px 0;">
+                                    1000072771471
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">Account Name: Berihu</div>
+                            </div>
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:4px;">📱 TeleBirr</h4>
+                                <div style="font-size:12px; color:var(--text-muted);">TeleBirr Number</div>
+                                <div style="font-family:monospace; font-size:18px; font-weight:700; background:var(--bg); padding:6px 12px; border-radius:var(--radius-sm); display:inline-block; margin:4px 0;">
+                                    +251 914 404 472
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">Account Name: Berihu</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success" style="flex:2;">📝 Submit Manual Payment</button>
+                        <button type="button" class="btn btn-neutral" onclick="resetPaymentForm()">Reset</button>
+                    </div>
+                </form>
+
+                <div id="paymentStatus" style="margin-top:12px; display:none; padding:12px; border-radius:var(--radius-md); text-align:center;"></div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Payment History -->
+            <div class="card">
+                <h3>📜 Payment History</h3>
+                <div id="paymentHistory"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Profile -->
+            <div class="card" id="supportCenterSection"><h3>💬 Support & Teacher Q&A</h3><p class="subtitle">Ask a teacher, report a problem, or send feedback. Your conversation stays inside Bright Mind Tutor.</p><form id="supportTicketForm" class="form-vertical"><input id="supportSubject" maxlength="160" placeholder="Subject" required><select id="supportCategory"><option value="academic">Academic question</option><option value="course">Course</option><option value="exam">Exam</option><option value="live_class">Live class</option><option value="technical">Technical problem</option><option value="payment">Payment</option><option value="general">General</option></select><input id="supportTeacherUid" placeholder="Teacher UID (optional)"><textarea id="supportMessage" rows="4" maxlength="3000" placeholder="Write your question or problem..." required></textarea><button class="btn btn-primary" type="submit">Send Request</button></form><div id="supportStatus" class="subtitle"></div><div id="studentSupportTickets" style="margin-top:12px"></div><div class="card" style="margin:12px 0 0"><h4 style="margin-top:0">⭐ Your Feedback</h4><form id="feedbackForm" class="form-vertical"><select id="feedbackRating"><option value="5">★★★★★ 5</option><option value="4">★★★★ 4</option><option value="3">★★★ 3</option><option value="2">★★ 2</option><option value="1">★ 1</option></select><textarea id="feedbackMessage" rows="3" maxlength="2000" placeholder="How can we improve Bright Mind Tutor?" required></textarea><button class="btn btn-secondary" type="submit">Send Feedback</button></form></div></div>
+            <div class="contact-info bmt-support-card" id="studentAdminContact">
+  <div class="bmt-support-icon">🛟</div>
+<div class="bmt-payment-strip" id="studentPaymentContact" aria-label="BMT payment accounts"><div class="bmt-payment-item"><small>🏦 CBE Account</small><strong>1000072771471</strong></div><div class="bmt-payment-item"><small>📱 TeleBirr</small><strong>+251914404472</strong></div></div>
+
+
+  <div class="bmt-support-copy"><strong>Need help from BMT Admin?</strong><span>For account, payment, exam or technical support, contact the administrator.</span></div>
+  <div class="bmt-support-actions"><a href="tel:+251914404472" class="btn btn-outline">📞 +251 914 404 472</a><a href="mailto:berihu144@gmail.com" class="btn btn-secondary">✉️ Email Admin</a></div>
+</div>
+
+<div class="card" id="profileSection">
+                <h3>👤 My Profile</h3>
+                <div class="profile-container">
+                    <div class="profile-picture" onclick="openProfileModal()">
+                        <img id="profileImage" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=128" alt="Profile Picture">
+                        <div class="upload-overlay"><span>📷<br>Change Photo</span></div>
+                        <div class="status-dot" id="statusDot"></div>
+                    </div>
+                    <div class="profile-info">
+                        <p><strong>Name:</strong> <span id="profileName">Loading...</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+                        <p><strong>Class:</strong> <span id="profileClass">Loading...</span></p>
+                        <p><strong>Bio:</strong> <span id="profileBio">Loading...</span></p>
+                    </div>
+                    <div id="progressStats" class="profile-stats">
+                        <div class="stat-item">📹 Videos: 0/0</div>
+                        <div class="stat-item">✍️ Quizzes: 0 completed</div>
+                    </div>
+                </div>
+                <button class="btn btn-accent" onclick="openProfileModal()" style="margin-top:12px;">✏️ Edit Profile</button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="card" id="digitalLibrarySection"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><div><h3 style="margin:0">📚 Digital Library</h3><p class="subtitle" style="margin:4px 0">Grade 3–12 textbooks, teacher guides, reference books, psychology and general development resources.</p></div><span class="badge badge-free">AI Translation</span></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px"><select id="libraryGrade"><option value="">All grades</option><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select><select id="libraryCategory"><option value="">All categories</option><option value="student_textbook">Student Textbooks</option><option value="teacher_guide">Teacher Guides</option><option value="reference">Reference Books (መጣቐስቲ)</option><option value="psychology">Psychology & General Development</option></select><input id="librarySubject" placeholder="Subject / topic"><button class="btn btn-primary" type="button" id="librarySearchBtn">Search library</button></div><div id="libraryList" style="margin-top:12px"></div><div class="card" style="margin-top:12px"><h4 style="margin-top:0">🤖 AI Translator</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><select id="translationSource"><option value="auto">Detect language</option><option>English</option><option>Amharic</option><option>Tigrinya</option></select><select id="translationTarget"><option>English</option><option>Amharic</option><option>Tigrinya</option></select></div><textarea id="libraryTranslationInput" rows="6" placeholder="Paste or select text from your library reading here…" style="margin-top:8px"></textarea><button class="btn btn-secondary" type="button" id="translateLibraryBtn">Translate with BMT AI</button><div id="libraryTranslationStatus" class="subtitle" style="margin-top:8px"></div><div id="libraryTranslationOutput" style="margin-top:8px;white-space:pre-wrap"></div></div></div>
+
+            <!-- Chat -->
+            <div class="card" id="communityChatRoom">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <div><h3 style="margin:0">💬 BMT Community Live Chat</h3><div class="subtitle">Students, teachers and admins • live conversation • replies • reactions • photos • audio • video</div></div>
+                    <span class="badge badge-free">🟢 LIVE ROOM</span>
+                </div>
+                <div id="typingIndicators" style="display:none; font-size:0.85em; color:var(--text-muted); padding:4px 0;"></div>
+                <div id="replyIndicator" style="display:none; background:var(--primary-light); padding:8px 12px; border-radius:var(--radius-md); margin-bottom:8px; border-left:3px solid var(--primary);">
+                    <span id="replyText" style="font-size:0.9em;"></span>
+                    <button onclick="cancelReply()" style="background:none; border:none; color:var(--danger); cursor:pointer; float:right;">✕</button>
+                </div>
+                <div id="emojiPicker" style="display:none; flex-wrap:wrap; gap:6px; padding:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:10px;">
+                    <button onclick="insertEmoji('😊')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😊</button>
+                    <button onclick="insertEmoji('😂')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😂</button>
+                    <button onclick="insertEmoji('❤️')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">❤️</button>
+                    <button onclick="insertEmoji('👍')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">👍</button>
+                    <button onclick="insertEmoji('👏')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">👏</button>
+                    <button onclick="insertEmoji('🎉')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🎉</button>
+                    <button onclick="insertEmoji('🔥')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🔥</button>
+                    <button onclick="insertEmoji('💯')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">💯</button>
+                    <button onclick="insertEmoji('🤔')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🤔</button>
+                    <button onclick="insertEmoji('😢')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">😢</button>
+                    <button onclick="insertEmoji('🙏')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🙏</button>
+                    <button onclick="insertEmoji('✨')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">✨</button>
+                    <button onclick="insertEmoji('⭐')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">⭐</button>
+                    <button onclick="insertEmoji('💪')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">💪</button>
+                    <button onclick="insertEmoji('🤝')" style="font-size:1.5em; background:none; border:none; cursor:pointer; padding:4px;">🤝</button>
+                    <button onclick="document.getElementById('emojiPicker').style.display='none'" style="font-size:0.8em; background:var(--danger); color:white; border:none; border-radius:var(--radius-sm); padding:2px 8px;">✕</button>
+                </div>
+                <div class="chat-box" id="chatMessagesContainer"><div class="spinner"></div> Loading...</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <textarea id="chatMessageText" rows="2" placeholder="Write to students, teachers and admins..." style="flex:1; min-width:200px;" oninput="setTypingIndicator()"></textarea>
+                    <button onclick="showEmojiPicker()" style="background:none; border:1px solid var(--border); font-size:1.3em; padding:8px 12px; border-radius:var(--radius-md);">😊</button>
+                    <button onclick="startVoiceRecording()" id="voiceRecordBtn" style="background:none; border:1px solid var(--border); font-size:1.3em; padding:8px 12px; border-radius:var(--radius-md);" title="Record up to 60 seconds">🎤</button>
+                    <span id="voiceRecordStatus" class="subtitle" style="display:none;align-self:center;">⏺️ 00:00 / 01:00</span>
+                    <button onclick="askCommunityAI()" id="communityAiBtn" class="btn btn-secondary" type="button">🤖 Ask BMT AI</button>
+                    <label class="btn btn-neutral" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;">📎 Media<input type="file" id="chatMediaFile" accept="image/*,audio/*,video/*" style="display:none;"></label>
+                    <button class="btn btn-primary" onclick="sendChatMessageWithReply()" style="flex:1;">Send</button>
+                </div>
+                <div class="subtitle" style="margin-top:6px;">🎤 Voice recordings: maximum 60 seconds per message • audio upload: maximum 5 MB</div>
+                <div id="communityAiAnswer" class="card" style="display:none;margin-top:10px;background:var(--surface);border-left:4px solid var(--accent);">
+                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+                        <strong>🤖 BMT AI Learning Assistant</strong>
+                        <button type="button" class="btn btn-neutral" onclick="closeCommunityAI()">✕</button>
+                    </div>
+                    <div id="communityAiAnswerText" style="margin-top:8px;white-space:pre-wrap;"></div>
+                </div>
+            </div>
+
+        </div><!-- /mainContent -->
+
+    </div><!-- /container -->
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✏️ Edit Profile</h3>
+                <button class="modal-close" onclick="closeProfileModal()">✕</button>
+            </div>
+            <div class="profile-upload-area">
+                <img id="profilePreview" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=128" alt="Profile Preview" class="preview">
+                <label class="upload-btn" for="profileFileInput">
+                    📷 Change Photo
+                    <input type="file" id="profileFileInput" accept="image/*" onchange="previewProfilePicture(this.files[0])">
+                </label>
+                <button type="button" class="btn btn-danger" style="padding:4px 12px; font-size:12px;" onclick="deleteProfilePicture()">🗑️ Remove Photo</button>
+            </div>
+            <form class="form-section" onsubmit="event.preventDefault(); saveProfile();">
+                <div class="section-title">Profile Information</div>
+                <div class="field-group full-width">
+                    <label>Full Name</label>
+                    <input type="text" id="modalName" placeholder="Your full name">
+                </div>
+                <div class="field-group full-width">
+                    <label>Bio</label>
+                    <textarea id="modalBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-neutral" onclick="closeProfileModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- In-app Book Reader Modal -->
+    <div class="modal-overlay" id="readerModal">
+        <div class="modal" style="max-width:820px;max-height:88vh;display:flex;flex-direction:column">
+            <div class="modal-header">
+                <h3 id="readerTitle" style="display:flex;align-items:center;gap:8px">📚 <span id="readerTitleText">Reader</span></h3>
+                <button class="modal-close" onclick="closeReader()">✕</button>
+            </div>
+            <div style="display:flex;gap:14px;flex:1;min-height:0;overflow:hidden">
+                <div id="readerNav" style="width:200px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border-light);padding-right:10px"></div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+                    <div id="readerProgressBar" style="height:5px;border-radius:3px;background:var(--border-light);margin-bottom:10px;overflow:hidden"><div id="readerProgressFill" style="height:100%;width:0%;background:var(--primary);transition:width .3s"></div></div>
+                    <div id="readerBody" style="flex:1;overflow-y:auto;padding-right:6px;line-height:1.7"></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+                        <button class="btn btn-outline" type="button" id="readerPrevBtn" onclick="readerNavigate(-1)">← Previous</button>
+                        <button class="btn btn-outline" type="button" onclick="readerAddBookmark()">🔖 Bookmark this spot</button>
+                        <button class="btn btn-outline" type="button" id="readerNextBtn" onclick="readerNavigate(1)">Next →</button>
+                    </div>
+                    <div id="readerStatus" class="subtitle" style="margin-top:6px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Media Preview Modal -->
+    <div class="modal-overlay" id="mediaPreviewModal">
+        <div class="modal" style="max-width:700px;">
+            <div class="modal-header">
+                <h3>📺 Media Preview</h3>
+                <button class="modal-close" onclick="closeMediaPreview()">✕</button>
+            </div>
+            <div id="mediaPreviewContent" style="min-height:200px;">
+                <div class="spinner"></div> Loading...
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='student.js') }}?v=31.82"></script>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            const btn = document.getElementById('darkModeToggle');
+            btn.textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('darkModeToggle');
+            if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+        })();
+        function switchTab(tab) {
+            document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerTab').style.display = tab === 'register' ? 'block' : 'none';
+            document.querySelectorAll('.auth-tabs .tab-btn').forEach((btn, i) => btn.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1)));
+        }
+        function setStudentLoginMethod(method) {
+            const email = method === 'email';
+            document.getElementById('emailLoginBox').style.display = email ? 'block' : 'none';
+            document.getElementById('phoneLoginBox').style.display = email ? 'none' : 'block';
+            document.querySelectorAll('[data-login-method]').forEach(b => { b.classList.toggle('active', b.dataset.loginMethod === method); b.classList.toggle('btn-primary', b.dataset.loginMethod === method); b.classList.toggle('btn-outline', b.dataset.loginMethod !== method); });
+        }
+        function setStudentRegisterMethod(method) {
+            const email = method === 'email';
+            document.getElementById('emailRegisterFields').style.display = email ? 'block' : 'none';
+            document.getElementById('phoneRegisterFields').style.display = email ? 'none' : 'block';
+            document.getElementById('registerBtn').style.display = email ? 'block' : 'none';
+            document.getElementById('phoneRegisterBtn').style.display = email ? 'none' : 'block';
+            document.querySelectorAll('[data-register-method]').forEach(b => { b.classList.toggle('active', b.dataset.registerMethod === method); b.classList.toggle('btn-primary', b.dataset.registerMethod === method); b.classList.toggle('btn-outline', b.dataset.registerMethod !== method); });
+        }
+    </script>
+<script>window.BMT_API_BASE = ""; window.BMT_FCM_VAPID_KEY = {{ fcm_vapid_key|tojson }};</script>
+    <script src="{{ url_for('static', filename='password-visibility.js') }}"></script><script src="{{ url_for('static', filename='auth-recovery.js') }}"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js',{scope:'/'}).catch(()=>{}));}</script><script>
+(function(){
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ async function loadLibrary(){const box=document.getElementById('libraryList');if(!box)return;box.innerHTML='<div class="spinner"></div> Loading library…';try{if(!window.auth?.currentUser){alert('Please sign in again.');return;} const token=await window.auth.currentUser.getIdToken(true);const grade=document.getElementById('libraryGrade').value,cat=document.getElementById('libraryCategory').value,subject=document.getElementById('librarySubject').value.trim();const q=new URLSearchParams({className:grade,category:cat,subject});const r=await fetch('/api/library?'+q,{headers:{Authorization:`Bearer ${token}`}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Could not load library.');const rows=d.items||[];
+   const palettes=[['#6c63ff','#ff6584'],['#22c1c3','#fdbb2d'],['#ee0979','#ff6a00'],['#00b09b','#96c93d'],['#834d9b','#d04ed6'],['#2193b0','#6dd5ed'],['#f7971e','#ffd200'],['#c31432','#240b36']];
+   const hashHue=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return palettes[h%palettes.length];};
+   const bookmarks=typeof window.getBookmarks==='function'?window.getBookmarks():{};
+   box.className='library-grid';
+   box.innerHTML=rows.length?rows.map(x=>{
+     const bid='lib_'+esc(x.sourceCollection)+'_'+esc(x.id);
+     const isSaved=!!bookmarks[bid];
+     const [c1,c2]=hashHue(x.title||x.id||'book');
+     const readBtn=x.hasChapters?`<button class="btn btn-primary" type="button" onclick="openReader('${esc(x.sourceCollection)}','${esc(x.id)}','${esc((x.title||'Library item').replace(/'/g,"\\'"))}')"><svg class="bmt-icon" style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a1 1 0 0 0-1-1H6.5A2.5 2.5 0 0 0 4 5.5v14Z"/></svg>Read</button>`
+       :(x.url?`<a class="btn btn-outline" href="${esc(x.url)}" target="_blank" rel="noopener">Open</a>`
+       :(x.storageProvider==='gcs'&&x.storagePath?`<button class="btn btn-outline" type="button" data-library-gcs="${esc(x.storagePath)}">Open</button>`:'<span class="subtitle" style="font-size:11px">No file</span>'));
+     return `<div class="library-card">
+       <div class="library-cover" style="--lc1:${c1};--lc2:${c2}">
+         ${x.hasChapters?'<span class="library-cover-badge">📖 Reader</span>':''}
+         <span class="library-cover-title">${esc(x.title||'Library item')}</span>
+       </div>
+       <div class="library-card-body">
+         <div class="subtitle">${esc(x.categoryLabel||x.category||'Textbook')} · ${x.grade?'Gr.'+esc(x.grade):'General'}</div>
+         <div class="library-card-actions">
+           <button class="library-star-btn ${isSaved?'active':''}" type="button" data-lib-star="${esc(bid)}" data-lib-title="${esc(x.title||'Library item')}" data-lib-class="${esc(x.grade||'')}" aria-label="Save">★</button>
+           ${readBtn}
+           <button class="library-star-btn" type="button" data-library-translate="${esc(x.description||'')}" title="Translate description" aria-label="Translate">🌐</button>
+         </div>
+       </div>
+     </div>`;
+   }).join(''):'<p class="subtitle">No library items match your filters yet.</p>';
+   box.querySelectorAll('[data-lib-star]').forEach(b=>b.onclick=async()=>{
+     if(typeof window.toggleBookmark!=='function')return;
+     await window.toggleBookmark(b.dataset.libStar,b.dataset.libTitle,'book','',b.dataset.libClass);
+     b.classList.toggle('active');
+   });
+   }catch(e){box.innerHTML=`<p class="error-text">${esc(e.message)}</p>`}}
+ document.getElementById('librarySearchBtn')?.addEventListener('click',loadLibrary);
+ document.getElementById('libraryList')?.addEventListener('click',async e=>{const t=e.target.closest('[data-library-translate]');if(t){document.getElementById('libraryTranslationInput').value=t.dataset.libraryTranslate||'';document.getElementById('libraryTranslationInput').focus();document.getElementById('libraryTranslationInput').scrollIntoView({behavior:'smooth',block:'center'});return;} const b=e.target.closest('[data-library-gcs]');if(!b)return;try{const token=await auth.currentUser.getIdToken(true);const r=await fetch('/api/storage/document-url',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({storagePath:b.dataset.libraryGcs})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.url)throw Error(d.error||'Could not open document.');window.open(d.url,'_blank','noopener')}catch(err){status=err;alert(err.message)}});document.getElementById('libraryGrade')?.addEventListener('change',loadLibrary);document.getElementById('libraryCategory')?.addEventListener('change',loadLibrary);
+ document.getElementById('translateLibraryBtn')?.addEventListener('click',async()=>{const text=document.getElementById('libraryTranslationInput').value.trim(),target=document.getElementById('translationTarget').value,source=document.getElementById('translationSource').value,status=document.getElementById('libraryTranslationStatus'),out=document.getElementById('libraryTranslationOutput');if(!text){status.textContent='Paste text first.';return}status.textContent='Translating…';out.textContent='';try{const token=await auth.currentUser.getIdToken(true);const r=await fetch('/api/ai/translate',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({text,targetLanguage:target,sourceLanguage:source})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Translation failed.');out.textContent=d.translation||'';status.textContent='Translation complete.'}catch(e){status.textContent=e.message}});
+ if(window.auth?.currentUser)loadLibrary();
+
+ // ---- In-app Reader (Cloud-B V31.39 integration) ----
+ let readerState=null, readerSaveTimer=null;
+ function renderReaderPage(){
+   if(!readerState)return;
+   const item=readerState.flat[readerState.index];
+   const body=document.getElementById('readerBody');
+   body.innerHTML=`<h4 style="margin-top:0">${esc(item.chapterTitle)} — ${esc(item.title)}</h4>${item.content?`<div>${esc(item.content).replace(/\n/g,'<br>')}</div>`:`<p class="subtitle">No text content added for this subchapter yet.${item.pageStart?` See pages ${esc(item.pageStart)}–${esc(item.pageEnd??'?')} in the original file.`:''}</p>`}`;
+   body.scrollTop=0;
+   const prevBtn=document.getElementById('readerPrevBtn'),nextBtn=document.getElementById('readerNextBtn');
+   if(prevBtn)prevBtn.disabled=readerState.index===0;
+   if(nextBtn)nextBtn.disabled=readerState.index===readerState.flat.length-1;
+   const pct=Math.round(((readerState.index+1)/readerState.flat.length)*100);
+   const fill=document.getElementById('readerProgressFill');
+   if(fill)fill.style.width=pct+'%';
+   document.querySelectorAll('#readerNav [data-sub]').forEach(el=>{el.style.background=el.dataset.sub===item.subchapterId?'var(--primary-light,rgba(108,99,255,.12))':'';el.style.fontWeight=el.dataset.sub===item.subchapterId?'700':'400';});
+   clearTimeout(readerSaveTimer);
+   readerSaveTimer=setTimeout(async()=>{
+     if(!window.auth?.currentUser)return;
+     try{const token=await window.auth.currentUser.getIdToken();await fetch('/api/library/progress',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({collection:readerState.collection,bookId:readerState.bookId,chapterId:item.chapterId,subchapterId:item.subchapterId,percentComplete:pct})})}catch(_){}
+   },600);
+ }
+ window.openReader=async function(collection,bookId,title){
+   const modal=document.getElementById('readerModal');
+   const titleEl=document.getElementById('readerTitleText'),body=document.getElementById('readerBody'),nav=document.getElementById('readerNav');
+   if(titleEl)titleEl.textContent=title;
+   if(body)body.innerHTML='<div class="spinner"></div> Loading…';
+   if(nav)nav.innerHTML='';
+   modal?.classList.add('active');
+   if(!window.auth?.currentUser){if(body)body.innerHTML='<p class="error-text">Please sign in again.</p>';return;}
+   try{
+     const token=await window.auth.currentUser.getIdToken(true);
+     const r=await fetch(`/api/library/books/${encodeURIComponent(collection)}/${encodeURIComponent(bookId)}/chapters`,{headers:{Authorization:`Bearer ${token}`}});
+     const d=await r.json().catch(()=>({}));
+     if(!r.ok)throw Error(d.error||'Could not load this book.');
+     const chapters=d.chapters||[];
+     const flat=[];
+     chapters.forEach(ch=>{(ch.subchapters||[]).forEach(sc=>{flat.push({chapterId:ch.id,chapterTitle:ch.title,subchapterId:sc.id,title:sc.title,content:sc.content,pageStart:sc.pageStart,pageEnd:sc.pageEnd})})});
+     if(!flat.length){if(body)body.innerHTML='<p class="subtitle">This book has chapters but no readable subchapters yet.</p>';return;}
+     readerState={collection,bookId,title,flat,index:0};
+     if(nav)nav.innerHTML=chapters.map(ch=>`<div style="margin-bottom:10px"><b style="font-size:12.5px">${esc(ch.title)}</b>${(ch.subchapters||[]).map(sc=>`<div data-sub="${esc(sc.id)}" style="padding:5px 6px;font-size:12.5px;cursor:pointer;border-radius:6px;margin-top:2px" onclick="readerJumpTo('${esc(sc.id)}')">${esc(sc.title)}</div>`).join('')}</div>`).join('');
+     try{
+       const pr=await fetch(`/api/library/progress/${encodeURIComponent(collection)}/${encodeURIComponent(bookId)}`,{headers:{Authorization:`Bearer ${token}`}});
+       const pd=await pr.json().catch(()=>({}));
+       const savedSub=pd?.progress?.subchapterId;
+       if(savedSub){const idx=flat.findIndex(f=>f.subchapterId===savedSub);if(idx>=0)readerState.index=idx;}
+     }catch(_){}
+     renderReaderPage();
+   }catch(e){if(body)body.innerHTML=`<p class="error-text">${esc(e.message)}</p>`;}
+ };
+ window.readerNavigate=function(dir){
+   if(!readerState)return;
+   const next=readerState.index+dir;
+   if(next<0||next>=readerState.flat.length)return;
+   readerState.index=next;
+   renderReaderPage();
+ };
+ window.readerJumpTo=function(subId){
+   if(!readerState)return;
+   const idx=readerState.flat.findIndex(f=>f.subchapterId===subId);
+   if(idx>=0){readerState.index=idx;renderReaderPage();}
+ };
+ window.readerAddBookmark=async function(){
+   if(!readerState||!window.auth?.currentUser||typeof window.toggleBookmark!=='function')return;
+   const item=readerState.flat[readerState.index];
+   const status=document.getElementById('readerStatus');
+   const bookmarkId=`${readerState.collection}:${readerState.bookId}:${item.subchapterId}`;
+   try{
+     await window.toggleBookmark(bookmarkId, `${readerState.title} — ${item.title}`, 'book_position', '', '');
+     if(status)status.textContent='✅ Bookmarked "'+item.title+'"';
+   }catch(e){if(status)status.textContent='❌ '+(e.message||'Could not save bookmark.');}
+ };
+ window.closeReader=function(){
+   document.getElementById('readerModal')?.classList.remove('active');
+   readerState=null;
+ };
+})();
+</script>
+<style>
+.bmt-portal-page{min-height:100vh;background:radial-gradient(circle at 15% 5%,rgba(108,99,255,.12),transparent 32%),radial-gradient(circle at 90% 80%,rgba(255,101,132,.10),transparent 30%)}
+.bmt-landing-top{max-width:1100px;margin:0 auto;padding:22px 18px 8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bmt-brand-mini{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}.bmt-brand-mini img{width:46px;height:46px;border-radius:14px;object-fit:cover;box-shadow:0 10px 25px rgba(108,99,255,.18)}.bmt-brand-mini strong{display:block;font-size:16px;letter-spacing:-.02em}.bmt-brand-mini small{display:block;color:var(--text-muted);font-size:11px;margin-top:2px}
+.bmt-home-link{border:1px solid var(--border-color);background:var(--surface);color:inherit;text-decoration:none;padding:9px 13px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 8px 24px rgba(35,40,80,.06)}
+.bmt-landing-intro{text-align:center;animation:bmtFadeUp .55s ease both;max-width:700px;margin:18px auto 18px;padding:0 18px}.bmt-kicker{font-size:11px;letter-spacing:.18em;font-weight:900;color:#6c63ff;text-transform:uppercase}.bmt-landing-intro h1{font-size:clamp(32px,7vw,54px);line-height:1.02;letter-spacing:-.045em;margin:10px 0 9px}.bmt-landing-intro h1 span{background:linear-gradient(90deg,#6c63ff,#ff6584);-webkit-background-clip:text;background-clip:text;color:transparent}.bmt-landing-intro p{margin:0 auto;color:var(--text-muted);font-size:14px;line-height:1.65;max-width:600px}.bmt-landing-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:13px}.bmt-landing-pills span{padding:7px 10px;animation:bmtFadeUp .55s ease both;border-radius:999px;background:var(--surface);border:1px solid var(--border-color);font-size:11px;font-weight:700;color:var(--text-muted)}
+.bmt-auth-card{position:relative;overflow:hidden;box-shadow:0 24px 70px rgba(35,40,80,.10)!important;border:1px solid rgba(108,99,255,.12)!important}.bmt-auth-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#6c63ff,#8b5cf6,#ff6584)}.bmt-auth-card .btn{transition:transform .18s,box-shadow .18s}.bmt-auth-card .btn:hover{transform:translateY(-1px)}
+.bmt-landing-footer{max-width:1100px;margin:22px auto 0;padding:18px;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;border-top:1px solid var(--border-color);color:var(--text-muted);font-size:11px}.bmt-landing-footer a{color:inherit;text-decoration:none}.bmt-landing-footer a:hover{color:#6c63ff}
+@keyframes bmtFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.bmt-landing-top{padding-top:15px}.bmt-home-link{padding:8px 10px}.bmt-landing-intro{margin-top:10px}.bmt-landing-intro h1{font-size:34px}}
+</style>
+</body>
+</html>

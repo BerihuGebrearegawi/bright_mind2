@@ -1,0 +1,48 @@
+{
+  "student": [
+    "Dashboard",
+    "Courses",
+    "Live Classes",
+    "Assignments",
+    "Assessments",
+    "AI Tutor",
+    "Progress",
+    "Notifications",
+    "Profile"
+  ],
+  "teacher": [
+    "Dashboard",
+    "My Classes",
+    "Students",
+    "Lessons",
+    "Assignments",
+    "Assessments",
+    "Live Classes",
+    "Analytics",
+    "Notifications",
+    "Profile"
+  ],
+  "parent": [
+    "Dashboard",
+    "Children",
+    "Progress",
+    "Attendance",
+    "Assessments",
+    "Notifications",
+    "Payments",
+    "Profile"
+  ],
+  "admin": [
+    "Dashboard",
+    "Users",
+    "Teachers",
+    "Students",
+    "Courses",
+    "Payments",
+    "Live Classes",
+    "Notifications",
+    "Analytics",
+    "System Settings",
+    "Security"
+  ]
+}

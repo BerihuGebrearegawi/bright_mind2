@@ -1,0 +1,12 @@
+{
+  "version": "30.80",
+  "release": "Final Reviewed",
+  "features": [
+    "student assignment submission",
+    "teacher submission review",
+    "teacher grading",
+    "teacher feedback",
+    "submission progress state"
+  ],
+  "security": "server-authoritative assignment workflow"
+}
