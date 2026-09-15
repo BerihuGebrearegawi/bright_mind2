@@ -1,0 +1,9 @@
+Flask==3.0.3
+Flask-Cors==4.0.1
+gunicorn==22.0.0
+requests==2.32.3
+firebase-admin==6.9.0
+google-genai==1.58.0
+pypdf==6.0.0
+PyMuPDF==1.26.4
+cloudinary==1.45.0

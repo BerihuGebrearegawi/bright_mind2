@@ -1,0 +1,19 @@
+{
+  "version": "30.46",
+  "baseline": "30.45",
+  "status": "ready-with-conditions",
+  "provider_tests": {
+    "gemini": "optional-real-smoke-test",
+    "telebirr": "server-config-validation",
+    "live_credentials_present_in_build_environment": false,
+    "remote_readiness_smoke": "supported-via-BMT_BASE_URL"
+  },
+  "security": {
+    "secrets_in_release": false,
+    "payment_hmac": true,
+    "payment_amount_validation": true,
+    "payment_currency_validation": true,
+    "admin_custom_claims": true,
+    "firebase_revocation_check": true
+  }
+}

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · Bright Mind Tutor</title>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo-favicon.svg') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f7ff;--card:#ffffff;--text:#172033;--muted:#667085;--border:rgba(23,32,51,.1);--primary:#6c63ff;--primary-dark:#5a52e0;--pink:#ff6584;--danger:#dc3545;--success:#1a9e6b;--radius:16px}
+html[data-theme=dark]{--bg:#0b1020;--card:#141b31;--text:#f4f7ff;--muted:#aeb8d0;--border:rgba(255,255,255,.12)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column}
+.glow{position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.18;pointer-events:none;z-index:0}
+.glow.g1{background:var(--primary);left:-160px;top:-100px}
+.glow.g2{background:var(--pink);right:-160px;bottom:-100px}
+header{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;max-width:1180px;margin:0 auto;width:100%}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--pink))}
+.brand-mark img{width:28px;height:28px;border-radius:8px;object-fit:cover}
+.brand b{font-size:15px}
+.brand small{display:block;color:var(--muted);font-size:11px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;z-index:1}
+.panel{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 30px;box-shadow:0 24px 60px rgba(23,32,51,.08)}
+.steps-track{display:flex;gap:6px;margin-bottom:24px}
+.steps-track span{flex:1;height:3px;border-radius:3px;background:var(--border)}
+.steps-track span.done{background:var(--primary)}
+.step{display:none;animation:slideIn .32s cubic-bezier(.2,.8,.2,1)}
+.step.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}
+.lede{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 22px}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border);background:transparent;color:inherit;font:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{width:100%;padding:12px 16px;border-radius:10px;border:none;font:inherit;font-weight:700;font-size:14px;cursor:pointer;margin-top:20px;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:inherit;margin-top:10px}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;margin-bottom:16px;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+.role-grid{display:grid;gap:10px}
+.role-option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--border);background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit;transition:border-color .15s,transform .15s}
+.role-option:hover{border-color:var(--primary);transform:translateY(-1px)}
+.role-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:rgba(108,99,255,.12);font-size:18px;flex-shrink:0}
+.role-option b{display:block;font-size:14px}
+.role-option span{color:var(--muted);font-size:12px}
+.status{font-size:13px;margin-top:14px;line-height:1.5;min-height:1px}
+.status.error{color:var(--danger)}
+.status.success{color:var(--success)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.field-hint{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
+.pending-icon{font-size:40px;text-align:center;margin-bottom:6px}
+.link-btn{background:none;border:none;color:var(--primary);font:inherit;font-weight:600;font-size:13px;cursor:pointer;padding:0}
+@media (max-width:480px){.panel{padding:26px 20px}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div>
+<header>
+  <a class="brand" href="/"><span class="brand-mark"><img src="{{ url_for('static', filename='logo.png') }}" alt=""></span><span><b>Bright Mind</b><small>Tutor</small></span></a>
+</header>
+<main>
+  <div class="panel">
+    <div class="steps-track" id="stepsTrack"><span class="done"></span><span></span><span></span></div>
+
+    <!-- Step 1: email -->
+    <section class="step active" id="step-email">
+      <h1>Sign in or create an account</h1>
+      <p class="lede">Enter your email to continue. We'll check whether you already have an account.</p>
+      <form id="emailForm">
+        <label for="emailInput">Email address</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" required autocomplete="email">
+        <button type="submit" class="btn btn-primary" id="emailContinueBtn">Continue</button>
+      </form>
+      <div class="status" id="emailStatus"></div>
+    </section>
+
+    <!-- Step 2A: sign in (returning user) -->
+    <section class="step" id="step-signin">
+      <button class="back-link" data-back="step-email">← Use a different email</button>
+      <h1>Welcome back</h1>
+      <p class="lede" id="signinEmailLabel"></p>
+      <form id="signinForm">
+        <label for="signinPassword">Password</label>
+        <input type="password" id="signinPassword" placeholder="••••••••" required autocomplete="current-password">
+        <button type="submit" class="btn btn-primary" id="signinBtn">Sign in</button>
+      </form>
+      <button class="link-btn" id="forgotPasswordBtn" style="margin-top:14px">Forgot your password?</button>
+      <div class="status" id="signinStatus"></div>
+    </section>
+
+    <!-- Step 2B: role selection (new user) -->
+    <section class="step" id="step-role">
+      <button class="back-link" data-back="step-email">← Use a different email</button>
+      <h1>Who's signing up?</h1>
+      <p class="lede">Choose the account that fits you — each dashboard is built around what that role needs.</p>
+      <div class="role-grid">
+        <button class="role-option" data-role="student"><span class="role-icon">🎓</span><span><b>Student</b><span>Courses, quizzes, exams and progress</span></span></button>
+        <button class="role-option" data-role="teacher"><span class="role-icon">👨‍🏫</span><span><b>Teacher</b><span>Create lessons, exams and manage classes</span></span></button>
+        <button class="role-option" data-role="parent"><span class="role-icon">👨‍👩‍👧</span><span><b>Parent</b><span>Follow your child's learning and progress</span></span></button>
+      </div>
+    </section>
+
+    <!-- Step 3: registration forms (one per role, shown/hidden together) -->
+    <section class="step" id="step-register">
+      <button class="back-link" data-back="step-role">← Choose a different role</button>
+      <h1 id="registerTitle">Create your account</h1>
+      <p class="lede" id="registerEmailLabel"></p>
+      <form id="registerForm">
+        <label for="regName">Full name</label>
+        <input type="text" id="regName" required>
+
+        <!-- Student-only fields -->
+        <div id="fields-student" style="display:none">
+          <div class="row2">
+            <div><label for="regAge">Age</label><input type="number" id="regAge" min="3" max="30"></div>
+            <div><label for="regClass">Grade</label>
+              <select id="regClass">
+                <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                <option value="6">Grade 6</option><option value="7" selected>Grade 7</option><option value="8">Grade 8</option>
+                <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+              </select>
+            </div>
+          </div>
+          <label for="regEducationLevel">Education level</label>
+          <select id="regEducationLevel">
+            <option value="">Not set</option>
+            <option value="Pre-primary">Pre-primary</option>
+            <option value="Primary (1-8)" selected>Primary (1-8)</option>
+            <option value="Secondary (9-10)">Secondary (9-10)</option>
+            <option value="Preparatory (11-12)">Preparatory (11-12)</option>
+          </select>
+          <label for="regSchool">School name</label>
+          <input type="text" id="regSchool" placeholder="e.g. Kokebe Tsibah School">
+          <label for="regRegion">Region</label>
+          <select id="regRegion"><option value="">Not set</option></select>
+          <div class="row2">
+            <div><label for="regGuardianName">Guardian name</label><input type="text" id="regGuardianName"></div>
+            <div><label for="regGuardianPhone">Guardian phone</label><input type="tel" id="regGuardianPhone" placeholder="09xxxxxxxx"></div>
+          </div>
+          <label for="regAddress">Address (optional)</label>
+          <input type="text" id="regAddress">
+        </div>
+
+        <!-- Teacher-only fields -->
+        <div id="fields-teacher" style="display:none">
+          <label for="regEduLevelTeacher">Your education level</label>
+          <input type="text" id="regEduLevelTeacher" placeholder="e.g. BSc in Mathematics">
+          <label for="regInstitution">Institution</label>
+          <input type="text" id="regInstitution" placeholder="Where you studied or currently teach">
+          <div class="row2">
+            <div><label for="regExpYears">Years of experience</label><input type="number" id="regExpYears" min="0"></div>
+            <div><label for="regSubjects">Subject</label>
+              <select id="regSubjects"><option>Mathematics</option><option>Physics</option><option>Chemistry</option><option>Biology</option><option>English</option><option>Amharic</option><option>History</option><option>Geography</option><option>Economics</option></select>
+            </div>
+          </div>
+          <label for="regTeacherGrades">Grade you teach</label>
+          <select id="regTeacherGrades"><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7" selected>Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select>
+          <div class="field-hint">You can teach more subjects and grades from your dashboard once approved.</div>
+        </div>
+
+        <!-- Parent-only fields -->
+        <div id="fields-parent" style="display:none">
+          <div class="field-hint">You'll link your child's account from your dashboard using their student code.</div>
+        </div>
+
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" minlength="6" required autocomplete="new-password">
+        <label for="regPasswordConfirm">Confirm password</label>
+        <input type="password" id="regPasswordConfirm" minlength="6" required autocomplete="new-password">
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">Create account</button>
+      </form>
+      <div class="status" id="registerStatus"></div>
+    </section>
+
+    <!-- Step 4: teacher pending approval -->
+    <section class="step" id="step-pending">
+      <div class="pending-icon">📨</div>
+      <h1 style="text-align:center">Application submitted</h1>
+      <p class="lede" style="text-align:center">Your teacher account is created and your application is waiting for admin approval. You'll be able to sign in fully once approved.</p>
+      <a class="btn btn-ghost" href="/" style="display:block;text-align:center;text-decoration:none">Back to home</a>
+    </section>
+  </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdTokenResult, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAyeZpwu9-FECjC5Qp-lI0OUAblKusxkeI",
+    authDomain: "bright-mind-tutor-app.firebaseapp.com",
+    projectId: "bright-mind-tutor-app",
+    storageBucket: "bright-mind-tutor-app.firebasestorage.app",
+    messagingSenderId: "782512714975",
+    appId: "1:782512714975:web:719e3b7a09ac8c7f9d256a",
+    measurementId: "G-TWYNFN7MT6"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const presetRole = params.get('role');
+const nextUrl = params.get('next');
+
+let state = { email: '', role: '' };
+
+function showStep(id, trackIndex) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+    document.querySelectorAll('#stepsTrack span').forEach((s, i) => s.classList.toggle('done', i <= trackIndex));
+}
+document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => {
+    const target = b.dataset.back;
+    showStep(target, target === 'step-email' ? 0 : 1);
+}));
+
+// Populate region select from the same list the dashboards use.
+const REGIONS = ["Addis Ababa","Afar","Amhara","Benishangul-Gumuz","Dire Dawa","Gambela","Harari","Oromia","Sidama","SNNPR","Somali","South West Ethiopia","Tigray"];
+REGIONS.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; $('regRegion').appendChild(o); });
+
+function setStatus(el, msg, kind) {
+    el.textContent = msg || '';
+    el.className = 'status' + (kind ? ' ' + kind : '');
+}
+function setBusy(btn, busy, labelBusy, labelIdle) {
+    btn.disabled = busy;
+    btn.innerHTML = busy ? `<span class="spinner"></span>${labelBusy}` : labelIdle;
+}
+
+$('emailForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('emailInput').value.trim();
+    const btn = $('emailContinueBtn');
+    setStatus($('emailStatus'), '');
+    setBusy(btn, true, 'Checking…', 'Continue');
+    try {
+        // V31.83: fetchSignInMethodsForEmail() always returns [] on this
+        // project because Firebase's Email Enumeration Protection is on,
+        // which forced every returning user into the registration step.
+        // Ask our own server (Admin SDK) instead -- it isn't affected.
+        const res = await fetch('/api/auth/check-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Could not check that email right now.');
+        state.email = email;
+        if (data.exists) {
+            $('signinEmailLabel').textContent = `Signing in as ${email}`;
+            showStep('step-signin', 1);
+        } else {
+            if (presetRole && ['student', 'teacher', 'parent'].includes(presetRole)) {
+                selectRole(presetRole);
+            } else {
+                showStep('step-role', 1);
+            }
+        }
+    } catch (err) {
+        setStatus($('emailStatus'), humanizeError(err), 'error');
+    } finally {
+        setBusy(btn, false, '', 'Continue');
+    }
+});
+
+$('signinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('signinBtn');
+    setStatus($('signinStatus'), '');
+    setBusy(btn, true, 'Signing in…', 'Sign in');
+    try {
+        const cred = await signInWithEmailAndPassword(auth, state.email, $('signinPassword').value);
+        await redirectByRole(cred.user);
+    } catch (err) {
+        setStatus($('signinStatus'), humanizeError(err), 'error');
+        setBusy(btn, false, '', 'Sign in');
+    }
+});
+
+$('forgotPasswordBtn').addEventListener('click', async () => {
+    if (!state.email) return;
+    try {
+        await fetch('/api/auth/forgot-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: state.email }) });
+        setStatus($('signinStatus'), 'If that email has an account, a reset link is on its way.', 'success');
+    } catch (_) {
+        setStatus($('signinStatus'), 'Could not send the reset email right now. Please try again shortly.', 'error');
+    }
+});
+
+function selectRole(role) {
+    state.role = role;
+    ['student', 'teacher', 'parent'].forEach(r => { $('fields-' + r).style.display = r === role ? 'block' : 'none'; });
+    $('registerTitle').textContent = 'Create your ' + role + ' account';
+    $('registerEmailLabel').textContent = state.email;
+    showStep('step-register', 2);
+}
+document.querySelectorAll('.role-option').forEach(b => b.addEventListener('click', () => selectRole(b.dataset.role)));
+
+$('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('registerBtn');
+    setStatus($('registerStatus'), '');
+    if ($('regPassword').value !== $('regPasswordConfirm').value) {
+        setStatus($('registerStatus'), 'Passwords do not match.', 'error');
+        return;
+    }
+    setBusy(btn, true, 'Creating account…', 'Create account');
+    let createdUser = null;
+    try {
+        const cred = await createUserWithEmailAndPassword(auth, state.email, $('regPassword').value);
+        createdUser = cred.user;
+        const name = $('regName').value.trim();
+        const className = state.role === 'student' ? $('regClass').value : '';
+
+        // Matches the exact field set Firestore rules allow on user-doc creation.
+        await setDoc(doc(db, 'users', createdUser.uid), {
+            uid: createdUser.uid, name, email: state.email, class: className,
+            registeredAt: serverTimestamp(), progress: { videos: {}, quizzes: {} },
+            payments: [], isAdmin: false, profileImage: '', bio: '',
+            freeTrial: { isActive: true, startedAt: serverTimestamp(), expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), daysRemaining: 7, usedDays: 0 },
+            isPaid: false, accountType: state.role
+        });
+
+        const token = await createdUser.getIdToken(true);
+        const authHeaders = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+        if (state.role === 'student') {
+            await fetch('/api/student/region', { method: 'POST', headers: authHeaders, body: JSON.stringify({ region: $('regRegion').value }) });
+            await fetch('/api/student/profile-details', { method: 'POST', headers: authHeaders, body: JSON.stringify({
+                age: $('regAge').value || null, educationLevel: $('regEducationLevel').value,
+                schoolName: $('regSchool').value.trim(), guardianName: $('regGuardianName').value.trim(),
+                guardianPhone: $('regGuardianPhone').value.trim(), address: $('regAddress').value.trim()
+            }) });
+            setStatus($('registerStatus'), 'Account created — taking you to your dashboard…', 'success');
+            location.href = nextUrl || '/student';
+        } else if (state.role === 'teacher') {
+            const applyRes = await fetch('/api/teacher/apply', { method: 'POST', headers: authHeaders, body: JSON.stringify({
+                name, educationLevel: $('regEduLevelTeacher').value.trim(), institution: $('regInstitution').value.trim(),
+                experienceYears: $('regExpYears').value || '0', experience: '', certifications: '',
+                subjects: [$('regSubjects').value], classes: [$('regTeacherGrades').value]
+            }) });
+            const applyData = await applyRes.json().catch(() => ({}));
+            if (!applyRes.ok) throw new Error(applyData.error || 'Could not submit your teacher application.');
+            showStep('step-pending', 2);
+        } else {
+            setStatus($('registerStatus'), 'Account created — taking you to your dashboard…', 'success');
+            location.href = nextUrl || '/parent';
+        }
+    } catch (err) {
+        setStatus($('registerStatus'), humanizeError(err), 'error');
+        setBusy(btn, false, '', 'Create account');
+    }
+});
+
+async function redirectByRole(user) {
+    try {
+        const tokenResult = await getIdTokenResult(user, true);
+        if (tokenResult.claims.admin === true || tokenResult.claims.role === 'admin') {
+            location.href = nextUrl || '/admin'; return;
+        }
+    } catch (_) {}
+    try {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        const accountType = snap.exists() ? (snap.data().accountType || 'student') : 'student';
+        const dest = accountType === 'teacher' ? '/teacher' : accountType === 'parent' ? '/parent' : '/student';
+        location.href = nextUrl || dest;
+    } catch (_) {
+        location.href = nextUrl || '/student';
+    }
+}
+
+function humanizeError(err) {
+    const code = err && err.code || '';
+    if (code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect password. Please try again.';
+    if (code.includes('too-many-requests')) return 'Too many attempts. Please wait a moment and try again.';
+    if (code.includes('email-already-in-use')) return 'That email already has an account — try signing in instead.';
+    if (code.includes('weak-password')) return 'Please choose a password with at least 6 characters.';
+    if (code.includes('invalid-email')) return 'Please enter a valid email address.';
+    if (code.includes('network-request-failed')) return 'Network error. Please check your connection and try again.';
+    return (err && err.message) ? err.message.replace('Firebase: ', '').replace(/\(auth\/[a-z-]+\)\.?/, '').trim() : 'Something went wrong. Please try again.';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+/* V30.28 Student Portal */
+.bmt-student-dashboard{display:grid;gap:20px}
+.bmt-student-course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.bmt-student-progress{height:8px;background:#E4E7EC;border-radius:999px;overflow:hidden}
+.bmt-student-progress>[data-bmt-student-progress]{height:100%;background:var(--bmt-primary);width:0;transition:width .25s ease}
+.bmt-student-lesson-list{display:grid;gap:8px}
+.bmt-student-lesson-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#fff;border:1px solid var(--bmt-border);border-radius:var(--bmt-radius-sm)}
+.bmt-student-status{font-size:12px;font-weight:700;color:var(--bmt-muted)}
+@media(max-width:900px){.bmt-student-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.bmt-student-course-grid{grid-template-columns:1fr}}

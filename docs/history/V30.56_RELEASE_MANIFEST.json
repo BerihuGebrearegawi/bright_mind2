@@ -1,0 +1,23 @@
+{
+  "version": "30.56",
+  "baseline": "30.55",
+  "status": "ready-with-conditions",
+  "focus": [
+    "release consistency",
+    "production smoke testing",
+    "secret-safe artifacts"
+  ],
+  "provider_tests": {
+    "gemini": "environment-backed smoke test available",
+    "telebirr": "environment-backed configuration validation available",
+    "live_calls_in_build_environment": false
+  },
+  "security": {
+    "secrets_in_release": false,
+    "payment_hmac": true,
+    "payment_amount_validation": true,
+    "payment_currency_validation": true,
+    "admin_custom_claims": true,
+    "firebase_revocation_check": true
+  }
+}

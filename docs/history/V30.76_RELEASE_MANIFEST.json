@@ -1,0 +1,22 @@
+{
+  "release": "V30.76",
+  "baseline": "V30.75",
+  "focus": ["admin-analytics", "student-progress", "ai-study-actions", "storage", "community", "security", "test"],
+  "admin_analytics": {
+    "endpoint": "/api/admin/analytics/overview",
+    "scope": "server-authoritative admin-only aggregation",
+    "metrics": ["active students 7d/30d", "active teachers 30d", "learning engagement", "content counts", "storage provider distribution"]
+  },
+  "storage": {
+    "app": "Render",
+    "database": "Firestore",
+    "media": "Cloudinary",
+    "books_primary": "Cloudinary",
+    "books_secondary": "Google Drive link from user's second account",
+    "videos_primary": "Cloudinary",
+    "videos_secondary": "YouTube link/embed",
+    "future_pdf_storage": "Google Cloud Storage when billing/payment method is available"
+  },
+  "runtime_e2e": "not run in build sandbox",
+  "secrets_in_release": false
+}

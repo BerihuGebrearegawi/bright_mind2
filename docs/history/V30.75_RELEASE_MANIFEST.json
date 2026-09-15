@@ -1,0 +1,17 @@
+{
+  "release": "V30.75",
+  "baseline": "V30.74",
+  "focus": ["student-progress", "ai-study-actions", "storage", "community", "security", "test"],
+  "storage": {
+    "app": "Render",
+    "database": "Firestore",
+    "media": "Cloudinary",
+    "books_primary": "Cloudinary",
+    "books_secondary": "Google Drive link from user's second account",
+    "videos_primary": "Cloudinary",
+    "videos_secondary": "YouTube link/embed",
+    "future_pdf_storage": "Google Cloud Storage when billing/payment method is available"
+  },
+  "runtime_e2e": "not_run_in_build_sandbox",
+  "secrets_in_release": false
+}

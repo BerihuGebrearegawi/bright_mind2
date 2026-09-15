@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Mind Tutor — Admin Panel</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo-favicon.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+    <script defer src="{{ url_for('static', filename='math-render.js') }}?v=31.108"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style id="bmt-v31-29-dashboard-modernization">
+/* V31.29 — unified dashboard visual system */
+:root{--bmt-blue:#2563eb;--bmt-violet:#7c3aed;--bmt-teal:#0f766e;--bmt-ink:#0f172a;--bmt-line:rgba(100,116,139,.16)}
+.bmt-portal-page{background:radial-gradient(700px 360px at 0 -5%,rgba(37,99,235,.10),transparent 62%),radial-gradient(700px 380px at 100% 100%,rgba(124,58,237,.08),transparent 62%),var(--bg,#f8fafc);}
+.bmt-portal-page .card,.bmt-portal-page .contact-info,.bmt-portal-page .auth-card{border:1px solid var(--bmt-line);border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.055);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.bmt-portal-page .card:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(15,23,42,.08);border-color:rgba(37,99,235,.22)}
+.bmt-portal-page .card h2,.bmt-portal-page .card h3,.bmt-portal-page .card h4{letter-spacing:-.02em}
+.bmt-portal-page .btn{border-radius:11px;font-weight:750;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.bmt-portal-page .btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 20px rgba(37,99,235,.12)}
+.bmt-portal-page input,.bmt-portal-page select,.bmt-portal-page textarea{border-radius:11px;border-color:var(--bmt-line);transition:border-color .18s,box-shadow .18s}
+.bmt-portal-page input:focus,.bmt-portal-page select:focus,.bmt-portal-page textarea:focus{border-color:rgba(37,99,235,.55);box-shadow:0 0 0 3px rgba(37,99,235,.09);outline:none}
+.bmt-dashboard-nav{position:sticky;top:8px;z-index:10;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--surface,#fff) 86%,transparent);border:1px solid var(--bmt-line);border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.bmt-dashboard-nav button{border:0!important;border-radius:10px!important;padding:8px 11px!important;font-size:12px!important;transition:.18s}
+.bmt-dashboard-nav button.active,.bmt-dashboard-nav button:hover{background:linear-gradient(135deg,var(--bmt-blue),var(--bmt-violet));color:#fff;transform:translateY(-1px)}
+.stats-grid,.metric-grid,.parent-grid{gap:10px!important}
+.stats-grid>* ,.metric,.child-card{border-radius:13px!important;border:1px solid var(--bmt-line)!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important}
+.bmt-portal-page table{font-size:12px;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+.bmt-portal-page th,.bmt-portal-page td{padding:7px 9px!important}
+.bmt-portal-page th{font-size:11px;letter-spacing:.02em}
+.bmt-portal-page .item-row{border:1px solid var(--bmt-line)!important;border-radius:12px!important;padding:10px!important;margin-bottom:8px;transition:.18s}
+.bmt-portal-page .item-row:hover{transform:translateX(2px);border-color:rgba(37,99,235,.22)!important}
+.bmt-support-card{display:flex;align-items:center;gap:12px;padding:12px 14px!important}
+.bmt-support-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#dbeafe,#ede9fe);font-size:18px;flex:0 0 auto}
+.bmt-support-copy{display:grid;gap:2px;flex:1}.bmt-support-copy strong{font-size:13px}.bmt-support-copy span{font-size:11px;color:var(--text-muted)}
+.bmt-support-actions{display:flex;gap:6px;flex-wrap:wrap}.bmt-support-actions .btn{padding:7px 9px;font-size:11px}
+.bmt-payment-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.bmt-payment-item{padding:10px 12px;border:1px solid var(--bmt-line);border-radius:12px;background:linear-gradient(135deg,rgba(37,99,235,.045),rgba(124,58,237,.045))}
+.bmt-payment-item small{display:block;color:var(--text-muted);font-size:10px;margin-bottom:3px}.bmt-payment-item strong{font-size:13px;letter-spacing:.01em}
+@media(max-width:650px){.bmt-payment-strip{grid-template-columns:1fr}.bmt-dashboard-nav{position:relative;top:auto;overflow:auto;white-space:nowrap}.bmt-dashboard-nav button{font-size:11px!important}.bmt-support-card{align-items:flex-start;flex-wrap:wrap}.bmt-support-actions{width:100%}}
+
+/* V31.108 — contain the big info-heavy admin panels (Dashboard, Admin
+   Control Center 2.0, Platform Analytics) inside their own scrollable
+   box instead of letting them stretch the whole page. */
+.bmt-panel-scroll{overflow-y:auto;padding-right:8px;margin-top:4px}
+.bmt-panel-scroll::-webkit-scrollbar{width:8px}
+.bmt-panel-scroll::-webkit-scrollbar-track{background:transparent}
+.bmt-panel-scroll::-webkit-scrollbar-thumb{background:var(--bmt-line);border-radius:8px}
+.bmt-panel-scroll::-webkit-scrollbar-thumb:hover{background:var(--border,#cbd5e1)}
+@media(max-width:650px){.bmt-panel-scroll{max-height:70vh!important}}
+@media(prefers-reduced-motion:reduce){.bmt-portal-page *{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+
+    <button class="dark-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">⚙️</div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to manage your platform</p>
+            <form class="form-vertical" id="loginForm" onsubmit="event.preventDefault(); document.getElementById('emailLoginBtn').click();">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button type="button" id="emailLoginBtn" class="btn btn-primary" style="width:100%;">Sign In</button><button type="button" class="btn btn-outline" data-forgot-password>Forgot Password?</button>
+                <!-- Admin sign-in is intentionally email + password only. Phone+PIN
+                     is for student/teacher/parent accounts (see app.py phone_pin_login,
+                     which now refuses admin accounts server-side as well). -->
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="container" id="adminPanel" style="display:none;">
+        
+        <!-- Top Bar -->
+        <div class="top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" id="navLogo" style="width:40px; height:40px; border-radius:var(--radius-sm); object-fit:cover;">
+                <h1 class="page-title" style="margin:0; text-align:left; font-size:1.5em;">
+                    Bright Mind Tutor <span style="font-weight:400; font-size:0.6em; color:var(--text-muted);">Admin</span>
+                </h1>
+            </div>
+            <button class="btn btn-danger" id="logoutBtn" style="padding:8px 16px;">Sign Out</button>
+        </div>
+        
+        <p class="subtitle" style="text-align:center; margin-top:6px;">
+            Manage books, videos, live streams, quizzes, and chat
+        </p>
+
+        <div class="card admin-preview-card" id="adminDashboardPreview">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div><h3 style="margin:0;">👁️ Dashboard Preview</h3><p class="subtitle" style="margin:4px 0 0;">Pick a real student, teacher, or parent account to view their actual dashboard in a read-only preview session. Preview links expire automatically.</p></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-secondary" type="button" data-admin-preview="student">👨‍🎓 Student View</button>
+                    <button class="btn btn-secondary" type="button" data-admin-preview="teacher">👨‍🏫 Teacher</button>
+                    <button class="btn btn-secondary" type="button" data-admin-preview="parent">👨‍👩‍👧 Parent</button>
+                </div>
+                <div id="adminPreviewStatus" class="subtitle" role="status" aria-live="polite" style="width:100%;"></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <nav class="bmt-dashboard-nav" aria-label="Admin dashboard sections" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><button type="button" class="active" onclick="document.getElementById('adminDashboardPreview')?.scrollIntoView({behavior:'smooth'})">📊 Overview</button><button type="button" onclick="document.getElementById('adminControlCenter')?.scrollIntoView({behavior:'smooth'})">🎛️ Control Center</button><button type="button" onclick="document.getElementById('adminRegisteredStudents')?.scrollIntoView({behavior:'smooth'})">🎓 Students</button><button type="button" onclick="document.getElementById('teacherRequestsSection')?.scrollIntoView({behavior:'smooth'})">👨‍🏫 Teachers</button><button type="button" onclick="document.getElementById('parentStudentLinkingSection')?.scrollIntoView({behavior:'smooth'})">👨‍👩‍👧 Parent Linking</button><button type="button" onclick="document.getElementById('adminDigitalLibrarySection')?.scrollIntoView({behavior:'smooth'})">📚 Digital Library</button><button type="button" onclick="document.getElementById('smartQuizScannerSection')?.scrollIntoView({behavior:'smooth'})">🧠 Quiz Scanner</button><button type="button" onclick="document.getElementById('challengeManagerSection')?.scrollIntoView({behavior:'smooth'})">🏆 Challenges</button><button type="button" onclick="document.getElementById('developmentContentSection')?.scrollIntoView({behavior:'smooth'})">🌱 Growth Media</button><button type="button" onclick="document.getElementById('telegramAdminSection')?.scrollIntoView({behavior:'smooth'})">✈️ Telegram</button><button type="button" onclick="document.getElementById('adminPaymentsList')?.scrollIntoView({behavior:'smooth'})">💳 Payments</button><button type="button" onclick="document.getElementById('adminChatList')?.scrollIntoView({behavior:'smooth'})">💬 Community</button></nav>
+
+        <!-- V30.85 Admin AI Copilot -->
+        <div class="card" id="adminAICopilot">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div><h3 style="margin:0;">🤖 BMT Admin AI Copilot</h3><p class="subtitle" style="margin:4px 0 0;">Use the existing Gemini setup for announcements, moderation analysis, platform insights and content operations.</p></div>
+                <span class="badge badge-free">Existing Gemini</span>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:10px;margin-top:12px;">
+                <select id="adminAIMode">
+                    <option value="general">General operations</option>
+                    <option value="announcement">Announcement</option>
+                    <option value="moderation">Chat moderation</option>
+                    <option value="analytics">Platform insights</option>
+                    <option value="content">Content planning</option>
+                </select>
+                <textarea id="adminAITask" rows="3" maxlength="7000" placeholder="Example: Draft an announcement telling Grade 8 students that the new algebra lesson and practice quiz are available."></textarea>
+            </div>
+            <textarea id="adminAIContext" rows="3" maxlength="12000" style="margin-top:10px;" placeholder="Optional context: paste non-sensitive statistics, chat text, or content details for analysis."></textarea>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;">
+                <button class="btn btn-primary" type="button" id="adminAIBtn">🤖 Ask BMT AI</button>
+                <span class="subtitle" id="adminAIStatus"></span>
+            </div>
+            <div id="adminAIResult" class="ai-tutor-messages" style="display:none;margin-top:12px;max-height:420px;white-space:pre-wrap;"></div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="card">
+            <h3>📊 Dashboard</h3>
+            <div class="bmt-panel-scroll" style="max-height:440px;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍🎓</div>
+                    <div class="stat-number" id="studentCount">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎥</div>
+                    <div class="stat-number" id="totalVideos">0</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-number" id="totalViews">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💳</div>
+                    <div class="stat-number" id="totalPayments">0</div>
+                    <div class="stat-label">Payments</div>
+                </div>
+            </div>
+            <div style="margin-top:15px; display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:10px;">
+                <div style="background:var(--success-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Approved</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="approvedPayments">0</div>
+                </div>
+                <div style="background:var(--warning-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Pending</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="pendingPayments">0</div>
+                </div>
+                <div style="background:var(--danger-light); padding:10px; border-radius:var(--radius-md); text-align:center;">
+                    <div style="font-size:0.8em; color:var(--text-muted);">Rejected</div>
+                    <div style="font-weight:bold; font-size:1.2em;" id="rejectedPayments">0</div>
+                </div>
+            </div>
+            <div style="margin-top:15px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);">
+                <strong>Top Video:</strong> <span id="topVideo">Loading...</span>
+            </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- V26 Admin Control Center -->
+        <div class="card" id="adminControlCenter">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin-bottom:4px;">🛡️ Admin Control Center 2.0</h3>
+                    <p class="subtitle" style="margin:0;">One secure overview for students, teachers, payments, content, live classes, AI and support.</p>
+                </div>
+                <button class="btn btn-primary" id="refreshControlCenterBtn" type="button">🔄 Refresh</button>
+            </div>
+
+            <div class="bmt-panel-scroll" style="max-height:680px;">
+            <div class="stats-grid" style="margin-top:16px;">
+                <div class="stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-number" id="ccStudents">—</div><div class="stat-label">Students</div></div>
+                <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-number" id="ccTeachers">—</div><div class="stat-label">Teachers</div></div>
+                <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-number" id="ccCourses">—</div><div class="stat-label">Courses</div></div>
+                <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-number" id="ccExams">—</div><div class="stat-label">Exams</div></div>
+                <div class="stat-card"><div class="stat-icon">🎥</div><div class="stat-number" id="ccLive">—</div><div class="stat-label">Live Classes</div></div>
+                <div class="stat-card"><div class="stat-icon">💳</div><div class="stat-number" id="ccPayments">—</div><div class="stat-label">Payments</div></div>
+                <div class="stat-card"><div class="stat-icon">🎫</div><div class="stat-number" id="ccSupport">—</div><div class="stat-label">Support Tickets</div></div>
+                <div class="stat-card"><div class="stat-icon">🤖</div><div class="stat-number" id="ccAiUsage">—</div><div class="stat-label">AI Usage Records</div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px;">
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">💳 Payment Health</h4>
+                    <div>Pending: <strong id="ccPendingPayments">—</strong></div>
+                    <div>Approved: <strong id="ccApprovedPayments">—</strong></div>
+                    <div>Rejected: <strong id="ccRejectedPayments">—</strong></div>
+                </div>
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">👨‍🏫 Teacher Requests</h4>
+                    <div>Pending: <strong id="ccPendingTeachers">—</strong></div>
+                    <div>Approved: <strong id="ccApprovedTeachers">—</strong></div>
+                    <div>Rejected: <strong id="ccRejectedTeachers">—</strong></div>
+                </div>
+                <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                    <h4 style="margin-top:0;">🎫 Support</h4>
+                    <div>Open: <strong id="ccOpenSupport">—</strong></div>
+                    <div>Unassigned: <strong id="ccUnassignedSupport">—</strong></div>
+                    <div>Closed: <strong id="ccClosedSupport">—</strong></div>
+                </div>
+            </div>
+
+            <div class="card" id="adminRegisteredStudents" style="margin-top:18px;padding:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h4 style="margin:0;">👨‍🎓 Registered Students</h4><div class="subtitle">Detailed student directory for authorized administrators.</div></div>
+                    <button class="btn btn-secondary" id="refreshStudentDirectoryBtn" type="button">↻ Refresh</button>
+                </div>
+                <input type="text" id="adminStudentDirectoryFilter" placeholder="🔎 Filter by name, phone, email, or grade…" style="width:100%;margin-top:10px;">
+                <div style="overflow:auto;margin-top:8px;max-height:480px;" class="admin-scroll-list"><table style="width:100%;min-width:720px;"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Grade</th><th>Payment</th><th>Registered</th><th>Actions</th></tr></thead><tbody id="adminStudentDirectoryBody"><tr><td colspan="7" class="subtitle">Loading…</td></tr></tbody></table></div>
+                <div id="adminStudentDirectoryStatus" class="subtitle" style="margin-top:8px;"></div>
+            </div>
+
+            <div style="margin-top:18px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><h4 style="margin:0;">📈 Platform Analytics</h4><div class="subtitle" style="margin:4px 0 0;">Live usage, learning engagement, content and storage-provider overview.</div></div>
+                    <button class="btn btn-secondary" id="refreshAnalyticsBtn" type="button">↻ Refresh analytics</button>
+                </div>
+                <div class="bmt-panel-scroll" style="max-height:360px;">
+                <div class="stats-grid" style="margin-top:14px;">
+                    <div class="stat-card"><div class="stat-icon">🟢</div><div class="stat-number" id="anActive7d">—</div><div class="stat-label">Active students · 7d</div></div>
+                    <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-number" id="anActive30d">—</div><div class="stat-label">Active students · 30d</div></div>
+                    <div class="stat-card"><div class="stat-icon">▶️</div><div class="stat-number" id="anVideosWatched">—</div><div class="stat-label">Videos watched</div></div>
+                    <div class="stat-card"><div class="stat-icon">🧠</div><div class="stat-number" id="anQuizSubmissions">—</div><div class="stat-label">Quiz submissions</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px;">
+                    <div><strong>Learning</strong><div class="subtitle">Students with progress: <b id="anStudentsProgress">—</b></div><div class="subtitle">Active teachers · 30d: <b id="anTeachers30d">—</b></div></div>
+                    <div><strong>Content</strong><div class="subtitle">Courses: <b id="anCourses">—</b> · Lessons: <b id="anLessons">—</b></div><div class="subtitle">Quizzes: <b id="anQuizzes">—</b> · Exam archive: <b id="anArchives">—</b></div></div>
+                    <div><strong>Video / file providers</strong><div class="subtitle">YouTube: <b id="anYoutube">—</b></div><div class="subtitle">Cloudinary: <b id="anCloudinary">—</b> · Drive: <b id="anDrive">—</b></div></div>
+                </div>
+                <div id="adminAnalyticsError" class="error-text" style="display:none;margin-top:10px;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top:18px;">
+                <h4>🕒 Recent Platform Activity</h4>
+                <div id="ccRecentActivity"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <div style="margin-top:18px;">
+                <h4>🛡️ Admin Audit Log</h4>
+                <div id="ccAuditLog"><div class="spinner"></div> Loading...</div>
+            </div>
+
+            <div style="margin-top:18px;padding:12px;border:1px dashed var(--border);border-radius:var(--radius-md);">
+                <strong>Quick actions</strong>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('teacherRequestsList')">👨‍🏫 Teachers</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminPaymentsList')">💳 Payments</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminExamArchiveList')">🏛️ Exam Archive</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('pushForm')">🔔 Announcements</button>
+                    <button class="btn btn-outline" type="button" onclick="scrollToAdminSection('adminChatList')">💬 Communication</button>
+                </div>
+            </div>
+            <div id="ccGeneratedAt" style="font-size:12px;color:var(--text-muted);margin-top:10px;"></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Organization Logo -->
+        <div class="card" id="organizationLogoSection">
+            <h3>🏢 Organization Logo</h3>
+            <p class="subtitle">Upload your organization logo. It will appear on the landing page and student dashboard.</p>
+            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin:12px 0;">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Current Logo" id="currentLogoDisplay" style="width:80px; height:80px; border-radius:var(--radius-md); object-fit:cover; border:2px solid var(--border);">
+                <button class="btn btn-primary" onclick="openLogoModal()" style="width:auto;">🖼️ Change Logo</button>
+                <button class="btn btn-danger" onclick="removeOrganizationLogo()" style="width:auto;">🗑️ Remove Logo</button>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Upload Book -->
+        <div class="card">
+            <h3>📚 Upload Book</h3>
+            <form class="form-section" id="bookForm" onsubmit="event.preventDefault(); uploadBook();">
+                <div class="section-title">Book Information</div>
+                <div class="field-group">
+                    <label>Book Title</label>
+                    <input type="text" id="bookTitle" placeholder="e.g. Grade 7 Math Book">
+                </div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="bookClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Library Category</label>
+                    <select id="bookCollection">
+                        <option value="books" selected>Textbooks (Main Library)</option>
+                        <option value="bookLibrary">Reading / General Library</option>
+                        <option value="teacherGuides">Teacher Guides</option>
+                        <option value="referenceBooks">Reference Books</option>
+                        <option value="psychologyBooks">Psychology & Child Development Books</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>Book Source</label>
+                    <select id="bookStorageProvider" onchange="toggleBookSource()">
+                        <option value="cloudinary" selected>Upload PDF/Document to Cloudinary (recommended)</option>
+                        <option value="external_link">Link to a book hosted elsewhere (any https:// URL)</option>
+                        <option value="google_drive">Google Drive Link (second account / existing file)</option>
+                    </select>
+                </div>
+                <div class="field-group full-width" id="bookFileGroup">
+                    <label>Book File (PDF)</label>
+                    <input type="file" id="bookFile" accept=".pdf,.doc,.docx">
+                    <div class="subtitle">For new uploads. Stored in Cloudinary; the library links to it directly.</div>
+                </div>
+                <div class="field-group full-width" id="bookExternalLinkGroup" style="display:none;">
+                    <label>Book Link</label>
+                    <input type="url" id="bookExternalUrl" placeholder="https://example.com/path/to/book.pdf">
+                    <div class="subtitle">Any direct https:// link to the book (a school website, another cloud drive, an existing PDF host, etc).</div>
+                </div>
+                <div class="field-group full-width" id="bookDriveGroup" style="display:none;">
+                    <label>Google Drive File Link</label>
+                    <input type="url" id="bookDriveUrl" placeholder="https://drive.google.com/file/d/FILE_ID/view">
+                    <div class="subtitle">Use a file from your second Google Drive account. Set the file sharing to <strong>Anyone with the link → Viewer</strong>.</div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">📚 Save Book</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Books</h4>
+            <div class="subtitle" style="margin:10px 0;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);">
+                <strong>Google Drive:</strong> the first upload may ask you to sign in with Google. If Google shows <em>Access blocked / Authorization Error</em>, add the Render domain under <strong>Authorized JavaScript origins</strong> for this OAuth client in Google Cloud Console.
+            </div>
+            <input type="text" id="adminBooksFilter" placeholder="🔎 Filter books by title, class, or category…" style="width:100%;margin-bottom:8px;">
+            <div id="adminBooksList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Upload Video -->
+        <div class="card">
+            <h3>🎥 Upload Video</h3>
+            <form class="form-section" id="videoForm" onsubmit="event.preventDefault(); uploadVideo();">
+                <div class="section-title">Video Information</div>
+                <div class="field-group">
+                    <label>Video Title</label>
+                    <input type="text" id="videoTitle" placeholder="e.g. Physics — Kinematics">
+                </div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="videoClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>Video File <span class="subtitle">(optional if using YouTube)</span></label>
+                    <input type="file" id="videoFile" accept="video/*">
+                </div>
+                <div class="field-group full-width">
+                    <label>YouTube URL <span class="subtitle">(optional alternative to upload)</span></label>
+                    <input type="url" id="videoYoutubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div class="field-group full-width">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="isPaidVideo" style="width:auto; margin:0;">
+                        <span>Paid Content?</span>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-secondary">📤 Upload Video</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Videos</h4>
+            <p class="subtitle">Choose a video from your device, including Android Photos/Google Photos through the system file picker. Cloudinary must have the configured upload preset enabled.</p>
+            <input type="text" id="adminVideosFilter" placeholder="🔎 Filter videos by title or class…" style="width:100%;margin-bottom:8px;">
+            <div id="adminVideosList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Live Stream -->
+        <div class="card">
+            <h3>📡 Live Stream</h3>
+            <div id="liveStatusBox" class="subtitle" style="padding:10px; border-radius:var(--radius-md); background:rgba(0,0,0,0.05); margin-bottom:10px;">
+                Checking live status...
+            </div>
+            <div class="form-section">
+                <div class="field-group">
+                    <label>Stream Title</label>
+                    <input type="text" id="liveTitle" placeholder="e.g. Live Math Review">
+                </div>
+                <div class="field-group">
+                    <label>Stream Type</label>
+                    <select id="liveType">
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                </div>
+                <div class="field-group full-width">
+                    <label>YouTube Live / Meet Link</label>
+                    <input type="text" id="liveLink" placeholder="https://www.youtube.com/watch?v=XXXXXXXX">
+                </div>
+                <div class="form-actions">
+                    <button onclick="startLiveStream()" class="btn btn-success">🟢 Start Live</button>
+                    <button onclick="toggleAdminAudioMute()" id="muteAudioBtn" class="btn btn-warning">🔇 Mute Audio</button>
+                    <button onclick="stopLiveStream()" class="btn btn-danger">🔴 Stop Live</button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Add Quiz -->
+        <div class="card">
+            <h3>✍️ Add Quiz</h3>
+            <form class="form-section" id="quizForm" onsubmit="event.preventDefault(); uploadQuiz();">
+                <div class="section-title">Quiz Information</div>
+                <div class="field-group">
+                    <label>Class</label>
+                    <select id="quizClass">
+                        <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Quiz Title</label>
+                    <input type="text" id="quizTitle" placeholder="e.g. Question 1">
+                </div>
+                <div class="field-group full-width">
+                    <label>Question</label>
+                    <textarea id="quizQuestion" rows="3" placeholder="e.g. v = u + at"></textarea>
+                </div>
+                <div class="field-group full-width">
+                    <label>Question Image (optional)</label>
+                    <input type="file" id="quizImageFile" accept="image/*">
+                </div>
+                <div class="section-title">Options</div>
+                <div class="field-group">
+                    <label>Option A</label>
+                    <input type="text" id="optA" placeholder="Option A">
+                </div>
+                <div class="field-group">
+                    <label>Option B</label>
+                    <input type="text" id="optB" placeholder="Option B">
+                </div>
+                <div class="field-group">
+                    <label>Option C</label>
+                    <input type="text" id="optC" placeholder="Option C">
+                </div>
+                <div class="field-group">
+                    <label>Option D</label>
+                    <input type="text" id="optD" placeholder="Option D">
+                </div>
+                <div class="field-group">
+                    <label>Correct Answer</label>
+                    <select id="correctOpt">
+                        <option value="A">A</option><option value="B">B</option>
+                        <option value="C">C</option><option value="D">D</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Quiz</button>
+                </div>
+            </form>
+            <h4 style="margin-top:18px;">Existing Quizzes</h4>
+            <input type="text" id="adminQuizzesFilter" placeholder="🔎 Filter quizzes by title or class…" style="width:100%;margin-bottom:8px;">
+            <div id="adminQuizzesList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        
+<div class="card" id="adminDigitalLibrarySection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">📚 Digital Library</h3><p class="subtitle" style="margin:4px 0">Browse and verify the library collections available across Student and Teacher dashboards.</p></div><span class="badge badge-free">Central Library</span></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px"><select id="dashboardLibraryGrade"><option value="">All grades</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><select id="dashboardLibraryCategory"><option value="">All categories</option><option value="student_textbook">Student Textbooks</option><option value="teacher_guide">Teacher Guides</option><option value="reference">Reference Books</option><option value="psychology">Psychology & Development</option></select><input id="dashboardLibrarySubject" placeholder="Subject / topic"><button class="btn btn-primary" id="dashboardLibrarySearchBtn" type="button">Search Library</button></div><div id="dashboardLibraryList" class="admin-scroll-list" style="margin-top:12px"></div></div>
+<div class="card" id="telegramAdminSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">✈️ Telegram Academic Challenge Bot</h3><p class="subtitle" style="margin:4px 0">Manage the existing BMT Telegram bot connection. The bot token is never displayed in the admin panel.</p></div><button class="btn btn-outline" id="telegramRefreshBtn" type="button">↻ Refresh</button></div><div id="telegramAdminStatus" style="margin-top:10px"></div><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Webhook URL</label><input id="telegramWebhookUrl" type="url" placeholder="https://your-domain.example/api/telegram/webhook" style="width:100%"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="telegramSetWebhookBtn" type="button">🔗 Set / Update Webhook</button></div><div id="telegramAdminActionStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div></div>
+
+<div class="card" id="telegramModeratorAdminSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">🛡️ Telegram Moderator / Support Bot</h3><p class="subtitle" style="margin:4px 0">Group safety and spam moderation. Separate bot identity from the Academic bot.</p></div><button class="btn btn-outline" id="telegramModeratorRefreshBtn" type="button">↻ Refresh</button></div><div id="telegramModeratorAdminStatus" style="margin-top:10px"></div><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Webhook URL</label><input id="telegramModeratorWebhookUrl" type="url" placeholder="https://your-domain.example/api/telegram/moderator/webhook" style="width:100%"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="telegramModeratorSetWebhookBtn" type="button">🔗 Set / Update Webhook</button></div><div id="telegramModeratorAdminActionStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div></div>
+
+<div class="card" id="telegramPublisherAdminSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">📣 Telegram Publisher / Content Bot</h3><p class="subtitle" style="margin:4px 0">Announcements, lessons, and media publishing. Separate bot identity from the Academic and Moderator bots.</p></div><button class="btn btn-outline" id="telegramPublisherRefreshBtn" type="button">↻ Refresh</button></div><div id="telegramPublisherAdminStatus" style="margin-top:10px"></div><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Webhook URL</label><input id="telegramPublisherWebhookUrl" type="url" placeholder="https://your-domain.example/api/telegram/publisher/webhook" style="width:100%"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="telegramPublisherSetWebhookBtn" type="button">🔗 Set / Update Webhook</button></div><div id="telegramPublisherAdminActionStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div></div>
+
+<div class="card" id="telegramPlatformSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">📡 Telegram Multi-Channel Publishing</h3><p class="subtitle" style="margin:4px 0">Send a message to one or more of the 6 BMT channels / 6 groups at once.</p></div><button class="btn btn-outline" id="tgRefresh" type="button">↻ Refresh targets</button></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:8px;background:var(--surface-2,rgba(0,0,0,.03));padding:8px;border-radius:8px">
+<div><label style="font-weight:700;font-size:12px;display:block">🧠 Smart Select — Grade</label><input id="tgSmartGrade" placeholder="e.g. 9" style="width:90px"></div>
+<div><label style="font-weight:700;font-size:12px;display:block">Purpose</label><select id="tgSmartPurpose"><option value="general">General announcement</option><option value="academic">Academic Challenge</option><option value="winners">Winners/Awards</option><option value="support">Teacher/Student Support</option></select></div>
+<button class="btn btn-outline" id="tgSmartApplyBtn" type="button">✨ Auto-select targets</button>
+</div>
+<div id="tgTargetList" style="margin-top:10px;max-height:220px;overflow:auto"></div><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Type</label><select id="tgType" style="width:100%"><option value="text">Text</option><option value="photo">Photo</option><option value="document">Document</option><option value="video">Video</option><option value="audio">Audio</option></select><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Text</label><textarea id="tgText" rows="3" style="width:100%"></textarea><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Caption (for media)</label><input id="tgCaption" type="text" style="width:100%"><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Media URL (for photo/document/video/audio)</label><input id="tgMediaUrl" type="url" style="width:100%"><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Or upload / take a photo (fills the URL above automatically)</label><input id="tgMediaFile" type="file" accept="image/*,video/*,audio/*,application/pdf" capture="environment" style="width:100%"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="tgPublish" type="button">📤 Publish</button></div><div id="tgStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div></div>
+
+<div class="card" id="telegramAnalyticsSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">📊 Telegram Analytics & Moderation Logs</h3><p class="subtitle" style="margin:4px 0">Posts sent, moderation actions, and the most recent moderator bot activity.</p></div><button class="btn btn-outline" id="tgAnalyticsRefreshBtn" type="button">↻ Refresh</button></div><div id="tgAnalyticsSummary" style="margin-top:10px"><div class="spinner"></div> Loading…</div><h4 style="margin:14px 0 6px">Recent Moderation Actions</h4><div id="tgModerationLogList" class="admin-scroll-list"><div class="spinner"></div> Loading…</div><h4 style="margin:14px 0 6px">🖼️ Media Library <span style="font-weight:400;font-size:12px">(click to reuse in the publisher above)</span></h4><input type="text" id="tgMediaLibraryFilter" placeholder="🔎 Filter media…" style="width:100%;margin-bottom:8px;"><div id="tgMediaLibraryList" class="admin-scroll-list"><div class="spinner"></div> Loading…</div><h4 style="margin:14px 0 6px">🗓️ Content Calendar</h4><div id="tgContentCalendar"><div class="spinner"></div> Loading…</div></div>
+
+<div class="card" id="developmentContentSection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">🌱 Psychology & Child Development Media</h3><p class="subtitle" style="margin:4px 0">Attach a video and/or a book (PDF) to any Student or Parent Development Center lesson.</p></div><button class="btn btn-outline" id="devContentRefreshBtn" type="button">↻ Refresh</button></div><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Lesson</label><select id="devContentLessonSelect" style="width:100%"></select><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Video URL (YouTube link, or upload below)</label><input id="devContentVideoUrl" type="url" style="width:100%" placeholder="https://..."><label style="display:block;margin-top:8px;font-weight:700;font-size:12px">Upload a video file</label><input id="devContentVideoFile" type="file" accept="video/*" style="width:100%"><label style="display:block;margin-top:10px;font-weight:700;font-size:12px">Book / PDF URL (or upload below)</label><input id="devContentBookUrl" type="url" style="width:100%" placeholder="https://..."><label style="display:block;margin-top:8px;font-weight:700;font-size:12px">Upload a book/PDF file</label><input id="devContentBookFile" type="file" accept="application/pdf" style="width:100%"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary" id="devContentSaveBtn" type="button">💾 Save to Lesson</button></div><div id="devContentStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div></div>
+
+<div class="card" id="challengeQuestionBankSection"><h3 style="margin:0">📚 Question Bank (Math & Aptitude Regional Challenge)</h3><p class="subtitle">Add questions here first, approve them, then use their IDs to build a challenge below.</p>
+<div style="display:grid;gap:8px;margin-top:8px">
+<label style="font-weight:700;font-size:12px">Question</label><textarea id="qbQuestion" rows="2" style="width:100%"></textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-weight:700;font-size:12px">Option A</label><input id="qbOptA" style="width:100%"></div><div><label style="font-weight:700;font-size:12px">Option B</label><input id="qbOptB" style="width:100%"></div><div><label style="font-weight:700;font-size:12px">Option C</label><input id="qbOptC" style="width:100%"></div><div><label style="font-weight:700;font-size:12px">Option D</label><input id="qbOptD" style="width:100%"></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div><label style="font-weight:700;font-size:12px">Correct Answer</label><select id="qbCorrect"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+<div><label style="font-weight:700;font-size:12px">Subject</label><select id="qbSubject"><option value="Mathematics">Mathematics</option><option value="Aptitude">Aptitude</option><option value="Other">Other</option></select></div>
+<div><label style="font-weight:700;font-size:12px">Grade</label><input id="qbGrade" placeholder="e.g. 9" style="width:100%"></div>
+</div>
+<button class="btn btn-primary" id="qbAddBtn" type="button" style="width:fit-content">➕ Add Question (draft)</button>
+<div id="qbStatus" class="subtitle"></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px"><h4 style="margin:0">Pending approval</h4><button class="btn btn-outline" id="qbRefreshBtn" type="button">↻ Refresh</button></div>
+<div id="qbPendingList" class="admin-scroll-list" style="margin-top:8px"></div>
+</div>
+
+<div class="card" id="challengeManagerSection"><h3 style="margin:0">🏆 Academic Challenge & Scholarship Manager</h3><p class="subtitle">Regional, grade-level Mathematics & Aptitude competitions, up to scholarship awards.</p>
+<div style="display:grid;gap:8px;margin-top:8px">
+<label style="font-weight:700;font-size:12px">Title</label><input id="chTitle" placeholder="e.g. Grade 9-10 Mathematics Regional Round 1" style="width:100%">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div><label style="font-weight:700;font-size:12px">Subject</label><select id="chSubject"><option value="Mathematics">Mathematics</option><option value="Aptitude">Aptitude</option><option value="Other">Other</option></select></div>
+<div><label style="font-weight:700;font-size:12px">Grade</label><input id="chGrade" placeholder="e.g. 9" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Region</label><select id="chRegion" style="width:100%"><option value="ALL">All Regions (national)</option></select></div>
+<div><label style="font-weight:700;font-size:12px">Zone / Sub-city (optional)</label><input id="chZone" placeholder="e.g. Bole" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Woreda (optional)</label><input id="chWoreda" placeholder="e.g. Woreda 07" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Round Number (1-7)</label><input id="chRound" type="number" min="1" max="7" value="1" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Qualification Count (advance to next round)</label><input id="chQualCount" type="number" min="0" value="0" style="width:100%"><div class="subtitle" style="margin-top:2px">Top N here are the only ones the server lets start Round N+1 in the same Season.</div></div>
+<div><label style="font-weight:700;font-size:12px">Duration (minutes)</label><input id="chDuration" type="number" min="1" max="240" value="20" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Season (groups rounds together)</label><input id="chSeason" placeholder="e.g. 2026-Regional-Math" style="width:100%"><div class="subtitle" style="margin-top:2px">Use the exact same text on every round of one competition.</div></div>
+<div><label style="font-weight:700;font-size:12px">Starts At</label><input id="chStart" type="datetime-local" style="width:100%"></div>
+<div><label style="font-weight:700;font-size:12px">Ends At</label><input id="chEnd" type="datetime-local" style="width:100%"></div>
+</div>
+<label style="font-weight:700;font-size:12px"><input type="checkbox" id="chIsScholarship"> This round can lead to a Scholarship</label>
+<label style="font-weight:700;font-size:12px">Question IDs (comma-separated, from the approved Question Bank above)</label><textarea id="chQuestionIds" rows="2" style="width:100%" placeholder="qId1, qId2, qId3"></textarea>
+<button class="btn btn-primary" id="chCreateBtn" type="button" style="width:fit-content">➕ Create Challenge (draft)</button>
+<div id="chCreateStatus" class="subtitle"></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><h4 style="margin:0">Existing Challenges</h4><button class="btn btn-outline" id="chRefreshBtn" type="button">↻ Refresh</button></div>
+<div id="chList" class="admin-scroll-list" style="margin-top:8px"></div>
+</div>
+
+<div class="card" id="smartQuizScannerSection">
+  <h3>🧠 Smart Quiz Scanner</h3>
+  <p class="subtitle">Upload a question photo or PDF. BMT will extract multiple-choice questions for review. Nothing is imported until you approve the edited questions.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <input id="smartScannerFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf" capture="environment">
+    <input id="smartScanner_title" placeholder="Quiz title prefix (optional)">
+    <select id="smartScanner_class"><option value="">Choose class</option><option>KG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+    <input id="smartScanner_pageNumber" type="number" min="1" value="1" placeholder="Page number">
+    <input id="smartScanner_collection" placeholder="Library collection (optional)">
+    <input id="smartScanner_bookId" placeholder="Book ID (optional)">
+    <input id="smartScanner_chapterId" placeholder="Chapter ID (optional)">
+    <input id="smartScanner_subchapterId" placeholder="Subchapter ID (optional)">
+    <input id="smartScanner_learningObjective" placeholder="Learning objective (optional)">
+    <input id="smartScanner_sourceRef" placeholder="Source reference (optional)">
+  </div>
+  <input id="smartScannerId" type="hidden">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <button class="btn btn-primary" type="button" id="smartScannerScanBtn">🔎 Scan & Extract</button>
+    <button class="btn btn-secondary" type="button" id="smartScannerReviewBtn">💾 Save Review</button>
+    <button class="btn btn-success" type="button" id="smartScannerImportBtn">✅ Approve & Import to Quizzes</button>
+  </div>
+  <div id="smartScannerStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div>
+  <div id="smartScannerQuestions" style="margin-top:10px"></div>
+</div>
+
+<!-- National Exam Archive -->
+        <div class="card" id="examArchiveAdminSection">
+            <h3>📚 National & Regional Exam Archive</h3>
+            <p class="subtitle">Manage Grade 6–12 exam PDFs. Grade 12 must be assigned to Natural Sciences or Social Sciences.</p>
+            <form class="form-section" id="examArchiveForm" onsubmit="event.preventDefault(); saveExamArchive();">
+                <div class="field-group">
+                    <label>Title</label>
+                    <input id="archiveTitle" maxlength="160" placeholder="e.g. Grade 12 Mathematics National Exam 2025" required>
+                </div>
+                <div class="field-group">
+                    <label>Grade</label>
+                    <select id="archiveGrade" onchange="toggleArchiveStream()">
+                        <option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="field-group" id="archiveStreamGroup" style="display:none;">
+                    <label>Grade 12 Stream</label>
+                    <select id="archiveStream"><option value="Natural Sciences">Natural Sciences</option><option value="Social Sciences">Social Sciences</option></select>
+                </div>
+                <div class="field-group"><label>Subject</label><input id="archiveSubject" maxlength="80" placeholder="Mathematics" required></div>
+                <div class="field-group"><label>Year</label><input id="archiveYear" type="number" min="1900" max="2100" placeholder="2025" required></div>
+                <div class="field-group"><label>Storage</label><select id="archiveProvider"><option value="gcs" selected>Google Cloud Storage (recommended)</option><option value="cloudinary">Cloudinary (legacy)</option><option value="google_drive">Google Drive (legacy)</option><option value="mega">Mega</option><option value="external">External</option></select></div>
+                <div class="field-group full-width"><label>Exam PDF</label><input id="archiveFile" type="file" accept="application/pdf"><small class="subtitle">Recommended: choose the PDF and BMT will upload it to Google Cloud Storage automatically. For legacy Google Drive/Mega/External items, you may leave this empty and use File ID/URL below.</small></div>
+                <div class="field-group full-width"><label>File ID / Public ID / Google Drive Link (optional)</label><input id="archiveFileId" maxlength="1000" placeholder="Cloudinary public ID or Google Drive file link / file ID"><small class="subtitle">For Google Drive, paste a file link from your second account, for example <code>https://drive.google.com/file/d/FILE_ID/view</code>. Set sharing to <strong>Anyone with the link → Viewer</strong>.</small></div>
+                <div class="field-group full-width"><label>Preview URL (optional)</label><input id="archivePreviewUrl" maxlength="1000" placeholder="Cloudinary/External preview URL (optional)"></div>
+                <div class="field-group full-width"><label>Download URL (optional)</label><input id="archiveDownloadUrl" maxlength="1000" placeholder="Cloudinary/External download URL (optional)"></div>
+                <div class="field-group full-width"><label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="archivePremium" checked style="width:auto;margin:0;"> Premium / paid archive</label><div style="display:grid;grid-template-columns:1fr 120px;gap:8px;margin-top:8px"><input id="archivePriceLabel" placeholder="e.g. 50" inputmode="decimal"><select id="archiveCurrency"><option>ETB</option><option>USD</option></select></div><small class="subtitle">Free items automatically display “Free”. Paid items should show a clear price.</small></div>
+                <div class="form-actions"><button class="btn btn-primary" type="submit">➕ Add Archive Item</button></div>
+            </form>
+            <input type="text" id="adminExamArchiveFilter" placeholder="🔎 Filter archive items…" style="width:100%;margin-bottom:8px;">
+            <div id="adminExamArchiveList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Payment Approvals -->
+        <div class="card">
+            <h3>💳 Payment Approvals</h3>
+            <p class="subtitle">Review transaction IDs submitted by students and approve or reject to unlock paid content.</p>
+            <input type="text" id="adminPaymentsFilter" placeholder="🔎 Filter by student name or class…" style="width:100%;margin-bottom:8px;">
+            <div id="adminPaymentsList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Teacher Requests -->
+        <div class="card" id="teacherRequestsSection">
+            <h3>👨‍🏫 Teacher Requests</h3>
+            <p class="subtitle">Review and approve teacher access requests.</p>
+            <input type="text" id="teacherRequestsFilter" placeholder="🔎 Filter by name or subject…" style="width:100%;margin-bottom:8px;">
+            <div id="teacherRequestsList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <!-- Active Teacher Roster -->
+        <div class="card" id="teacherRosterCard" style="margin-top:14px">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><h3 style="margin:0">📋 Active Teacher Roster</h3><button class="btn btn-outline" type="button" onclick="loadTeacherRoster()">↻ Refresh</button></div>
+            <p class="subtitle">Approved teachers with their subjects, grades, phone, and activity - pulled live from their profile and course/assignment records.</p>
+            <input type="text" id="teacherRosterFilter" placeholder="🔎 Filter by name, subject, or grade…" style="width:100%;margin-bottom:8px;">
+            <div id="teacherRosterList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <!-- Parent-Student Linking -->
+        <div class="card" id="parentStudentLinkingSection" style="margin-top:14px">
+            <h3>👨‍👩‍👧 Parent–Student Linking</h3>
+            <p class="subtitle">Link a verified parent account to a student. The parent will then see only that student’s server-authorized progress and results.</p>
+            <form id="parentLinkForm" class="form-vertical" style="max-width:620px">
+                <input id="parentLinkParentEmail" type="email" placeholder="Parent account email" required>
+                <input id="parentLinkStudentEmail" type="email" placeholder="Student account email" required>
+                <button class="btn btn-primary" type="submit" id="parentLinkBtn">Link Parent to Student</button>
+                <div id="parentLinkStatus" class="subtitle" role="status" aria-live="polite"></div>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Push Notifications -->
+        <div class="card">
+            <h3>🔔 Push Notifications</h3>
+            <p class="subtitle">Send a real browser push notification to students who enabled notifications.</p>
+            <form class="form-vertical" id="pushForm">
+                <input id="pushTitle" value="Bright Mind Tutor" maxlength="100" placeholder="Notification title">
+                <textarea id="pushMessage" rows="3" maxlength="500" placeholder="New lesson is available…" required></textarea>
+                <button class="btn btn-primary" type="submit">🔔 Send Notification</button>
+                <div id="pushStatus" class="subtitle"></div>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- In-App Announcements -->
+        <div class="card">
+            <h3>📢 In-App Announcements</h3>
+            <p class="subtitle">Create a durable notification that appears in every student's notification bell.</p>
+            <form class="form-vertical" id="announcementForm">
+                <input id="announcementTitle" maxlength="120" placeholder="Announcement title" required>
+                <textarea id="announcementMessage" rows="4" maxlength="600" placeholder="Write the announcement…" required></textarea>
+                <button class="btn btn-primary" type="submit">📢 Publish Announcement</button>
+                <div id="announcementStatus" class="subtitle"></div>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Chat Moderation -->
+        <div class="card">
+            <h3>💬 Chat Moderation</h3>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0"><textarea id="adminCommunityMessage" rows="2" placeholder="Send an announcement to the community chat…" style="flex:1;min-width:220px"></textarea><input id="adminCommunityMedia" type="file" accept="image/*,audio/*,video/*" style="max-width:180px"><button class="btn btn-primary" type="button" id="adminCommunitySendBtn">Send to community</button></div><div id="adminCommunitySendStatus" class="subtitle"></div><input type="text" id="adminChatFilter" placeholder="🔎 Filter chat messages by sender or text…" style="width:100%;margin-bottom:8px;"><div id="adminChatList" class="admin-scroll-list"><div class="spinner"></div> Loading...</div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Service Prices -->
+        <div class="card">
+            <h3>💰 Service Prices <span style="font-size:0.7em; color:var(--text-muted);">(Admin Setup)</span></h3>
+            <p class="subtitle">Set prices for each paid service. Students will see these when subscribing.</p>
+            <form class="form-section" id="priceForm" onsubmit="event.preventDefault(); saveServicePrices();">
+                <div class="section-title">Price Configuration</div>
+                <div class="field-group">
+                    <label>Currency</label>
+                    <select id="priceCurrency"><option value="ETB">ETB (Birr)</option><option value="USD">USD (Dollar)</option></select>
+                </div>
+                <div class="field-group">
+                    <label>Monthly Subscription <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceMonthly" placeholder="9.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Yearly Subscription <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceYearly" placeholder="79.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Single Video <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceVideo" placeholder="2.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Exam PDF <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceExam" placeholder="4.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Quiz Access <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceQuiz" placeholder="1.99" step="0.01" min="0">
+                </div>
+                <div class="field-group">
+                    <label>Live Class <span data-price-currency>ETB</span></label>
+                    <input type="number" id="priceLive" placeholder="5.99" step="0.01" min="0">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Prices</button>
+                    <button type="button" class="btn btn-neutral" onclick="loadServicePrices()">🔄 Load Current</button>
+                </div>
+            </form>
+            <div id="priceStatus" style="margin-top:12px; display:none; padding:12px; border-radius:var(--radius-md); text-align:center;"></div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <div>
+                <h4>📞 Contact</h4>
+                <div>📱 <a href="tel:+251914404472">+251 914 404 472</a></div>
+                <div>✉️ <a href="mailto:berihu144@gmail.com">berihu144@gmail.com</a></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Logo Modal -->
+    <div class="modal-overlay" id="logoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🏢 Update Organization Logo</h3>
+                <button class="modal-close" onclick="closeLogoModal()">✕</button>
+            </div>
+            <div class="profile-upload-area">
+                <img id="logoPreview" src="{{ url_for('static', filename='logo.png') }}" alt="Logo Preview" class="preview has-image">
+                <label class="upload-btn" for="logoFileInput">
+                    📁 Choose Image
+                    <input type="file" id="logoFileInput" accept="image/*" onchange="previewLogo(this.files[0])">
+                </label>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:16px;">
+                <button class="btn btn-primary" onclick="saveOrganizationLogo()" style="flex:1;">💾 Save Logo</button>
+                <button class="btn btn-neutral" onclick="closeLogoModal()" style="flex:1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='smart_quiz_scanner.js') }}?v=31.108"></script><script src="{{ url_for('static', filename='dashboard_integrations.js') }}?v=31.108"></script>
+    <script src="{{ url_for('static', filename='admin_telegram_bots.js') }}?v=31.108"></script><script src="{{ url_for('static', filename='admin_telegram.js') }}?v=31.108"></script>
+    <script src="{{ url_for('static', filename='admin_development_content.js') }}?v=31.108"></script>
+    <script src="{{ url_for('static', filename='admin_challenge_manager.js') }}?v=31.108"></script>
+<script type="module" src="{{ url_for('static', filename='admin.js') }}?v=31.108"></script>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            const btn = document.getElementById('darkModeToggle');
+            btn.textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+            const btn = document.getElementById('darkModeToggle');
+            if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+        })();
+    </script>
+    <script src="{{ url_for('static', filename='password-visibility.js') }}"></script><script src="{{ url_for('static', filename='auth-recovery.js') }}"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js?v=31.108',{scope:'/'}).catch(()=>{}));}</script></body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "release": "V30.61",
+  "previous_release": "V30.60",
+  "type": "production-readiness-hardening",
+  "live_provider_tests": false,
+  "validation": [
+    "release_consistency",
+    "static_regression",
+    "rate_limit_regression",
+    "python_compile",
+    "secret_scan",
+    "zip_integrity"
+  ]
+}

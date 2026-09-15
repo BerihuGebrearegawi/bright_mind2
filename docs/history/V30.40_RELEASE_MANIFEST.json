@@ -1,0 +1,10 @@
+{
+  "version": "30.40",
+  "baseline": "30.39",
+  "status": "READY_WITH_CONDITIONS",
+  "focus": ["correctness", "runtime reliability", "release validation"],
+  "live_external_tests": false,
+  "python_compile": true,
+  "javascript_syntax": true,
+  "secrets_in_release": false
+}

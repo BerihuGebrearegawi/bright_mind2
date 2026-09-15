@@ -1,0 +1,12 @@
+{
+  "release": "V30.29",
+  "baseline": "V30.28",
+  "focus": "Teacher portal workflow completion and end-to-end QA preparation",
+  "source_sha256": "ddaab08a4e0b8ae406e73e9425ddacf1c87e993148e5d4ff36b07d6ac17c5e0d",
+  "artifacts": [
+    "teacher-portal/bmt-v30.29-teacher-portal.js",
+    "teacher-portal/bmt-v30.29-teacher-portal.css",
+    "teacher-portal/BMT_V30.29_TEACHER_PORTAL.md",
+    "V30.29_RELEASE_NOTES.md"
+  ]
+}

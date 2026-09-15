@@ -1,0 +1,3 @@
+# Dev/test-only dependencies. Not needed in production (Flask/gunicorn deploy).
+# Install with: pip install -r requirements.txt -r requirements-dev.txt
+pytest==8.3.3

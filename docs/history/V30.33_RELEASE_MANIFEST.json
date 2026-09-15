@@ -1,0 +1,20 @@
+{
+  "version": "30.33",
+  "baseline": "30.32",
+  "focus": [
+    "authorization-hardening",
+    "cors-hardening",
+    "production-configuration"
+  ],
+  "breakingChanges": false,
+  "adminAuthorization": "firebase-custom-claims-only",
+  "permissiveCorsDefault": false,
+  "validation": {
+    "pythonCompilation": "passed",
+    "javascriptSyntax": "passed",
+    "securityScan": "passed",
+    "zipIntegrity": "passed"
+  },
+  "sha256": "22cb5801a318003a375cc193b283137d1132330f7f0c3c62db2c0e2bdfb9aa2a",
+  "artifact": "Bright-Mind-Tutor-Advanced-Platform-V30.33.zip"
+}
