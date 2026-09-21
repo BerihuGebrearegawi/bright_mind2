@@ -1,0 +1,9 @@
+/* V30.29 Teacher Portal */
+.bmt-teacher-dashboard{display:grid;gap:20px}
+.bmt-teacher-class-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.bmt-teacher-workspace{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:18px}
+.bmt-teacher-roster{display:grid;gap:8px}
+.bmt-teacher-roster-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#fff;border:1px solid var(--bmt-border);border-radius:var(--bmt-radius-sm)}
+.bmt-teacher-grade{font-weight:800}
+@media(max-width:900px){.bmt-teacher-class-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bmt-teacher-workspace{grid-template-columns:1fr}}
+@media(max-width:600px){.bmt-teacher-class-grid{grid-template-columns:1fr}}

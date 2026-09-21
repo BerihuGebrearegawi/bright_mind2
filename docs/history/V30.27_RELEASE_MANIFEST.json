@@ -1,0 +1,12 @@
+{
+  "release": "V30.27",
+  "baseline": "V30.26",
+  "focus": "Navigation, forms, tables and interaction QA",
+  "source_sha256": "2c4cf178785bf3904b51f307863e310832063a44575b0e264ef6e207cd255484",
+  "artifacts": [
+    "ui-system/bmt-v30.27-interaction-qa.js",
+    "ui-system/bmt-v30.27-interaction.css",
+    "ui-system/BMT_V30.27_INTERACTION_QA.md",
+    "V30.27_RELEASE_NOTES.md"
+  ]
+}

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · Bright Mind Tutor</title>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo-favicon.svg') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6ecda;--card:#ffffff;--text:#191d2e;--muted:#6b7086;--border:rgba(25,29,46,.09);--primary:#4F46E5;--primary-dark:#3730A3;--violet:#7C3AED;--pink:#EC4899;--danger:#dc3545;--success:#1a9e6b;--radius:18px}
+html[data-theme=dark]{--bg:#0b0e1a;--card:#151a2c;--text:#f4f6ff;--muted:#9aa1bd;--border:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:
+    radial-gradient(560px 320px at 50% -10%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 70%),
+    var(--bg);
+  color:var(--text);font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column}
+header{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;padding:22px 24px 4px;max-width:1180px;margin:0 auto;width:100%}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:12.5px;font-weight:600;letter-spacing:.01em}
+.brand b{color:var(--text)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;z-index:1}
+.panel{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:34px 30px 30px;box-shadow:0 30px 70px -20px rgba(25,29,46,.16)}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:26px}
+.hero-mark{position:relative;width:72px;height:72px;margin-bottom:14px}
+.hero-mark svg.ring{position:absolute;inset:-10px;width:92px;height:92px;color:color-mix(in srgb, var(--primary) 35%, transparent);animation:orbit 26s linear infinite}
+.hero-mark .disc{position:relative;width:72px;height:72px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--violet) 60%,var(--pink));box-shadow:0 14px 30px -8px color-mix(in srgb, var(--primary) 55%, transparent)}
+.hero-mark .disc svg{width:36px;height:36px;color:#fff}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.hero-mark svg.ring{animation:none}}
+.hero h2{font-size:19px;margin:0 0 4px;letter-spacing:-.01em}
+.hero p{margin:0;color:var(--muted);font-size:13px}
+.icon{width:1em;height:1em;display:inline-block;vertical-align:-.15em}
+.steps-track{display:flex;gap:6px;margin-bottom:24px}
+.steps-track span{flex:1;height:3px;border-radius:3px;background:var(--border)}
+.steps-track span.done{background:var(--primary)}
+.step{display:none;animation:slideIn .32s cubic-bezier(.2,.8,.2,1)}
+.step.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}
+.lede{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 22px}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border);background:transparent;color:inherit;font:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{width:100%;padding:12px 16px;border-radius:10px;border:none;font:inherit;font-weight:700;font-size:14px;cursor:pointer;margin-top:20px;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:inherit;margin-top:10px}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;margin-bottom:16px;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+.role-grid{display:grid;gap:10px}
+.role-option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--border);background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit;transition:border-color .15s,transform .15s}
+.role-option:hover{border-color:var(--primary);transform:translateY(-1px)}
+.role-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb, var(--primary) 11%, transparent);color:var(--primary);flex-shrink:0}
+.role-icon svg{width:20px;height:20px}
+.role-option b{display:block;font-size:14px}
+.role-option span{color:var(--muted);font-size:12px}
+.status{font-size:13px;margin-top:14px;line-height:1.5;min-height:1px}
+.status.error{color:var(--danger)}
+.status.success{color:var(--success)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.field-hint{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
+.pending-icon{display:flex;justify-content:center;margin-bottom:14px}
+.pending-icon .disc{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--violet))}
+.pending-icon svg{width:30px;height:30px;color:#fff}
+.link-btn{background:none;border:none;color:var(--primary);font:inherit;font-weight:600;font-size:13px;cursor:pointer;padding:0}
+.or-divider{display:flex;align-items:center;gap:10px;margin:18px 0 14px;color:var(--muted);font-size:12px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+.btn-google:hover{background:color-mix(in srgb, var(--text) 4%, transparent)}
+.input-wrap{position:relative}
+.input-wrap .field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.input-wrap input{padding-left:38px}
+.input-wrap.has-toggle input{padding-right:40px}
+.toggle-pass{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;display:flex;border-radius:6px}
+.toggle-pass:hover{color:var(--text)}
+.toggle-pass svg{width:17px;height:17px}
+@media (max-width:480px){.panel{padding:26px 20px}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/"><b>Bright Mind</b>&nbsp;Tutor</a>
+  <div data-lang-switcher style="margin-left:14px"></div>
+</header>
+<main>
+  <div class="panel">
+    <div class="hero">
+      <div class="hero-mark">
+        <svg class="ring" viewBox="0 0 92 92" fill="none"><circle cx="46" cy="46" r="43" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 9" stroke-linecap="round"/></svg>
+        <div class="disc"><img src="{{ url_for('static', filename='logo.png') }}" alt="" style="width:34px;height:34px;border-radius:9px;object-fit:cover"></div>
+      </div>
+      <h2>Bright Mind Tutor</h2>
+      <p>Sign in to keep learning where you left off</p>
+    </div>
+    <div class="steps-track" id="stepsTrack"><span class="done"></span><span></span><span></span></div>
+
+    <!-- Step 1: email -->
+    <section class="step active" id="step-email">
+      <h1>Sign in or create an account</h1>
+      <p class="lede">Enter your email to continue. We'll check whether you already have an account.</p>
+      <form id="emailForm">
+        <label for="emailInput">Email address</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 6.5 9 6 9-6"/></svg>
+          <input type="email" id="emailInput" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <button type="submit" class="btn btn-primary" id="emailContinueBtn">Continue</button>
+      </form>
+      <div class="status" id="emailStatus"></div>
+    </section>
+
+    <!-- Step 2A: sign in (returning user) -->
+    <section class="step" id="step-signin">
+      <button class="back-link" data-back="step-email">← Use a different email</button>
+      <h1>Welcome back</h1>
+      <p class="lede" id="signinEmailLabel"></p>
+      <!-- Shown instead of the password form when this account has no
+           password credential (Google-only account). Prevents the
+           confusing "wrong password" dead end for those users. -->
+      <div id="signinGoogleOnly" style="display:none">
+        <p class="lede">This account signs in with Google — there's no password to enter here.</p>
+        <button type="button" class="btn-google" id="signinGoogleBtn">
+          <svg viewBox="0 0 48 48" width="18" height="18"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5Z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4c-7.4 0-13.8 4.2-17 10.3Z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.4-2.1 14.1-5.4l-6.5-5.5C29.6 34.9 27 36 24 36c-5.2 0-9.7-3.1-11.3-7.6l-6.5 5C9.9 39.7 16.4 44 24 44Z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.5 5.5C39.4 37.3 44 31.5 44 24c0-1.3-.1-2.7-.4-3.5Z"/></svg>
+          Continue with Google
+        </button>
+        <div class="status" id="signinGoogleStatus"></div>
+      </div>
+      <form id="signinForm">
+        <label for="signinPassword">Password</label>
+        <div class="input-wrap has-toggle">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+          <input type="password" id="signinPassword" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-pass" id="toggleSigninPass" aria-label="Show password" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <button type="submit" class="btn btn-primary" id="signinBtn">Sign in</button>
+      </form>
+      <button class="link-btn" id="forgotPasswordBtn" style="margin-top:14px">Forgot your password?</button>
+      <div class="status" id="signinStatus"></div>
+    </section>
+
+    <!-- Step 2B: role selection (new user) -->
+    <section class="step" id="step-role">
+      <button class="back-link" data-back="step-email">← Use a different email</button>
+      <h1>Who's signing up?</h1>
+      <p class="lede">Choose the account that fits you — each dashboard is built around what that role needs.</p>
+      <div class="role-grid">
+        <button class="role-option" data-role="student">
+          <span class="role-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 9 12 4 2 9l10 5 10-5Z"/><path d="M6 11.5V17c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5.5"/><path d="M22 9v6"/></svg></span>
+          <span><b>Student</b><span>Courses, quizzes, exams and progress</span></span>
+        </button>
+        <button class="role-option" data-role="teacher">
+          <span class="role-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M7 20h10M9 16v4M15 16v4"/><path d="M7.5 12.5 10 9l2 2 2.5-3.5"/></svg></span>
+          <span><b>Teacher</b><span>Create lessons, exams and manage classes</span></span>
+        </button>
+        <button class="role-option" data-role="parent">
+          <span class="role-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.6"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15.2c2.2.3 3.8 1.9 3.8 4.3"/></svg></span>
+          <span><b>Parent</b><span>Follow your child's learning and progress</span></span>
+        </button>
+      </div>
+      <div class="or-divider"><span>or, for teachers &amp; parents</span></div>
+      <button type="button" class="btn-google" id="googleContinueBtn">
+        <svg viewBox="0 0 48 48" width="18" height="18"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5Z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4c-7.4 0-13.8 4.2-17 10.3Z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.4-2.1 14.1-5.4l-6.5-5.5C29.6 34.9 27 36 24 36c-5.2 0-9.7-3.1-11.3-7.6l-6.5 5C9.9 39.7 16.4 44 24 44Z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.5 5.5C39.4 37.3 44 31.5 44 24c0-1.3-.1-2.7-.4-3.5Z"/></svg>
+        Continue with Google
+      </button>
+      <div class="status" id="googleRoleStatus"></div>
+    </section>
+
+    <!-- Google sign-in landed a new user here: pick which of the two Google-eligible roles they are -->
+    <section class="step" id="step-google-role">
+      <button class="back-link" data-back="step-role">← Use a different method</button>
+      <h1>Continue as…</h1>
+      <p class="lede" id="googleRoleEmailLabel"></p>
+      <div class="role-grid">
+        <button class="role-option" data-role="teacher">
+          <span class="role-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M7 20h10M9 16v4M15 16v4"/><path d="M7.5 12.5 10 9l2 2 2.5-3.5"/></svg></span>
+          <span><b>Teacher</b><span>Create lessons, exams and manage classes</span></span>
+        </button>
+        <button class="role-option" data-role="parent">
+          <span class="role-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.6"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15.2c2.2.3 3.8 1.9 3.8 4.3"/></svg></span>
+          <span><b>Parent</b><span>Follow your child's learning and progress</span></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 3: registration forms (one per role, shown/hidden together) -->
+    <section class="step" id="step-register">
+      <button class="back-link" data-back="step-role">← Choose a different role</button>
+      <h1 id="registerTitle">Create your account</h1>
+      <p class="lede" id="registerEmailLabel"></p>
+      <form id="registerForm">
+        <label for="regName">Full name</label>
+        <input type="text" id="regName" required>
+
+        <!-- Student-only fields -->
+        <div id="fields-student" style="display:none">
+          <div class="row2">
+            <div><label for="regAge">Age</label><input type="number" id="regAge" min="3" max="30"></div>
+            <div><label for="regClass">Grade</label>
+              <select id="regClass">
+                <option value="KG">KG</option><option value="1">Grade 1</option><option value="2">Grade 2</option>
+                <option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option>
+                <option value="6">Grade 6</option><option value="7" selected>Grade 7</option><option value="8">Grade 8</option>
+                <option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+              </select>
+            </div>
+          </div>
+          <label for="regEducationLevel">Education level</label>
+          <select id="regEducationLevel">
+            <option value="">Not set</option>
+            <option value="Pre-primary">Pre-primary</option>
+            <option value="Primary (1-8)" selected>Primary (1-8)</option>
+            <option value="Secondary (9-10)">Secondary (9-10)</option>
+            <option value="Preparatory (11-12)">Preparatory (11-12)</option>
+          </select>
+          <label for="regSchool">School name</label>
+          <input type="text" id="regSchool" placeholder="e.g. Kokebe Tsibah School">
+          <label for="regRegion">Region</label>
+          <select id="regRegion"><option value="">Not set</option></select>
+          <div class="row2">
+            <div><label for="regGuardianName">Guardian name</label><input type="text" id="regGuardianName"></div>
+            <div><label for="regGuardianPhone">Guardian phone</label><input type="tel" id="regGuardianPhone" placeholder="09xxxxxxxx"></div>
+          </div>
+          <label for="regAddress">Address (optional)</label>
+          <input type="text" id="regAddress">
+        </div>
+
+        <!-- Teacher-only fields -->
+        <div id="fields-teacher" style="display:none">
+          <label for="regEduLevelTeacher">Your education level</label>
+          <input type="text" id="regEduLevelTeacher" placeholder="e.g. BSc in Mathematics">
+          <label for="regInstitution">Institution</label>
+          <input type="text" id="regInstitution" placeholder="Where you studied or currently teach">
+          <div class="row2">
+            <div><label for="regExpYears">Years of experience</label><input type="number" id="regExpYears" min="0"></div>
+            <div><label for="regSubjects">Subject</label>
+              <select id="regSubjects"><option>Mathematics</option><option>Physics</option><option>Chemistry</option><option>Biology</option><option>English</option><option>Amharic</option><option>History</option><option>Geography</option><option>Economics</option></select>
+            </div>
+          </div>
+          <label for="regTeacherGrades">Grade you teach</label>
+          <select id="regTeacherGrades"><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7" selected>Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select>
+          <div class="field-hint">You can teach more subjects and grades from your dashboard once approved.</div>
+        </div>
+
+        <!-- Parent-only fields -->
+        <div id="fields-parent" style="display:none">
+          <div class="field-hint">You'll link your child's account from your dashboard using their student code.</div>
+        </div>
+
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" minlength="6" required autocomplete="new-password">
+        <label for="regPasswordConfirm">Confirm password</label>
+        <input type="password" id="regPasswordConfirm" minlength="6" required autocomplete="new-password">
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">Create account</button>
+      </form>
+      <div class="status" id="registerStatus"></div>
+    </section>
+
+    <!-- Step 4: teacher pending approval -->
+    <section class="step" id="step-pending">
+      <div class="pending-icon"><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span></div>
+      <h1 style="text-align:center">Application submitted</h1>
+      <p class="lede" style="text-align:center">Your teacher account is created and your application is waiting for admin approval. You'll be able to sign in fully once approved.</p>
+      <a class="btn btn-ghost" href="/" style="display:block;text-align:center;text-decoration:none">Back to home</a>
+    </section>
+  </div>
+</main>
+
+<script src="{{ url_for('static', filename='i18n.js') }}?v=1"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdTokenResult, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAyeZpwu9-FECjC5Qp-lI0OUAblKusxkeI",
+    authDomain: "bright-mind-tutor-app.firebaseapp.com",
+    projectId: "bright-mind-tutor-app",
+    storageBucket: "bright-mind-tutor-app.firebasestorage.app",
+    messagingSenderId: "782512714975",
+    appId: "1:782512714975:web:719e3b7a09ac8c7f9d256a",
+    measurementId: "G-TWYNFN7MT6"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const presetRole = params.get('role');
+const nextUrl = params.get('next');
+
+let state = { email: '', role: '' };
+
+function showStep(id, trackIndex) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+    document.querySelectorAll('#stepsTrack span').forEach((s, i) => s.classList.toggle('done', i <= trackIndex));
+}
+document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => {
+    const target = b.dataset.back;
+    showStep(target, target === 'step-email' ? 0 : 1);
+}));
+
+$('toggleSigninPass').addEventListener('click', () => {
+    const input = $('signinPassword');
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    $('toggleSigninPass').setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+});
+
+// Populate region select from the same list the dashboards use.
+const REGIONS = ["Addis Ababa","Afar","Amhara","Benishangul-Gumuz","Dire Dawa","Gambela","Harari","Oromia","Sidama","SNNPR","Somali","South West Ethiopia","Tigray"];
+REGIONS.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; $('regRegion').appendChild(o); });
+
+function setStatus(el, msg, kind) {
+    el.textContent = msg || '';
+    el.className = 'status' + (kind ? ' ' + kind : '');
+}
+function setBusy(btn, busy, labelBusy, labelIdle) {
+    btn.disabled = busy;
+    btn.innerHTML = busy ? `<span class="spinner"></span>${labelBusy}` : labelIdle;
+}
+
+$('emailForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('emailInput').value.trim();
+    const btn = $('emailContinueBtn');
+    setStatus($('emailStatus'), '');
+    setBusy(btn, true, 'Checking…', 'Continue');
+    try {
+        // V31.83: fetchSignInMethodsForEmail() always returns [] on this
+        // project because Firebase's Email Enumeration Protection is on,
+        // which forced every returning user into the registration step.
+        // Ask our own server (Admin SDK) instead -- it isn't affected.
+        const res = await fetch('/api/auth/check-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Could not check that email right now.');
+        state.email = email;
+        if (data.exists) {
+            $('signinEmailLabel').textContent = `Signing in as ${email}`;
+            const providers = data.providers || [];
+            // V31.108 fix: a Google-only account has no password credential.
+            // Sending it through the password form always fails with a
+            // generic "wrong password" error and traps the user. Route it
+            // straight to the Google button instead.
+            const googleOnly = providers.length > 0 && providers.includes('google.com') && !providers.includes('password');
+            $('signinGoogleOnly').style.display = googleOnly ? 'block' : 'none';
+            $('signinForm').style.display = googleOnly ? 'none' : 'block';
+            $('forgotPasswordBtn').style.display = googleOnly ? 'none' : 'inline-flex';
+            showStep('step-signin', 1);
+        } else {
+            if (presetRole && ['student', 'teacher', 'parent'].includes(presetRole)) {
+                selectRole(presetRole);
+            } else {
+                showStep('step-role', 1);
+            }
+        }
+    } catch (err) {
+        setStatus($('emailStatus'), humanizeError(err), 'error');
+    } finally {
+        setBusy(btn, false, '', 'Continue');
+    }
+});
+
+$('signinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('signinBtn');
+    setStatus($('signinStatus'), '');
+    setBusy(btn, true, 'Signing in…', 'Sign in');
+    try {
+        const cred = await signInWithEmailAndPassword(auth, state.email, $('signinPassword').value);
+        await redirectByRole(cred.user);
+    } catch (err) {
+        setStatus($('signinStatus'), humanizeError(err), 'error');
+        setBusy(btn, false, '', 'Sign in');
+    }
+});
+
+$('signinGoogleBtn').addEventListener('click', async () => {
+    const btn = $('signinGoogleBtn');
+    setStatus($('signinGoogleStatus'), '');
+    setBusy(btn, true, 'Opening Google…', 'Continue with Google');
+    try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        await redirectByRole(result.user);
+    } catch (err) {
+        setStatus($('signinGoogleStatus'), humanizeError(err), 'error');
+        setBusy(btn, false, '', 'Continue with Google');
+    }
+});
+
+$('forgotPasswordBtn').addEventListener('click', async () => {
+    if (!state.email) return;
+    try {
+        await fetch('/api/auth/forgot-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: state.email }) });
+        setStatus($('signinStatus'), 'If that email has an account, a reset link is on its way.', 'success');
+    } catch (_) {
+        setStatus($('signinStatus'), 'Could not send the reset email right now. Please try again shortly.', 'error');
+    }
+});
+
+$('googleContinueBtn').addEventListener('click', async () => {
+    const btn = $('googleContinueBtn');
+    setStatus($('googleRoleStatus'), '');
+    setBusy(btn, true, 'Opening Google…', 'Continue with Google');
+    try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        state.googleUser = result.user;
+        state.email = result.user.email;
+        $('googleRoleEmailLabel').textContent = `Continuing as ${state.email}`;
+        showStep('step-google-role', 1);
+    } catch (err) {
+        setStatus($('googleRoleStatus'), humanizeError(err), 'error');
+    } finally {
+        setBusy(btn, false, '', 'Continue with Google');
+    }
+});
+document.querySelectorAll('#step-google-role .role-option').forEach(b => b.addEventListener('click', () => selectRole(b.dataset.role)));
+
+function selectRole(role) {
+    state.role = role;
+    ['student', 'teacher', 'parent'].forEach(r => { $('fields-' + r).style.display = r === role ? 'block' : 'none'; });
+    $('registerTitle').textContent = 'Create your ' + role + ' account';
+    $('registerEmailLabel').textContent = state.email;
+    const passwordFields = [$('regPassword'), $('regPasswordConfirm')];
+    if (state.googleUser) {
+        passwordFields.forEach(f => {
+            f.required = false;
+            f.style.display = 'none';
+            const lbl = document.querySelector(`label[for="${f.id}"]`);
+            if (lbl) lbl.style.display = 'none';
+        });
+        $('regName').value = state.googleUser.displayName || '';
+    } else {
+        passwordFields.forEach(f => {
+            f.required = true;
+            f.style.display = '';
+            const lbl = document.querySelector(`label[for="${f.id}"]`);
+            if (lbl) lbl.style.display = '';
+        });
+    }
+    showStep('step-register', 2);
+}
+document.querySelectorAll('.role-option').forEach(b => b.addEventListener('click', () => selectRole(b.dataset.role)));
+
+$('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('registerBtn');
+    setStatus($('registerStatus'), '');
+    if (!state.googleUser && $('regPassword').value !== $('regPasswordConfirm').value) {
+        setStatus($('registerStatus'), 'Passwords do not match.', 'error');
+        return;
+    }
+    setBusy(btn, true, 'Creating account…', 'Create account');
+    let createdUser = null;
+    try {
+        if (state.googleUser) {
+            createdUser = state.googleUser;
+        } else {
+            const cred = await createUserWithEmailAndPassword(auth, state.email, $('regPassword').value);
+            createdUser = cred.user;
+        }
+        const name = $('regName').value.trim();
+        const className = state.role === 'student' ? $('regClass').value : '';
+
+        // Matches the exact field set Firestore rules allow on user-doc creation.
+        await setDoc(doc(db, 'users', createdUser.uid), {
+            uid: createdUser.uid, name, email: state.email, class: className,
+            registeredAt: serverTimestamp(), progress: { videos: {}, quizzes: {} },
+            payments: [], isAdmin: false, profileImage: '', bio: '',
+            freeTrial: { isActive: true, startedAt: serverTimestamp(), expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), daysRemaining: 7, usedDays: 0 },
+            isPaid: false, accountType: state.role
+        });
+
+        const token = await createdUser.getIdToken(true);
+        const authHeaders = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+        if (state.role === 'student') {
+            await fetch('/api/student/region', { method: 'POST', headers: authHeaders, body: JSON.stringify({ region: $('regRegion').value }) });
+            await fetch('/api/student/profile-details', { method: 'POST', headers: authHeaders, body: JSON.stringify({
+                age: $('regAge').value || null, educationLevel: $('regEducationLevel').value,
+                schoolName: $('regSchool').value.trim(), guardianName: $('regGuardianName').value.trim(),
+                guardianPhone: $('regGuardianPhone').value.trim(), address: $('regAddress').value.trim()
+            }) });
+            setStatus($('registerStatus'), 'Account created — taking you to your dashboard…', 'success');
+            location.href = nextUrl || '/student';
+        } else if (state.role === 'teacher') {
+            const applyRes = await fetch('/api/teacher/apply', { method: 'POST', headers: authHeaders, body: JSON.stringify({
+                name, educationLevel: $('regEduLevelTeacher').value.trim(), institution: $('regInstitution').value.trim(),
+                experienceYears: $('regExpYears').value || '0', experience: '', certifications: '',
+                subjects: [$('regSubjects').value], classes: [$('regTeacherGrades').value]
+            }) });
+            const applyData = await applyRes.json().catch(() => ({}));
+            if (!applyRes.ok) throw new Error(applyData.error || 'Could not submit your teacher application.');
+            showStep('step-pending', 2);
+        } else {
+            setStatus($('registerStatus'), 'Account created — taking you to your dashboard…', 'success');
+            location.href = nextUrl || '/parent';
+        }
+    } catch (err) {
+        setStatus($('registerStatus'), humanizeError(err), 'error');
+        setBusy(btn, false, '', 'Create account');
+    }
+});
+
+async function redirectByRole(user) {
+    try {
+        const tokenResult = await getIdTokenResult(user, true);
+        if (tokenResult.claims.admin === true || tokenResult.claims.role === 'admin') {
+            location.href = nextUrl || '/admin'; return;
+        }
+    } catch (_) {}
+    try {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        const accountType = snap.exists() ? (snap.data().accountType || 'student') : 'student';
+        const dest = accountType === 'teacher' ? '/teacher' : accountType === 'parent' ? '/parent' : '/student';
+        location.href = nextUrl || dest;
+    } catch (_) {
+        location.href = nextUrl || '/student';
+    }
+}
+
+function humanizeError(err) {
+    const code = err && err.code || '';
+    if (code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect password. Please try again.';
+    if (code.includes('too-many-requests')) return 'Too many attempts. Please wait a moment and try again.';
+    if (code.includes('email-already-in-use')) return 'That email already has an account — try signing in instead.';
+    if (code.includes('weak-password')) return 'Please choose a password with at least 6 characters.';
+    if (code.includes('invalid-email')) return 'Please enter a valid email address.';
+    if (code.includes('network-request-failed')) return 'Network error. Please check your connection and try again.';
+    // V31.108 fix: Google Sign-in on an email that already has a
+    // password-based account throws this instead of just logging in. Left
+    // unhandled it showed a raw Firebase error and looked like the two
+    // sign-in methods created duplicate/conflicting accounts.
+    if (code.includes('account-exists-with-different-credential')) return 'That email already has a password account. Please go back and sign in with your password instead.';
+    return (err && err.message) ? err.message.replace('Firebase: ', '').replace(/\(auth\/[a-z-]+\)\.?/, '').trim() : 'Something went wrong. Please try again.';
+}
+</script>
+</body>
+</html>

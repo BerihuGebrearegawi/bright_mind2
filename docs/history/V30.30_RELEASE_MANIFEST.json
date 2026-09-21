@@ -1,0 +1,14 @@
+{
+  "release": "V30.30",
+  "baseline": "V30.29",
+  "focus": "Parent portal, verified parent-child analytics and cross-role security foundation",
+  "artifacts": [
+    "parent_routes.py",
+    "templates/parent.html",
+    "firestore.rules",
+    "app.py",
+    "V30.30_RELEASE_NOTES.md",
+    "V30.30_RELEASE_MANIFEST.json"
+  ],
+  "baseline_sha256": "69b6335ed2f1a824877103ef1050f510ad2305d70c5c936e7b4379a5e512a057"
+}

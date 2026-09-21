@@ -1,0 +1,15 @@
+{
+  "release": "V30.74",
+  "baseline": "V30.72",
+  "focus": ["books", "pdf-storage", "google-drive-link", "cloudinary", "review", "secure", "test"],
+  "storage": {
+    "app": "Render",
+    "database": "Firestore",
+    "media": "Cloudinary",
+    "books_primary": "Cloudinary",
+    "books_secondary": "Google Drive link from user's second account",
+    "future_pdf_storage": "Google Cloud Storage when billing/payment method is available"
+  },
+  "runtime_e2e": "not_run_in_build_sandbox",
+  "secrets_in_release": false
+}

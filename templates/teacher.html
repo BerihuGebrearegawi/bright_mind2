@@ -1,0 +1,388 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bright Mind Tutor — Teacher Portal</title><link rel="icon" href="{{ url_for('static', filename='logo-favicon.svg') }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script defer src="{{ url_for('static', filename='math-render.js') }}?v=31.108"></script>
+<style>
+.bmt-portal-page{min-height:100vh;background:radial-gradient(circle at 15% 5%,rgba(108,99,255,.12),transparent 32%),radial-gradient(circle at 90% 80%,rgba(255,101,132,.10),transparent 30%)}
+.bmt-landing-top{max-width:1100px;margin:0 auto;padding:22px 18px 8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bmt-brand-mini{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}.bmt-brand-mini img{width:46px;height:46px;border-radius:14px;object-fit:cover;box-shadow:0 10px 25px rgba(108,99,255,.18)}.bmt-brand-mini strong{display:block;font-size:16px;letter-spacing:-.02em}.bmt-brand-mini small{display:block;color:var(--text-muted);font-size:11px;margin-top:2px}
+.bmt-home-link{border:1px solid var(--border-color);background:var(--surface);color:inherit;text-decoration:none;padding:9px 13px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 8px 24px rgba(35,40,80,.06)}
+.bmt-landing-intro{text-align:center;animation:bmtFadeUp .55s ease both;max-width:700px;margin:18px auto 18px;padding:0 18px}.bmt-kicker{font-size:11px;letter-spacing:.18em;font-weight:900;color:#6c63ff;text-transform:uppercase}.bmt-landing-intro h1{font-size:clamp(32px,7vw,54px);line-height:1.02;letter-spacing:-.045em;margin:10px 0 9px}.bmt-landing-intro h1 span{background:linear-gradient(90deg,#6c63ff,#ff6584);-webkit-background-clip:text;background-clip:text;color:transparent}.bmt-landing-intro p{margin:0 auto;color:var(--text-muted);font-size:14px;line-height:1.65;max-width:600px}.bmt-landing-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:13px}.bmt-landing-pills span{padding:7px 10px;animation:bmtFadeUp .55s ease both;border-radius:999px;background:var(--surface);border:1px solid var(--border-color);font-size:11px;font-weight:700;color:var(--text-muted)}
+.bmt-auth-card{position:relative;overflow:hidden;box-shadow:0 24px 70px rgba(35,40,80,.10)!important;border:1px solid rgba(108,99,255,.12)!important}.bmt-auth-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#6c63ff,#8b5cf6,#ff6584)}.bmt-auth-card .btn{transition:transform .18s,box-shadow .18s}.bmt-auth-card .btn:hover{transform:translateY(-1px)}
+.bmt-landing-footer{max-width:1100px;margin:22px auto 0;padding:18px;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;border-top:1px solid var(--border-color);color:var(--text-muted);font-size:11px}.bmt-landing-footer a{color:inherit;text-decoration:none}.bmt-landing-footer a:hover{color:#6c63ff}
+@keyframes bmtFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.bmt-landing-top{padding-top:15px}.bmt-home-link{padding:8px 10px}.bmt-landing-intro{margin-top:10px}.bmt-landing-intro h1{font-size:34px}}
+</style>
+<style id="bmt-original-motion-system">
+:root{--bmt-a:#5b5cf6;--bmt-b:#14b8a6;--bmt-c:#f472b6}
+.bmt-portal-page{background:radial-gradient(900px 500px at 8% -10%,color-mix(in srgb,var(--bmt-a) 14%,transparent),transparent 60%),radial-gradient(800px 500px at 100% 100%,color-mix(in srgb,var(--bmt-b) 11%,transparent),transparent 60%);}
+.bmt-landing-top{animation:bmtNavIn .7s cubic-bezier(.2,.8,.2,1) both}
+.bmt-landing-intro{position:relative}
+.bmt-landing-intro:after{content:"";position:absolute;z-index:-1;inset:-35px 8%;border-radius:50%;background:conic-gradient(from 120deg,color-mix(in srgb,var(--bmt-a) 14%,transparent),color-mix(in srgb,var(--bmt-c) 10%,transparent),color-mix(in srgb,var(--bmt-b) 12%,transparent),color-mix(in srgb,var(--bmt-a) 14%,transparent));filter:blur(35px);animation:bmtHalo 9s linear infinite}
+.bmt-kicker{animation:bmtReveal .7s .08s both}
+.bmt-landing-intro h1{animation:bmtReveal .8s .15s both}
+.bmt-landing-intro p{animation:bmtReveal .8s .24s both}
+.bmt-landing-pills span{animation:bmtFloatIn .7s calc(.12s * var(--i,1)) both;transition:transform .25s,box-shadow .25s,border-color .25s}
+.bmt-landing-pills span:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 14px 32px rgba(35,40,80,.10);border-color:color-mix(in srgb,var(--bmt-a) 40%,var(--border-color))}
+.bmt-auth-card{animation:bmtCardIn .8s .18s both}
+.bmt-auth-card:after{content:"";position:absolute;inset:auto -30% -65% -30%;height:140px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--bmt-a) 8%,transparent),transparent);transform:translateX(-60%);animation:bmtSweep 6s ease-in-out infinite}
+.bmt-landing-footer{animation:bmtReveal .8s .35s both}
+@keyframes bmtNavIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes bmtReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes bmtFloatIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes bmtCardIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes bmtHalo{to{transform:rotate(360deg)}}
+@keyframes bmtSweep{0%,55%{transform:translateX(-70%)}80%,100%{transform:translateX(70%)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+<style id="bmt-compact-landing-v3124">
+/* V31.24 compact landing polish: smaller typography and tighter landing cards */
+.bmt-portal-page .bmt-landing-top{padding:14px 12px 5px}.bmt-portal-page .bmt-brand-mini{gap:7px}.bmt-portal-page .bmt-brand-mini img{width:34px;height:34px;border-radius:10px}.bmt-portal-page .bmt-brand-mini strong{font-size:12px}.bmt-portal-page .bmt-brand-mini small{font-size:9px}.bmt-portal-page .bmt-home-link{padding:6px 9px;font-size:9px}.bmt-portal-page .bmt-landing-intro{max-width:560px;margin:10px auto 10px;padding:0 10px}.bmt-portal-page .bmt-kicker{font-size:8px;letter-spacing:.14em}.bmt-portal-page .bmt-landing-intro h1{font-size:clamp(23px,5vw,36px);margin:7px 0 6px}.bmt-portal-page .bmt-landing-intro p{font-size:10px;line-height:1.45;max-width:500px}.bmt-portal-page .bmt-landing-pills{gap:5px;margin-top:8px}.bmt-portal-page .bmt-landing-pills span{padding:4px 7px;border-radius:999px;font-size:8px}.bmt-portal-page .bmt-auth-card{border-radius:12px!important}.bmt-portal-page .bmt-auth-card .btn{font-size:10px;padding:7px 9px}.bmt-portal-page .bmt-landing-footer{margin:12px auto 0;padding:10px 8px;font-size:8px;gap:10px}.bmt-portal-page .bmt-landing-footer a{font-size:8px}
+@media(max-width:600px){.bmt-portal-page .bmt-landing-top{padding-top:10px}.bmt-portal-page .bmt-landing-intro{margin-top:7px}.bmt-portal-page .bmt-landing-intro h1{font-size:25px}.bmt-portal-page .bmt-landing-pills span{font-size:8px;padding:4px 6px}}
+</style>
+
+<style id="bmt-v31-26-landing-typography">
+/* V31.26: readable landing typography, while keeping dashboard UI untouched */
+.bmt-landing-top .bmt-brand-mini strong{font-size:18px!important}
+.bmt-landing-top .bmt-brand-mini small{font-size:13.5px!important}
+.bmt-landing-top .bmt-home-link{font-size:13.5px!important}
+.bmt-landing-intro .bmt-kicker{font-size:12px!important}
+.bmt-landing-intro h1{font-size:clamp(34.5px,7.5vw,54px)!important}
+.bmt-landing-intro p{font-size:15px!important;line-height:1.65!important}
+.bmt-landing-footer{font-size:16.5px!important;gap:18px!important}
+.bmt-landing-footer a{font-size:16.5px!important}
+@media(max-width:600px){
+  .bmt-landing-top .bmt-brand-mini strong{font-size:16px!important}
+  .bmt-landing-top .bmt-brand-mini small{font-size:12px!important}
+  .bmt-landing-top .bmt-home-link{font-size:12px!important}
+  .bmt-landing-intro h1{font-size:37.5px!important}
+  .bmt-landing-intro p{font-size:15px!important}
+  .bmt-landing-footer,.bmt-landing-footer a{font-size:13.5px!important}
+}
+</style>
+
+<style id="bmt-v31-27-auth-polish">
+.bmt-auth-card{position:relative;overflow:hidden}
+.bmt-auth-choice{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;margin:12px 0 14px;background:rgba(91,92,246,.06);border:1px solid rgba(91,92,246,.12);border-radius:14px}
+.bmt-auth-choice .btn{border:0!important;box-shadow:none!important;min-height:42px;font-weight:800}
+.bmt-auth-choice .btn.active{background:linear-gradient(135deg,#5b5cf6,#8b5cf6)!important;color:#fff!important}
+.bmt-auth-method{animation:bmtAuthSwap .22s ease both}
+.bmt-auth-card input{min-height:44px;border-radius:12px}
+@keyframes bmtAuthSwap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.bmt-auth-choice .btn{font-size:12px}}
+</style>
+
+<style id="bmt-v31-29-dashboard-modernization">
+/* V31.29 — unified dashboard visual system */
+:root{--bmt-blue:#2563eb;--bmt-violet:#7c3aed;--bmt-teal:#0f766e;--bmt-ink:#0f172a;--bmt-line:rgba(100,116,139,.16)}
+.bmt-portal-page{background:radial-gradient(700px 360px at 0 -5%,rgba(37,99,235,.10),transparent 62%),radial-gradient(700px 380px at 100% 100%,rgba(124,58,237,.08),transparent 62%),var(--bg,#f8fafc);}
+.bmt-portal-page .card,.bmt-portal-page .contact-info,.bmt-portal-page .auth-card{border:1px solid var(--bmt-line);border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.055);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.bmt-portal-page .card:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(15,23,42,.08);border-color:rgba(37,99,235,.22)}
+.bmt-portal-page .card h2,.bmt-portal-page .card h3,.bmt-portal-page .card h4{letter-spacing:-.02em}
+.bmt-portal-page .btn{border-radius:11px;font-weight:750;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.bmt-portal-page .btn:hover{transform:translateY(-1px);filter:brightness(1.02);box-shadow:0 8px 20px rgba(37,99,235,.12)}
+.bmt-portal-page input,.bmt-portal-page select,.bmt-portal-page textarea{border-radius:11px;border-color:var(--bmt-line);transition:border-color .18s,box-shadow .18s}
+.bmt-portal-page input:focus,.bmt-portal-page select:focus,.bmt-portal-page textarea:focus{border-color:rgba(37,99,235,.55);box-shadow:0 0 0 3px rgba(37,99,235,.09);outline:none}
+.bmt-dashboard-nav{position:sticky;top:8px;z-index:10;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--surface,#fff) 86%,transparent);border:1px solid var(--bmt-line);border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.bmt-dashboard-nav button{border:0!important;border-radius:10px!important;padding:8px 11px!important;font-size:12px!important;transition:.18s}
+.bmt-dashboard-nav button.active,.bmt-dashboard-nav button:hover{background:linear-gradient(135deg,var(--bmt-blue),var(--bmt-violet));color:#fff;transform:translateY(-1px)}
+.stats-grid,.metric-grid,.parent-grid{gap:10px!important}
+.stats-grid>* ,.metric,.child-card{border-radius:13px!important;border:1px solid var(--bmt-line)!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important}
+.bmt-portal-page table{font-size:12px;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+.bmt-portal-page th,.bmt-portal-page td{padding:7px 9px!important}
+.bmt-portal-page th{font-size:11px;letter-spacing:.02em}
+.bmt-portal-page .item-row{border:1px solid var(--bmt-line)!important;border-radius:12px!important;padding:10px!important;margin-bottom:8px;transition:.18s}
+.bmt-portal-page .item-row:hover{transform:translateX(2px);border-color:rgba(37,99,235,.22)!important}
+.bmt-support-card{display:flex;align-items:center;gap:12px;padding:12px 14px!important}
+.bmt-support-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#dbeafe,#ede9fe);font-size:18px;flex:0 0 auto}
+.bmt-support-copy{display:grid;gap:2px;flex:1}.bmt-support-copy strong{font-size:13px}.bmt-support-copy span{font-size:11px;color:var(--text-muted)}
+.bmt-support-actions{display:flex;gap:6px;flex-wrap:wrap}.bmt-support-actions .btn{padding:7px 9px;font-size:11px}
+.bmt-payment-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.bmt-payment-item{padding:10px 12px;border:1px solid var(--bmt-line);border-radius:12px;background:linear-gradient(135deg,rgba(37,99,235,.045),rgba(124,58,237,.045))}
+.bmt-payment-item small{display:block;color:var(--text-muted);font-size:10px;margin-bottom:3px}.bmt-payment-item strong{font-size:13px;letter-spacing:.01em}
+@media(max-width:650px){.bmt-payment-strip{grid-template-columns:1fr}.bmt-dashboard-nav{position:relative;top:auto;overflow:auto;white-space:nowrap}.bmt-dashboard-nav button{font-size:11px!important}.bmt-support-card{align-items:flex-start;flex-wrap:wrap}.bmt-support-actions{width:100%}}
+.bmt-guest-redirect{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px}
+.bmt-guest-mark img{width:56px;height:56px;border-radius:16px;object-fit:cover;box-shadow:0 14px 30px -8px rgba(37,99,235,.35)}
+.bmt-guest-spinner{width:26px;height:26px;border-radius:50%;border:3px solid rgba(37,99,235,.18);border-top-color:#2563eb;animation:bmtGuestSpin .8s linear infinite}
+@keyframes bmtGuestSpin{to{transform:rotate(360deg)}}
+.bmt-guest-redirect p{color:var(--text-muted);font-size:13.5px;margin:0}
+.bmt-dashboard-nav{display:none !important}
+.bmt-tab-panel{display:none}
+.bmt-tab-panel.bmt-tab-active{display:block;animation:bmtTeacherTabFadeIn .22s ease both}
+@keyframes bmtTeacherTabFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+.bmt-icon{width:22px;height:22px;display:block}
+.bmt-hamburger-btn{position:relative;padding:8px;border-radius:10px;background:var(--card-bg);border:1px solid var(--border-color);display:grid;place-items:center;cursor:pointer}
+.bmt-hamburger-btn svg{width:19px;height:19px;color:var(--text)}
+.bmt-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-around;align-items:stretch;background:var(--surface,#fff);border-top:1px solid var(--bmt-line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 26px rgba(15,23,42,.06)}
+.bmt-bottom-nav button{flex:1;max-width:84px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;padding:6px 2px;color:var(--text-muted);font:inherit;font-size:10.5px;font-weight:600;cursor:pointer;border-radius:12px;transition:color .15s,transform .15s}
+.bmt-bottom-nav button .bmt-icon{color:var(--text-muted);transition:color .15s,transform .15s}
+.bmt-bottom-nav button.active{color:var(--bmt-blue,#2563eb)}
+.bmt-bottom-nav button.active .bmt-icon{color:var(--bmt-blue,#2563eb);transform:translateY(-2px)}
+.bmt-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:70;opacity:0;pointer-events:none;transition:opacity .22s ease}
+.bmt-drawer-overlay.open{opacity:1;pointer-events:auto}
+.bmt-drawer{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);background:var(--surface,#fff);z-index:71;transform:translateX(-104%);transition:transform .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:20px 0 50px rgba(15,23,42,.15)}
+.bmt-drawer.open{transform:translateX(0)}
+.bmt-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px;border-bottom:1px solid var(--bmt-line)}
+.bmt-drawer-head img{width:38px;height:38px;border-radius:11px;object-fit:cover}
+.bmt-drawer-close{background:none;border:none;padding:6px;border-radius:8px;cursor:pointer;color:var(--text-muted)}
+.bmt-drawer-close svg{width:20px;height:20px}
+.bmt-drawer-body{flex:1;overflow-y:auto;padding:10px 8px 24px}
+.bmt-drawer-section{margin:14px 8px 4px;font-size:11px;font-weight:800;letter-spacing:.02em;color:var(--text-muted)}
+.bmt-drawer-body button{width:100%;display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:12px;border:none;background:none;color:var(--text);font:inherit;font-size:14px;font-weight:600;text-align:left;cursor:pointer}
+.bmt-drawer-body button:hover{background:color-mix(in srgb, var(--bmt-blue,#2563eb) 8%, transparent)}
+.bmt-drawer-body button .bmt-icon{color:inherit;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.bmt-portal-page *{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body class="bmt-portal-page"><div class="bmt-landing-top" id="bmtLandingTop"><a class="bmt-brand-mini" href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="BMT"><span style="--i:1"><strong>Bright Mind Tutor</strong><small>Teacher workspace</small></span></a><a class="bmt-home-link" href="/">← Home</a></div><div class="container" id="teacherApp">
+<div class="top-bar teacher-header" id="teacherHeader" style="display:none;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px"><div style="display:flex;align-items:center;gap:12px"><img src="{{ url_for('static', filename='logo.png') }}" id="navLogo" style="width:46px;height:46px;border-radius:12px;object-fit:cover"><div><h1 class="page-title" style="margin:0;text-align:left">Teacher Portal</h1><div class="subtitle" id="teacherIdentity">Checking account…</div></div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="bmt-hamburger-btn" type="button" onclick="bmtOpenDrawer()" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button id="notificationBell" class="btn" type="button" onclick="toggleNotificationPanel()" aria-label="Notifications" style="position:relative;padding:8px 10px;background:var(--card-bg);border:1px solid var(--border-color);display:grid;place-items:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M6 8.5a6 6 0 0 1 12 0c0 4.2 1.2 5.8 1.7 6.4.2.2 0 .6-.3.6H4.6c-.3 0-.5-.4-.3-.6.5-.6 1.7-2.2 1.7-6.4Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span id="notificationBadge" style="display:none;position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:999px;background:#ef4444;color:#fff;font-size:10px;line-height:18px;text-align:center;padding:0 4px;"></span></button><div data-lang-switcher></div><button class="btn btn-danger" id="teacherLogout">Logout</button></div></div>
+<div id="notificationPanel" class="card" style="display:none;position:relative;margin-bottom:18px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h3 style="margin:0;">Notifications</h3>
+        <button class="btn btn-secondary" type="button" onclick="markAllNotificationsRead()">Mark all read</button>
+    </div>
+    <div id="notificationList" style="margin-top:12px;" class="bmt-scroll-list"><p class="subtitle">Loading notifications…</p></div>
+</div>
+<div class="bmt-guest-redirect" id="teacherGuestRedirect">
+    <div class="bmt-guest-mark"><img src="{{ url_for('static', filename='logo.png') }}" alt=""></div>
+    <div class="bmt-guest-spinner"></div>
+    <p>Taking you to sign in…</p>
+</div>
+<div style="display:none">
+<div id="teacherAuthChoice" class="bmt-auth-choice" role="tablist" aria-label="Teacher account access">
+<button id="teacherSignInTab" class="btn btn-primary active" type="button" role="tab" aria-selected="true" onclick="setTeacherAuthMode('login')">Sign In</button>
+<button id="teacherRegisterTab" class="btn btn-outline" type="button" role="tab" aria-selected="false" onclick="setTeacherAuthMode('register')">Register</button>
+</div>
+<div id="teacherLogin" class="card bmt-auth-card" style="display:none;margin-bottom:14px">
+<div class="bmt-landing-intro" style="padding:0;margin:4px auto 18px"><div class="bmt-kicker">Teach • Create • Inspire</div><h1 style="font-size:clamp(30px,6vw,48px)">Build better learning with <span style="--i:2">Bright Mind.</span></h1><p>Plan lessons, publish materials, create secure exams, support students and use AI tools from one professional workspace.</p></div>
+<h3>Teacher Sign In</h3>
+<p class="subtitle">Sign in to access your approved teacher dashboard.</p>
+<form id="teacherUnifiedLoginForm" class="form-vertical">
+<input id="teacherLoginIdentity" type="text" autocomplete="username" placeholder="Email or Phone Number" required>
+<input id="teacherLoginSecret" type="password" autocomplete="current-password" placeholder="Password or 6–8 digit PIN" required>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" type="submit" id="teacherLoginBtn">Sign In</button><button class="btn btn-outline" type="button" data-forgot-password>Forgot Password?</button><button class="btn btn-outline" type="button" onclick="forgotPinTeacher()">Forgot PIN? (phone accounts)</button></div>
+<div id="teacherLoginStatus" class="subtitle bmt-auth-status" aria-live="polite"></div>
+<p class="bmt-auth-helper">One sign-in box: email + password or phone + PIN.</p></form></div>
+<div id="teacherSignup" class="card bmt-auth-card" style="display:none;margin-bottom:14px"><h3>Create Teacher Account</h3><p class="subtitle">Use email/password or a phone number with a secure PIN.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><button class="btn btn-primary" type="button" onclick="document.getElementById('teacherEmailSignupBox').style.display='block';document.getElementById('teacherPhoneSignupBox').style.display='none'">Email</button><button class="btn btn-outline" type="button" onclick="document.getElementById('teacherEmailSignupBox').style.display='none';document.getElementById('teacherPhoneSignupBox').style.display='block'">Phone + PIN</button></div><div id="teacherEmailSignupBox"><form id="teacherSignupForm" class="form-vertical"><input id="teacherSignupName" placeholder="Full name" required><input id="teacherSignupEmail" type="email" autocomplete="email" placeholder="Email" required><input id="teacherSignupPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Password (at least 6 characters)" required><input id="teacherSignupConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="Confirm password" required><button class="btn btn-primary" type="submit" id="teacherSignupBtn">Create Teacher Account</button><div id="teacherSignupStatus" class="subtitle" aria-live="polite"></div></form></div><div id="teacherPhoneSignupBox" style="display:none"><form class="form-vertical" onsubmit="event.preventDefault();registerTeacherPhonePin()"><input id="teacherPhoneRegName" placeholder="Full name" required><input id="teacherPhoneRegNumber" type="tel" inputmode="tel" placeholder="Phone number" required><input id="teacherPhoneRegPin" type="password" inputmode="numeric" maxlength="8" placeholder="PIN (6–8 digits)" required><input id="teacherPhoneRegConfirm" type="password" inputmode="numeric" maxlength="8" placeholder="Confirm PIN" required><button class="btn btn-primary" type="submit" id="teacherPhoneRegBtn">Create Teacher Account</button><div id="teacherPhoneRegStatus" class="subtitle" aria-live="polite"></div></form></div></div>
+</div>
+<div id="teacherDenied" class="card" style="display:none"><h3>Become a Bright Mind Tutor teacher</h3><p class="subtitle">Submit your teaching profile. An administrator must approve it before you can publish content.</p><form id="teacherApplyForm" class="form-vertical"><input id="applyName" placeholder="Full name" required><label>Subjects</label><select id="applySubjects" multiple size="5" required><option>Mathematics</option><option>Physics</option><option>Chemistry</option><option>Biology</option><option>English</option><option>Amharic</option><option>History</option><option>Geography</option><option>Economics</option></select><label>Grades</label><select id="applyClasses" multiple size="6" required><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><label>Education level</label><input id="applyEducationLevel" placeholder="e.g. Diploma, BSc, MSc, MA" required><input id="applyInstitution" placeholder="College / University / Institution"><label>Teaching experience</label><input id="applyExperienceYears" type="number" min="0" max="60" placeholder="Years of experience"><textarea id="applyExperience" rows="3" placeholder="Describe your teaching/work experience"></textarea><input id="applyCertifications" placeholder="Certificates / professional qualifications"><textarea id="applyBio" rows="3" placeholder="Short professional bio"></textarea><button class="btn btn-primary" type="submit">Apply to Become a Teacher</button><div id="applyStatus" class="subtitle"></div></form></div>
+<div id="teacherPanel" style="display:none">
+<div class="bmt-dashboard-shell teacher-dashboard-shell">
+<div class="bmt-dashboard-hero"><div class="bmt-dashboard-hero-copy"><span class="bmt-dashboard-kicker">BMT • TEACHER WORKSPACE</span><h2>Teach smarter. <span>Create better.</span></h2><p>Your professional workspace for classes, assignments, exams, AI and student support.</p></div><div class="bmt-dashboard-hero-actions"><span class="bmt-live-dot"><i></i> Workspace active</span><button class="btn btn-outline" type="button" onclick="document.getElementById('teacherAICopilot')?.scrollIntoView({behavior:'smooth'})">AI Copilot</button></div></div>
+<nav class="bmt-bottom-nav" aria-label="Teacher dashboard sections">
+    <button type="button" class="active" data-tab="overview" onclick="bmtSwitchTab('overview')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span>Overview</span></button>
+    <button type="button" data-tab="courses" onclick="bmtSwitchTab('courses')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg><span>Courses</span></button>
+    <button type="button" data-tab="exams" onclick="bmtSwitchTab('exams')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5 11 13.5 15.5 8.5"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg><span>Exams</span></button>
+    <button type="button" data-tab="live" onclick="bmtSwitchTab('live')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m21 8-5 3.2V12.8L21 16Z"/></svg><span>Live</span></button>
+    <button type="button" data-tab="students" onclick="bmtSwitchTab('students')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><circle cx="18" cy="9" r="2.4"/><path d="M15.5 14.3c2.6.3 4.5 2.3 4.5 5.2"/></svg><span>Students</span></button>
+</nav>
+
+<div class="bmt-drawer-overlay" id="bmtDrawerOverlay" onclick="bmtCloseDrawer()"></div>
+<aside class="bmt-drawer" id="bmtDrawer" aria-label="More sections">
+    <div class="bmt-drawer-head">
+        <div style="display:flex;align-items:center;gap:10px">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+            <div><strong style="display:block;font-size:14px">Bright Mind Tutor</strong><span style="font-size:11px;color:var(--text-muted)">Teacher workspace</span></div>
+        </div>
+        <button class="bmt-drawer-close" onclick="bmtCloseDrawer()" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="bmt-drawer-body">
+        <div class="bmt-drawer-section">Teaching Tools</div>
+        <button type="button" data-tab="work" onclick="bmtSwitchTab('work')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5h6M8 6.5h8a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 16 20.5H8A1.5 1.5 0 0 1 6.5 19V8A1.5 1.5 0 0 1 8 6.5Z"/><path d="M9 11h6M9 14.5h6M9 18h3"/></svg><span>Work / Assignments</span></button>
+        <button type="button" data-tab="aimaterials" onclick="bmtSwitchTab('aimaterials')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.6 3.6L17 8l-3.4 1.4L12 13l-1.6-3.6L7 8l3.4-1.4Z"/><path d="M18.5 15.5 19.3 17.2 21 18l-1.7.8-.8 1.7-.8-1.7L16 18l1.7-.8Z"/></svg><span>AI Materials</span></button>
+        <button type="button" data-tab="scanner" onclick="bmtSwitchTab('scanner')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M4 12h16"/></svg><span>Scanner</span></button>
+        <button type="button" data-tab="questionbank" onclick="bmtSwitchTab('questionbank')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="17" height="13" rx="2"/><path d="M3.5 7 7 3.5h10L20.5 7"/><path d="M9.5 12h5"/></svg><span>Question Bank</span></button>
+        <button type="button" data-tab="digitallibrary" onclick="bmtSwitchTab('digitallibrary')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span>Digital Library</span></button>
+
+        <div class="bmt-drawer-section">Class Management</div>
+        <button type="button" data-tab="attendance" onclick="bmtSwitchTab('attendance')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="m9 14.5 2 2 4-4.2"/></svg><span>Attendance</span></button>
+        <button type="button" data-tab="parents" onclick="bmtSwitchTab('parents')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.6"/><circle cx="17" cy="9.5" r="2"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15.2c2.2.3 3.8 1.9 3.8 4.3"/></svg><span>Parents</span></button>
+
+        <div class="bmt-drawer-section">Community</div>
+        <button type="button" data-tab="chat" onclick="bmtSwitchTab('chat')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H9l-4 3.5V16H5.5A1.5 1.5 0 0 1 4 14.5Z"/></svg><span>Community Chat</span></button>
+        <button type="button" data-tab="support" onclick="bmtSwitchTab('support')"><svg class="bmt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.3a2.8 2.8 0 1 1 3.9 2.6c-.9.4-1.4 1-1.4 2.1"/><path d="M12 17.2h.01"/></svg><span>Support</span></button>
+    </div>
+</aside>
+<div class="bmt-section-heading bmt-tab-panel" data-tab="overview"><span>YOUR TEACHING CENTER</span><small>Everything you need, organized in one place</small></div>
+<div class="card bmt-tab-panel" data-tab="overview" style="margin-bottom:14px"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('courses')">Courses</button><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('work')">Assignments</button><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('exams')">Results</button><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('exams')">Exams</button><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('chat')">Community</button><button class="btn btn-outline" type="button" onclick="bmtSwitchTab('aimaterials')">AI Copilot</button></div></div>
+<div class="stats-grid bmt-tab-panel bmt-tab-active" data-tab="overview" id="teacherStats"></div><hr class="divider">
+<div class="card bmt-tab-panel" data-tab="courses"><h3>My Courses</h3><input type="text" id="courseListFilter" placeholder="Filter courses…" style="width:100%;margin-bottom:8px;"><div id="courseList" class="bmt-scroll-list">Loading…</div></div>
+<div class="card bmt-tab-panel" data-tab="courses"><h3>Create Course</h3><form id="courseForm" class="form-vertical"><input id="courseTitle" placeholder="Course title" required><select id="courseClass"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="courseSubject" placeholder="Subject (e.g. Mathematics)"><textarea id="courseDescription" rows="3" placeholder="What will students learn?"></textarea><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-weight:700;font-size:12px">Learning Mode</label><select id="courseLearningMode" multiple style="width:100%"><option value="Regular" selected>Regular</option><option value="Distance">Distance</option></select></div><div><label style="font-weight:700;font-size:12px">Target Audience</label><select id="courseAudience" multiple style="width:100%"><option value="Free Regular" selected>Free Regular</option><option value="Paid Regular" selected>Paid Regular</option><option value="Distance">Distance</option></select></div></div><p class="subtitle" style="margin:4px 0">Hold Ctrl/Cmd to select more than one. Mark a course "Distance" so it appears in students' Distance Learning tab.</p><button class="btn btn-primary" type="submit">Create Course</button></form></div>
+<div class="card bmt-tab-panel" data-tab="students" id="teacherStudentDirectory" style="margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 style="margin:0">My Students</h3><p class="subtitle">Students in the grades you teach. Contact details are shown server-authorized.</p></div><button class="btn btn-secondary" type="button" id="refreshTeacherStudentsBtn">↻ Refresh</button></div><input type="text" id="teacherStudentDirectoryFilter" placeholder="Filter by name, phone, email, or grade…" style="width:100%;margin-top:10px;"><div style="overflow:auto;margin-top:8px;max-height:420px" class="bmt-scroll-list"><table style="width:100%;min-width:680px"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Grade</th><th>Payment</th></tr></thead><tbody id="teacherStudentDirectoryBody"><tr><td colspan="5" class="subtitle">Loading…</td></tr></tbody></table></div><div id="teacherStudentDirectoryStatus" class="subtitle" style="margin-top:8px"></div></div><div class="card bmt-tab-panel" data-tab="attendance" id="teacherAttendanceSection" style="margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 style="margin:0">Attendance</h3><p class="subtitle">Regular classroom attendance only — Distance students track progress instead and never appear here.</p></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px"><select id="attendanceGrade"><option value="">Grade…</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="attendanceSubject" placeholder="Subject (optional)"><input id="attendanceDate" type="date"><button class="btn btn-secondary" type="button" id="loadAttendanceRosterBtn">Load Roster</button></div><div id="attendanceRosterList" style="margin-top:10px" class="bmt-scroll-list"></div><div style="margin-top:8px"><button class="btn btn-primary" type="button" id="saveAttendanceBtn" style="display:none">Save Attendance</button></div><div id="attendanceStatus" class="subtitle" style="margin-top:6px"></div><hr class="divider"><h4 style="margin:0 0 8px">Attendance Report</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px"><select id="attendanceReportGrade"><option value="">Grade…</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="attendanceReportFrom" type="date"><input id="attendanceReportTo" type="date"><button class="btn btn-outline" type="button" id="loadAttendanceReportBtn">View Report</button></div><div id="attendanceReportResults" style="margin-top:10px;overflow:auto"></div></div>
+<div class="card bmt-tab-panel" data-tab="work"><h3>Assignments</h3><p class="subtitle">Give students classwork or homework and track your published assignments.</p><form id="assignmentForm" class="form-vertical"><input id="assignmentTitle" placeholder="Assignment title" required><select id="assignmentCourse"></select><select id="assignmentGrade"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="assignmentDue" type="datetime-local"><textarea id="assignmentDescription" rows="4" placeholder="Instructions for students"></textarea><button class="btn btn-primary" type="submit">Publish Assignment</button></form><div id="assignmentStatus" class="subtitle"></div><input type="text" id="assignmentListFilter" placeholder="Filter assignments…" style="width:100%;margin:8px 0"><div id="assignmentList" class="bmt-scroll-list"></div><div id="assignmentSubmissionsPanel" class="card" style="display:none;margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><div><h4 style="margin:0">Student Submissions</h4><p id="selectedAssignmentTitle" class="subtitle" style="margin:4px 0 0"></p></div><button class="btn btn-secondary" type="button" id="refreshAssignmentSubmissions">Refresh</button></div><div id="assignmentSubmissionsList" style="margin-top:10px" class="bmt-scroll-list"></div></div></div>
+<div class="card bmt-tab-panel" data-tab="courses"><h3>Add Lesson / Learning Material</h3><form id="lessonForm" class="form-vertical"><select id="lessonCourse"></select><input id="lessonTitle" placeholder="Lesson title" required><select id="lessonType"><option value="youtube">YouTube</option><option value="telegram">Telegram</option><option value="pdf">PDF</option><option value="drive">Google Drive</option><option value="cloudinary">Cloudinary</option><option value="link">External link</option></select><input id="lessonUrl" type="url" placeholder="Content URL" required><input id="lessonOrder" type="number" min="0" step="1" placeholder="Order in course (0, 1, 2…)"><textarea id="lessonDescription" rows="3" placeholder="Lesson description"></textarea><button class="btn btn-success" type="submit">Publish Lesson</button></form></div>
+<div class="card bmt-tab-panel bmt-lb" data-tab="courses" id="lessonBuilderCard"><h3>Interactive Lesson Builder</h3><div id="lessonBuilderMount"></div></div>
+<div class="card bmt-tab-panel" data-tab="courses" id="lessonProgressCard"><h3>Lesson Progress</h3><p class="subtitle">Practice/Quiz results and self-paced completion for your Interactive Lesson Builder lessons. Separate from Exams/Marklist.</p><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><select id="lessonProgressCourse" style="flex:1;min-width:200px"></select><button class="btn btn-secondary" type="button" id="refreshLessonProgressBtn">↻ Refresh</button></div><div id="courseProgressSummary" class="bmt-scroll-list" style="margin-bottom:10px"></div><div id="lessonProgressList" class="bmt-scroll-list">Select a course to view lesson progress.</div><div id="lessonProgressDetail" style="margin-top:10px"></div></div>
+<div class="card bmt-tab-panel" data-tab="work" id="teacherLessonPlanSection"><h3>Lesson Plans</h3><p class="subtitle">Plan a grade/subject/unit's lessons — objectives, activities, materials and assessment — and track progress. Course, Lesson and Assignment links are optional.</p>
+<form id="lessonPlanForm" class="form-vertical">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+<select id="lessonPlanGrade" required><option value="">Grade…</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+<input id="lessonPlanSubject" placeholder="Subject">
+<input id="lessonPlanUnit" placeholder="Unit (e.g. Kinematics)">
+<input id="lessonPlanWeek" type="date">
+</div>
+<input id="lessonPlanTitle" placeholder="Plan title (optional)" style="margin-top:8px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+<select id="lessonPlanCourse"><option value="">No course link</option></select>
+<select id="lessonPlanAssignment"><option value="">No assignment link</option></select>
+</div>
+<input id="lessonPlanLesson" placeholder="Lesson ID (optional, advanced)" style="margin-top:8px">
+<textarea id="lessonPlanObjectives" rows="3" placeholder="Learning objectives (one per line)" style="margin-top:8px"></textarea>
+<textarea id="lessonPlanActivities" rows="3" placeholder="Activities (one per line)" style="margin-top:8px"></textarea>
+<textarea id="lessonPlanMaterials" rows="2" placeholder="Materials / resources (one per line)" style="margin-top:8px"></textarea>
+<textarea id="lessonPlanAssessment" rows="2" placeholder="Assignment / assessment notes" style="margin-top:8px"></textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+<select id="lessonPlanStatus"><option value="planned">Planned</option><option value="in_progress">In Progress</option><option value="completed">Completed</option></select>
+<div><label style="font-weight:700;font-size:12px">Learning Mode</label><select id="lessonPlanLearningMode" multiple style="width:100%"><option value="Regular">Regular</option><option value="Distance">Distance</option></select></div>
+<div><label style="font-weight:700;font-size:12px">Target Audience</label><select id="lessonPlanAudience" multiple style="width:100%"><option value="Free Regular">Free Regular</option><option value="Paid Regular">Paid Regular</option><option value="Distance">Distance</option><option value="Scholarship">Scholarship</option><option value="Competition">Competition</option></select></div>
+</div>
+<p class="subtitle" style="margin:4px 0">Learning Mode / Audience are optional — leave unselected unless this plan is specific to one cohort.</p>
+<button class="btn btn-primary" type="submit" style="margin-top:10px">Save Lesson Plan</button>
+</form>
+<div id="lessonPlanFormStatus" class="subtitle"></div>
+<input type="text" id="lessonPlanListFilter" placeholder="Filter lesson plans…" style="width:100%;margin:8px 0">
+<div id="lessonPlanList" class="bmt-scroll-list"></div>
+</div>
+<div class="card bmt-tab-panel" data-tab="live"><h3>Live Classes</h3><p class="subtitle">Schedule Grade 3–12 classes. Students see upcoming classes and your online status.</p><form id="liveClassForm" class="form-vertical"><input id="liveTitle" placeholder="Class title" required><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><select id="liveGrade"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="liveSubject" placeholder="Subject" required></div><input id="liveClassGroup" placeholder="Class group / section (optional, e.g. 8A)"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-weight:700;font-size:12px">Learning Mode (optional)</label><select id="liveLearningMode" multiple style="width:100%"><option value="Regular">Regular</option><option value="Distance">Distance</option></select></div><div><label style="font-weight:700;font-size:12px">Target Audience (optional)</label><select id="liveAudience" multiple style="width:100%"><option value="Free Regular">Free Regular</option><option value="Paid Regular">Paid Regular</option><option value="Distance">Distance</option><option value="Scholarship">Scholarship</option><option value="Competition">Competition</option></select></div></div><p class="subtitle" style="margin:2px 0">Leave both unselected to keep this class open to every student in the grade, as before.</p><label>Start time (EAT / Africa/Addis_Ababa)</label><input id="liveStart" type="datetime-local" required><input id="liveDuration" type="number" min="15" max="240" value="60" placeholder="Duration (minutes)"><input id="liveMeetingUrl" type="url" placeholder="Meeting link (Zoom, Google Meet, Telegram, Teams, YouTube, etc.)" required><textarea id="liveDescription" rows="3" placeholder="Class description"></textarea><button class="btn btn-primary" type="submit">Schedule Live Class</button></form><div id="liveClassStatus" class="subtitle"></div><div id="teacherLiveClasses" style="margin-top:12px"></div></div>
+<div class="card bmt-tab-panel" data-tab="chat" id="teacherCommunitySection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">BMT Community Live Chat</h3><p class="subtitle" style="margin:4px 0">Students, teachers and admins • replies/comments • reactions • photos • audio • video</p></div><span class="badge badge-free">LIVE ROOM</span></div><div id="teacherCommunityMessages" class="chat-box" style="max-height:420px;overflow:auto"><div class="spinner"></div> Loading…</div><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><textarea id="teacherCommunityMessage" rows="2" placeholder="Write to students, teachers and admins..." style="flex:1;min-width:220px"></textarea><input type="file" id="teacherCommunityMedia" accept="image/*,audio/*,video/*" style="max-width:170px"><button class="btn btn-neutral" type="button" id="teacherRecordBtn">Record</button><button class="btn btn-secondary" type="button" id="teacherCommunityAiBtn">AI Assist</button><button class="btn btn-primary" type="button" id="teacherCommunitySendBtn">Send</button></div><div class="subtitle" style="margin-top:6px">Voice recordings: maximum 60 seconds • audio upload: maximum 5 MB</div></div><div id="teacherCommunityAiAnswer" class="card" style="display:none;margin-top:10px"><strong>BMT AI Assistant</strong><div id="teacherCommunityAiText" style="margin-top:8px;white-space:pre-wrap"></div></div></div>
+<div class="card bmt-tab-panel" data-tab="parents" id="teacherParentMessages" style="margin-top:14px"><h3 style="margin:0">Parent Communication</h3><p class="subtitle">Message verified parents connected to students in your teaching classes.</p><div id="teacherParentContacts" class="parent-grid" style="margin-top:10px"></div><div id="teacherParentChat" style="display:none;margin-top:10px"><div id="teacherParentChatTitle" class="subtitle" style="font-weight:800"></div><div id="teacherParentChatMessages" class="chat-box" style="max-height:300px;overflow:auto;margin-top:6px"></div><div style="display:flex;gap:8px;margin-top:8px"><textarea id="teacherParentChatInput" rows="2" placeholder="Write a private message to the parent…" style="flex:1"></textarea><button class="btn btn-primary" id="teacherParentChatSend" type="button">Send</button></div></div></div>
+<div class="card bmt-tab-panel" data-tab="support" id="teacherSupportSection"><h3>Student Support Inbox</h3><p class="subtitle">Answer assigned student questions and support requests.</p><div id="teacherSupportTickets"><div class="spinner"></div> Loading…</div></div>
+<div class="bmt-support-card-mini" id="teacherAdminContact">
+  <div class="bmt-support-icon-mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="m6.2 6.2 3.4 3.4M17.8 6.2l-3.4 3.4M6.2 17.8l3.4-3.4M17.8 17.8l-3.4-3.4"/></svg></div>
+  <div class="bmt-support-mini-body"><strong>እርዳታ ይፈልጋሉ?</strong></div>
+  <div class="bmt-support-mini-actions">
+    <a href="tel:+251914404472" class="bmt-icon-btn" aria-label="ደውል"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-.6.4-1 1-1h2.3c.5 0 .9.3 1 .8l1 3.6c.1.4 0 .8-.3 1.1L7.5 11c1 2.2 2.8 4 5 5l1.5-1.5c.3-.3.7-.4 1.1-.3l3.6 1c.5.1.8.5.8 1V19c0 .6-.4 1-1 1h-1C9.9 20 4 14.1 4 6.5V5Z"/></svg></a>
+    <a href="mailto:berihu144@gmail.com" class="bmt-icon-btn" aria-label="ኢሜይል"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 6.5 9 6 9-6"/></svg></a>
+  </div>
+</div>
+<div class="card bmt-tab-panel" data-tab="aimaterials" id="teacherAICopilot"><h3>AI Teacher Copilot</h3><p class="subtitle">Use the existing Gemini setup to prepare lessons, activities, quizzes, homework and differentiated tasks. No new API key is required.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><select id="teacherAIGrade"><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select><input id="teacherAISubject" placeholder="Subject"></div><textarea id="teacherAITask" rows="5" placeholder="Example: Prepare a Grade 8 mathematics lesson on linear equations with objectives, worked examples, group activity, differentiation and a 5-question exit ticket."></textarea><button class="btn btn-primary" type="button" id="teacherAIBtn">Generate with AI</button><div id="teacherAIStatus" class="subtitle" style="margin-top:8px"></div><div id="teacherAIResult" class="ai-tutor-messages" style="max-height:420px"></div></div>
+
+<div class="card bmt-tab-panel" data-tab="digitallibrary" id="teacherDigitalLibrarySection"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">Digital Library</h3><p class="subtitle" style="margin:4px 0">Access BMT textbooks, teacher guides, reference books and development resources from the same library used by students.</p></div><span class="badge badge-free">Grade 3–12</span></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px"><select id="dashboardLibraryGrade"><option value="">All grades</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><select id="dashboardLibraryCategory"><option value="">All categories</option><option value="student_textbook">Student Textbooks</option><option value="teacher_guide">Teacher Guides</option><option value="reference">Reference Books</option><option value="psychology">Psychology & Development</option></select><input id="dashboardLibrarySubject" placeholder="Subject / topic"><button class="btn btn-primary" id="dashboardLibrarySearchBtn" type="button">Search Library</button></div><div id="dashboardLibraryList" style="margin-top:12px" class="bmt-scroll-list"></div></div>
+
+<div class="card bmt-tab-panel" data-tab="scanner" id="smartQuizScannerSection">
+  <h3>Smart Quiz Scanner</h3>
+  <p class="subtitle">Upload a question photo or PDF. BMT will extract multiple-choice questions for review. Nothing is imported until you approve the edited questions.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <input id="smartScannerFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf">
+    <input id="smartScanner_title" placeholder="Quiz title prefix (optional)">
+    <select id="smartScanner_destination"><option value="classwork">Import as: Classwork (a specific class)</option><option value="questionBank">Import as: Question Bank (reusable, needs approval)</option></select>
+    <select id="smartScanner_class"><option value="">Choose class</option><option>KG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+    <input id="smartScanner_qbSubject" placeholder="Subject (Question Bank only)" style="display:none">
+    <input id="smartScanner_qbGrade" placeholder="Grade (Question Bank only)" style="display:none">
+    <input id="smartScanner_pageNumber" type="number" min="1" value="1" placeholder="Page number">
+    <input id="smartScanner_collection" placeholder="Library collection (optional)">
+    <input id="smartScanner_bookId" placeholder="Book ID (optional)">
+    <input id="smartScanner_chapterId" placeholder="Chapter ID (optional)">
+    <input id="smartScanner_subchapterId" placeholder="Subchapter ID (optional)">
+    <input id="smartScanner_learningObjective" placeholder="Learning objective (optional)">
+    <input id="smartScanner_sourceRef" placeholder="Source reference (optional)">
+  </div>
+  <input id="smartScannerId" type="hidden">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <button class="btn btn-primary" type="button" id="smartScannerScanBtn">Scan & Extract</button>
+    <button class="btn btn-secondary" type="button" id="smartScannerReviewBtn">Save Review</button>
+    <button class="btn btn-success" type="button" id="smartScannerImportBtn">Approve & Import</button>
+  </div>
+  <script>(function(){var d=document.getElementById('smartScanner_destination');function sync(){var qb=d.value==='questionBank';document.getElementById('smartScanner_class').style.display=qb?'none':'';document.getElementById('smartScanner_qbSubject').style.display=qb?'':'none';document.getElementById('smartScanner_qbGrade').style.display=qb?'':'none';}d?.addEventListener('change',sync);sync();})();</script>
+  <div id="smartScannerStatus" class="subtitle" style="margin-top:8px" aria-live="polite"></div>
+  <div id="smartScannerQuestions" style="margin-top:10px"></div>
+</div>
+
+<div class="card bmt-tab-panel" data-tab="aimaterials"><h3>AI Tutor Materials</h3><p class="subtitle">Publish lesson text or upload a text-based PDF. Bright Mind Tutor will split it into searchable chunks for the AI Tutor. The original file is stored in BMT media storage (Cloudinary). Firestore stores only searchable text and metadata.</p><form id="aiMaterialForm" class="form-vertical" enctype="multipart/form-data"><input id="aiMaterialTitle" placeholder="Material title" required><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><select id="aiMaterialGrade"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><input id="aiMaterialSubject" placeholder="Subject" required></div><input id="aiMaterialUrl" type="url" placeholder="Original Google Drive/Cloudinary URL (optional)"><input id="aiMaterialFile" type="file" accept="application/pdf"><textarea id="aiMaterialText" rows="7" placeholder="Or paste lesson text here"></textarea><div class="field-group full-width"><label>Learning Mode <span class="subtitle">(optional — leave unselected to keep this material visible to everyone, as before)</span></label><select id="aiMaterialLearningMode" multiple style="width:100%"><option value="Regular">Regular</option><option value="Distance">Distance</option></select></div><div class="field-group full-width"><label>Target Audience <span class="subtitle">(optional — leave unselected unless restricting this material)</span></label><select id="aiMaterialAudience" multiple style="width:100%"><option value="Free Regular">Free Regular</option><option value="Paid Regular">Paid Regular</option><option value="Distance">Distance</option><option value="Scholarship">Scholarship</option><option value="Competition">Competition</option></select></div><button class="btn btn-primary" type="submit">Add to AI Knowledge Base</button></form><div id="aiMaterialStatus" class="subtitle"></div><input type="text" id="aiMaterialListFilter" placeholder="Filter materials…" style="width:100%;margin:8px 0"><div id="aiMaterialList" class="bmt-scroll-list"></div></div>
+<div class="card bmt-tab-panel" data-tab="questionbank" id="teacherQuestionBankSection"><h3>Question Bank</h3><p class="subtitle">Build a reusable bank of subject/grade questions — for classwork, group work, or student self-practice. Works fully by hand; AI drafting is an optional shortcut.</p>
+<form id="qbForm" class="form-vertical">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+    <input id="qbSubject" placeholder="Subject (e.g. Mathematics)" required>
+    <select id="qbGrade"><option value="">Grade</option><option>KG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+    <input id="qbDomain" placeholder="Topic (e.g. Fractions)">
+    <select id="qbDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button type="button" id="qbAiDraftBtn" class="btn btn-outline">Draft with AI</button><span id="qbAiStatus" class="subtitle"></span></div>
+  <textarea id="qbQuestion" rows="3" placeholder="Question text" required style="margin-top:10px"></textarea>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+    <input id="qbOptionA" placeholder="Option A" required>
+    <input id="qbOptionB" placeholder="Option B" required>
+    <input id="qbOptionC" placeholder="Option C">
+    <input id="qbOptionD" placeholder="Option D">
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+    <select id="qbCorrectAnswer" required><option value="">Correct answer…</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+    <input id="qbPoints" type="number" min="0.1" max="100" step="0.1" value="1" placeholder="Points">
+  </div>
+  <button class="btn btn-primary" type="submit" style="margin-top:10px">Save as Draft</button>
+</form>
+<div id="qbStatus" class="subtitle"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px">
+  <select id="qbFilterStatus"><option value="draft">My drafts &amp; pending</option><option value="approved">Approved</option></select>
+  <input id="qbFilterSubject" placeholder="Filter by subject">
+  <button type="button" id="qbRefreshBtn" class="btn btn-outline">Refresh</button>
+</div>
+<div id="qbList" style="margin-top:10px" class="bmt-scroll-list"></div>
+<div id="qbAssignPanel" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <select id="qbAssignClass"><option value="">Assign to class…</option><option>KG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+    <select id="qbAssignType"><option value="classwork">Classwork</option><option value="groupwork">Group Work</option><option value="practice">Practice</option></select>
+    <button type="button" id="qbAssignBtn" class="btn btn-primary">Assign Selected to Class</button>
+  </div>
+  <div id="qbAssignStatus" class="subtitle" style="margin-top:6px"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)">
+    <select id="qbTelegramTarget"><option value="">Send to Telegram target…</option></select>
+    <button type="button" id="qbTelegramSendBtn" class="btn btn-secondary">Send Selected to Telegram</button>
+  </div>
+  <div id="qbTelegramStatus" class="subtitle" style="margin-top:6px"></div>
+</div>
+</div>
+<div class="card bmt-tab-panel" data-tab="exams"><h3>Exam Results</h3><p class="subtitle">Review completed exam attempts for exams you created. Student answer keys remain server-side.</p><div class="stats-grid" id="teacherAnalyticsSummary" aria-live="polite"></div><div id="teacherAnalyticsDetails" style="margin-top:12px"></div><div id="teacherExamResults"><div class="spinner"></div> Loading…</div></div>
+<div class="card bmt-tab-panel" data-tab="exams" id="teacherMarkListSection"><h3>Mark List</h3><p class="subtitle">Combined Assignment + Exam averages per student, for a grade you teach.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px"><select id="markListGrade"><option value="">Grade…</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select><button class="btn btn-outline" type="button" id="loadMarkListBtn">Load Mark List</button></div><div id="markListResults" style="margin-top:10px;overflow:auto"></div></div>
+<div class="card bmt-tab-panel" data-tab="exams" id="teacherExamBuilderAnchor"><h3>Advanced Exam Builder</h3><p class="subtitle">Create the exam visually. The secure answer key is stored separately on the server and is never sent to students.</p>
+<div class="form-vertical">
+<input id="examTitle" placeholder="Exam title" required>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><select id="examClass"><option value="3">Grade 3</option><option value="4">Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option><option value="10">Grade 10</option><option value="11">Grade 11</option><option value="12">Grade 12</option></select><input id="examDuration" type="number" min="1" max="240" value="30" placeholder="Duration (minutes)"><input id="examPassMark" type="number" min="0" max="100" value="50" placeholder="Pass mark %"><input id="examMaxAttempts" type="number" min="1" max="20" value="1" placeholder="Maximum attempts"></div>
+<div class="card" style="margin:0"><h4 style="margin-top:0">Question Builder</h4><div id="questionBuilder"></div><button class="btn btn-secondary" type="button" id="addQuestionBtn">＋ Add Question</button></div>
+<div class="card" style="margin:0"><h4 style="margin-top:0">Preview</h4><div id="examPreview" class="subtitle">No questions added yet.</div></div>
+<button class="btn btn-success" type="button" id="publishExamBtn">Publish Exam</button><div id="examStatus"></div></div>
+</div></div></div><script>
+window.bmtSwitchTab = function(tab) {
+    document.querySelectorAll('.bmt-tab-panel').forEach(function(el){
+        el.classList.toggle('bmt-tab-active', el.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.bmt-bottom-nav button[data-tab], .bmt-drawer button[data-tab]').forEach(function(btn){
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+    });
+    try { localStorage.setItem('bmtTeacherActiveTab', tab); } catch(e){}
+    var main = document.getElementById('teacherApp');
+    if (main && main.scrollIntoView) main.scrollIntoView({behavior:'smooth', block:'start'});
+    bmtCloseDrawer();
+};
+document.addEventListener('DOMContentLoaded', function(){
+    var saved = 'overview';
+    try { saved = localStorage.getItem('bmtTeacherActiveTab') || 'overview'; } catch(e){}
+    if (!document.querySelector('.bmt-tab-panel[data-tab="' + saved + '"]')) saved = 'overview';
+    bmtSwitchTab(saved);
+});
+window.bmtOpenDrawer = function() {
+    document.getElementById('bmtDrawer')?.classList.add('open');
+    document.getElementById('bmtDrawerOverlay')?.classList.add('open');
+};
+window.bmtCloseDrawer = function() {
+    document.getElementById('bmtDrawer')?.classList.remove('open');
+    document.getElementById('bmtDrawerOverlay')?.classList.remove('open');
+};
+window.setTeacherAuthMode=function(mode){
+ const login=document.getElementById('teacherLogin'), reg=document.getElementById('teacherSignup');
+ const a=document.getElementById('teacherSignInTab'), b=document.getElementById('teacherRegisterTab');
+ const isLogin=mode==='login';
+ if(login) login.style.display=isLogin?'block':'none';
+ if(reg) reg.style.display=isLogin?'none':'block';
+ if(a){a.classList.toggle('active',isLogin);a.classList.toggle('btn-primary',isLogin);a.classList.toggle('btn-outline',!isLogin);a.setAttribute('aria-selected',String(isLogin));}
+ if(b){b.classList.toggle('active',!isLogin);b.classList.toggle('btn-primary',!isLogin);b.classList.toggle('btn-outline',isLogin);b.setAttribute('aria-selected',String(!isLogin));}
+};
+</script>
+<script src="{{ url_for('static', filename='smart_quiz_scanner.js') }}?v=31.108"></script><script src="{{ url_for('static', filename='dashboard_integrations.js') }}?v=31.108"></script><script src="{{ url_for('static', filename='lesson_builder.js') }}?v=31.108"></script>
+<script type="module" src="{{ url_for('static', filename='teacher.js') }}?v=31.108"></script><script src="{{ url_for('static', filename='auth-recovery.js') }}"></script>
+<script src="{{ url_for('static', filename='i18n.js') }}?v=1"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js?v=31.108',{scope:'/'}).catch(()=>{}));}</script></body></html>

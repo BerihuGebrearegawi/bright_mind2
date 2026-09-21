@@ -1,0 +1,25 @@
+{
+  "version": "30.32",
+  "baseline": "30.31",
+  "focus": [
+    "production-hardening",
+    "api-safety",
+    "observability",
+    "failure-handling"
+  ],
+  "breakingChanges": false,
+  "serverAuthoritativeTeacherApproval": true,
+  "customAdminClaimsSupported": true,
+  "legacyAdminEmailFallback": true,
+  "validation": {
+    "pythonCompile": true,
+    "javascriptSyntax": true,
+    "healthEndpoint": true,
+    "zipIntegrity": true
+  },
+  "status": "READY_WITH_CONDITIONS",
+  "securityHeaders": true,
+  "requestIds": true,
+  "maxContentLengthDefaultBytes": 2097152,
+  "fcmTokenBatchLimit": 500
+}

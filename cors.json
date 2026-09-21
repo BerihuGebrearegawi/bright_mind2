@@ -1,0 +1,12 @@
+[
+  {
+    "origin": [
+      "http://127.0.0.1:5000",
+      "http://localhost:5000",
+      "https://bright-mind-tutor.onrender.com"
+    ],
+    "method": ["GET", "PUT", "POST", "DELETE", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization", "Content-Range", "x-goog-resumable"]
+  }
+]

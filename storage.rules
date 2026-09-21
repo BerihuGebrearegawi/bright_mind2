@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == 'admin'
+      );
+    }
+
+    match /profiles/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Legacy direct browser media paths. Writes are restricted to admins;
+    // the current app primarily uses Google Drive/Cloudinary/ImgBB instead.
+    match /chat_media/{classId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /books/{classId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if isAdmin();
+    }
+
+    match /videos/{classId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if isAdmin();
+    }
+
+    match /quiz_images/{classId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if isAdmin();
+    }
+
+    match /settings/logo/{fileName} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
+    }
+
+    match /exams/{classId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write, delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

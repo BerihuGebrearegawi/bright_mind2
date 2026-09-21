@@ -1,0 +1,13 @@
+{
+  "version": "V30.43",
+  "baseline": "V30.44",
+  "focus": ["payment verification precision", "production safety"],
+  "secretsIncluded": false,
+  "liveExternalTests": false,
+  "validation": {
+    "pythonCompile": true,
+    "javascriptSyntax": true,
+    "secretScan": true,
+    "zipIntegrity": true
+  }
+}
